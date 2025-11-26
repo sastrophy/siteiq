@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help - SiteIQ</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --bg-card-hover: rgba(255, 255, 255, 0.06);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --text-primary: #ffffff;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --accent-pink: #ec4899;
+            --accent-cyan: #06b6d4;
+            --accent-green: #10b981;
+            --accent-orange: #f97316;
+            --accent-red: #ef4444;
+            --accent-yellow: #fbbf24;
+            --gradient-primary: linear-gradient(135deg, #3b82f6, #8b5cf6, #ec4899);
+            --gradient-security: linear-gradient(135deg, #ef4444, #f97316);
+            --gradient-seo: linear-gradient(135deg, #3b82f6, #06b6d4);
+            --gradient-geo: linear-gradient(135deg, #8b5cf6, #ec4899);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bg-glow {
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 30%, rgba(59, 130, 246, 0.08) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 70%, rgba(139, 92, 246, 0.08) 0%, transparent 50%);
+            animation: glowMove 20s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes glowMove {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-5%, -5%); }
+        }
+
+        /* Navigation */
+        .navbar {
+            background: rgba(10, 10, 15, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--text-primary);
+            background: var(--bg-card);
+        }
+
+        /* Main Container */
+        .main-container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 3rem 0;
+            margin-bottom: 2rem;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Table of Contents */
+        .toc-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            position: sticky;
+            top: 100px;
+        }
+
+        .toc-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .toc-link {
+            display: block;
+            color: var(--text-muted);
+            text-decoration: none;
+            padding: 0.5rem 0;
+            font-size: 0.9rem;
+            border-left: 2px solid transparent;
+            padding-left: 1rem;
+            margin-left: -1rem;
+            transition: all 0.2s;
+        }
+
+        .toc-link:hover {
+            color: var(--text-primary);
+            border-left-color: var(--accent-blue);
+        }
+
+        /* Section Cards */
+        .section {
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-title i {
+            font-size: 1.25rem;
+            padding: 0.5rem;
+            border-radius: 8px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        /* Steps */
+        .steps {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .step {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .step-content h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .step-content p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        /* Feature Grid */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+
+        .feature-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.25rem;
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .feature-card.security {
+            border-top: 3px solid var(--accent-orange);
+        }
+
+        .feature-card.seo {
+            border-top: 3px solid var(--accent-cyan);
+        }
+
+        .feature-card.geo {
+            border-top: 3px solid var(--accent-purple);
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-icon.security {
+            background: rgba(249, 115, 22, 0.2);
+            color: var(--accent-orange);
+        }
+
+        .feature-icon.seo {
+            background: rgba(6, 182, 212, 0.2);
+            color: var(--accent-cyan);
+        }
+
+        .feature-icon.geo {
+            background: rgba(139, 92, 246, 0.2);
+            color: var(--accent-purple);
+        }
+
+        .feature-card h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-card p {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .feature-card .includes {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .feature-card .includes strong {
+            color: var(--text-muted);
+        }
+
+        /* Severity Badges */
+        .severity-badge {
+            display: inline-block;
+            padding: 0.35rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .severity-badge.critical {
+            background: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+        }
+
+        .severity-badge.high {
+            background: rgba(249, 115, 22, 0.2);
+            color: #fb923c;
+        }
+
+        .severity-badge.medium {
+            background: rgba(251, 191, 36, 0.2);
+            color: #fbbf24;
+        }
+
+        .severity-badge.low {
+            background: rgba(34, 197, 94, 0.2);
+            color: #4ade80;
+        }
+
+        .severity-badge.info {
+            background: rgba(6, 182, 212, 0.2);
+            color: #22d3ee;
+        }
+
+        /* Tables */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .data-table th {
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .data-table td {
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Code Block */
+        .code-block {
+            background: #0d0d12;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem 1.25rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: #e2e8f0;
+            overflow-x: auto;
+        }
+
+        /* Alert Boxes */
+        .alert-box {
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .alert-box i {
+            font-size: 1.1rem;
+            margin-top: 0.1rem;
+        }
+
+        .alert-box.danger {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            color: #fca5a5;
+        }
+
+        .alert-box.danger i {
+            color: var(--accent-red);
+        }
+
+        .alert-box.info {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            color: #93c5fd;
+        }
+
+        .alert-box.info i {
+            color: var(--accent-blue);
+        }
+
+        .alert-box.tip {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            color: #6ee7b7;
+        }
+
+        .alert-box.tip i {
+            color: var(--accent-green);
+        }
+
+        /* Accordion */
+        .accordion {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .accordion-item {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .accordion-header {
+            padding: 1rem 1.25rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.2s;
+        }
+
+        .accordion-header:hover {
+            background: var(--bg-card-hover);
+        }
+
+        .accordion-header h4 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin: 0;
+            color: var(--text-primary);
+        }
+
+        .accordion-header i {
+            color: var(--text-muted);
+            transition: transform 0.3s;
+        }
+
+        .accordion-item.active .accordion-header i {
+            transform: rotate(180deg);
+        }
+
+        .accordion-content {
+            display: none;
+            padding: 0 1.25rem 1.25rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .accordion-item.active .accordion-content {
+            display: block;
+        }
+
+        /* Do/Don't Cards */
+        .do-dont-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+
+        .do-card, .dont-card {
+            border-radius: 12px;
+            padding: 1.25rem;
+        }
+
+        .do-card {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .dont-card {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .do-card h4, .dont-card h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .do-card h4 {
+            color: var(--accent-green);
+        }
+
+        .dont-card h4 {
+            color: var(--accent-red);
+        }
+
+        .do-card ul, .dont-card ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .do-card li, .dont-card li {
+            padding: 0.4rem 0;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .do-card li::before {
+            content: "✓";
+            color: var(--accent-green);
+            font-weight: bold;
+        }
+
+        .dont-card li::before {
+            content: "✕";
+            color: var(--accent-red);
+            font-weight: bold;
+        }
+
+        /* Back to Top */
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 48px;
+            height: 48px;
+            background: var(--gradient-primary);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 1.25rem;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .toc-card {
+                position: static;
+                margin-bottom: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 1rem;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .do-dont-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-grid"></div>
+    <div class="bg-glow"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container d-flex justify-content-between align-items-center">
+            <a class="navbar-brand" href="/">
+                <i class="bi bi-lightning-charge-fill"></i>
+                SiteIQ
+            </a>
+            <div class="nav-links d-flex gap-2">
+                <a href="/"><i class="bi bi-speedometer2 me-1"></i>Dashboard</a>
+                <a href="/help" class="active"><i class="bi bi-question-circle me-1"></i>Help</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <!-- Hero -->
+        <div class="hero">
+            <h1><i class="bi bi-book me-2"></i>User Guide</h1>
+            <p>Learn how to use SiteIQ to analyze your websites for security vulnerabilities, SEO issues, and global performance.</p>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar TOC -->
+            <div class="col-lg-3 mb-4">
+                <div class="toc-card">
+                    <div class="toc-title">
+                        <i class="bi bi-list-ul"></i>
+                        Contents
+                    </div>
+                    <a href="#getting-started" class="toc-link">Getting Started</a>
+                    <a href="#security-tests" class="toc-link">Security Testing</a>
+                    <a href="#seo-tests" class="toc-link">SEO Analysis</a>
+                    <a href="#geo-tests" class="toc-link">GEO Testing</a>
+                    <a href="#severity-levels" class="toc-link">Severity Levels</a>
+                    <a href="#advanced-options" class="toc-link">Advanced Options</a>
+                    <a href="#best-practices" class="toc-link">Best Practices</a>
+                    <a href="#faq" class="toc-link">FAQ</a>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-lg-9">
+                <!-- Getting Started -->
+                <section id="getting-started" class="section">
+                    <h2 class="section-title">
+                        <i class="bi bi-rocket-takeoff" style="background: rgba(59, 130, 246, 0.2); color: var(--accent-blue);"></i>
+                        Getting Started
+                    </h2>
+
+                    <div class="card">
+                        <div class="steps">
+                            <div class="step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <h4>Enter Target URL</h4>
+                                    <p>Enter the complete URL of the website you want to analyze, including https:// or http://</p>
+                                    <div class="code-block mt-2">https://example.com</div>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <h4>Choose Test Category</h4>
+                                    <p>Select between Security Testing or SEO & GEO Analysis tabs based on your needs.</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <h4>Select Tests</h4>
+                                    <p>Click on individual test cards to select/deselect them, or use "Select All" / "Deselect All" buttons.</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">4</div>
+                                <div class="step-content">
+                                    <h4>Start Analysis</h4>
+                                    <p>Click the "Start Analysis" button and watch the results stream in real-time.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="alert-box danger">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        <div>
+                            <strong>Important:</strong> Only scan websites you own or have explicit written permission to test. Unauthorized testing may violate laws.
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Security Tests -->
+                <section id="security-tests" class="section">
+                    <h2 class="section-title">
+                        <i class="bi bi-shield-lock" style="background: rgba(249, 115, 22, 0.2); color: var(--accent-orange);"></i>
+                        Security Testing
+                    </h2>
+
+                    <p class="text-secondary mb-4">Comprehensive security analysis based on OWASP Top 10 vulnerabilities.</p>
+
+                    <div class="feature-grid">
+                        <div class="feature-card security">
+                            <div class="feature-icon security">
+                                <i class="bi bi-database"></i>
+                            </div>
+                            <h4>SQL Injection</h4>
+                            <p>Tests for SQL injection vulnerabilities that could allow database access.</p>
+                            <div class="includes"><strong>Includes:</strong> Classic, Union-based, Blind, Time-based, NoSQL</div>
+                        </div>
+
+                        <div class="feature-card security">
+                            <div class="feature-icon security">
+                                <i class="bi bi-code-slash"></i>
+                            </div>
+                            <h4>Cross-Site Scripting</h4>
+                            <p>Detects XSS vulnerabilities that allow malicious script injection.</p>
+                            <div class="includes"><strong>Includes:</strong> Reflected XSS, DOM-based, Filter bypass</div>
+                        </div>
+
+                        <div class="feature-card security">
+                            <div class="feature-icon security">
+                                <i class="bi bi-shield-check"></i>
+                            </div>
+                            <h4>Security Headers</h4>
+                            <p>Validates security headers that protect against common attacks.</p>
+                            <div class="includes"><strong>Includes:</strong> CSP, HSTS, X-Frame-Options, CORS</div>
+                        </div>
+
+                        <div class="feature-card security">
+                            <div class="feature-icon security">
+                                <i class="bi bi-lock"></i>
+                            </div>
+                            <h4>SSL/TLS</h4>
+                            <p>Validates SSL certificate and encryption configuration.</p>
+                            <div class="includes"><strong>Includes:</strong> Certificate validity, Protocol versions, Ciphers</div>
+                        </div>
+
+                        <div class="feature-card security">
+                            <div class="feature-icon security">
+                                <i class="bi bi-person-lock"></i>
+                            </div>
+                            <h4>Authentication</h4>
+                            <p>Tests login security and session management.</p>
+                            <div class="includes"><strong>Includes:</strong> Brute force, User enumeration, Sessions</div>
+                        </div>
+
+                        <div class="feature-card security">
+                            <div class="feature-icon security">
+                                <i class="bi bi-wordpress"></i>
+                            </div>
+                            <h4>WordPress</h4>
+                            <p>WordPress-specific security tests for CMS installations.</p>
+                            <div class="includes"><strong>Includes:</strong> Version detection, XML-RPC, Plugins</div>
+                        </div>
+
+                        <div class="feature-card security">
+                            <div class="feature-icon security">
+                                <i class="bi bi-folder2-open"></i>
+                            </div>
+                            <h4>Directory Traversal</h4>
+                            <p>Tests for path traversal and file inclusion vulnerabilities.</p>
+                            <div class="includes"><strong>Includes:</strong> LFI, RFI, Sensitive files, Git exposure</div>
+                        </div>
+
+                        <div class="feature-card security">
+                            <div class="feature-icon security">
+                                <i class="bi bi-bug"></i>
+                            </div>
+                            <h4>CSRF & OWASP</h4>
+                            <p>Tests for CSRF, SSRF, and other OWASP vulnerabilities.</p>
+                            <div class="includes"><strong>Includes:</strong> CSRF tokens, Open redirects, IDOR</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SEO Tests -->
+                <section id="seo-tests" class="section">
+                    <h2 class="section-title">
+                        <i class="bi bi-search" style="background: rgba(6, 182, 212, 0.2); color: var(--accent-cyan);"></i>
+                        SEO Analysis
+                    </h2>
+
+                    <p class="text-secondary mb-4">Comprehensive SEO analysis to improve search engine rankings.</p>
+
+                    <div class="feature-grid">
+                        <div class="feature-card seo">
+                            <div class="feature-icon seo">
+                                <i class="bi bi-tags"></i>
+                            </div>
+                            <h4>Meta Tags</h4>
+                            <p>Validates title, description, and other meta tags.</p>
+                            <div class="includes"><strong>Includes:</strong> Title length, Description, Viewport, Robots</div>
+                        </div>
+
+                        <div class="feature-card seo">
+                            <div class="feature-icon seo">
+                                <i class="bi bi-code-square"></i>
+                            </div>
+                            <h4>Schema Markup</h4>
+                            <p>Validates JSON-LD structured data for rich results.</p>
+                            <div class="includes"><strong>Includes:</strong> JSON-LD validation, Schema types</div>
+                        </div>
+
+                        <div class="feature-card seo">
+                            <div class="feature-icon seo">
+                                <i class="bi bi-share"></i>
+                            </div>
+                            <h4>Open Graph</h4>
+                            <p>Checks social media sharing metadata.</p>
+                            <div class="includes"><strong>Includes:</strong> og:title, og:image, Twitter Cards</div>
+                        </div>
+
+                        <div class="feature-card seo">
+                            <div class="feature-icon seo">
+                                <i class="bi bi-speedometer2"></i>
+                            </div>
+                            <h4>Performance</h4>
+                            <p>Page speed and Core Web Vitals analysis.</p>
+                            <div class="includes"><strong>Includes:</strong> Load time, LCP, CLS, Compression</div>
+                        </div>
+
+                        <div class="feature-card seo">
+                            <div class="feature-icon seo">
+                                <i class="bi bi-robot"></i>
+                            </div>
+                            <h4>Robots & Sitemap</h4>
+                            <p>Validates robots.txt and sitemap.xml.</p>
+                            <div class="includes"><strong>Includes:</strong> Crawl rules, Sitemap URLs, XML validation</div>
+                        </div>
+
+                        <div class="feature-card seo">
+                            <div class="feature-icon seo">
+                                <i class="bi bi-type-h1"></i>
+                            </div>
+                            <h4>Content Structure</h4>
+                            <p>Analyzes headings, images, and links.</p>
+                            <div class="includes"><strong>Includes:</strong> H1-H6 hierarchy, Alt text, Broken links</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- GEO Tests -->
+                <section id="geo-tests" class="section">
+                    <h2 class="section-title">
+                        <i class="bi bi-geo-alt" style="background: rgba(139, 92, 246, 0.2); color: var(--accent-purple);"></i>
+                        GEO Testing
+                    </h2>
+
+                    <p class="text-secondary mb-4">Test your website's performance and content from different geographic locations.</p>
+
+                    <div class="feature-grid">
+                        <div class="feature-card geo">
+                            <div class="feature-icon geo">
+                                <i class="bi bi-globe"></i>
+                            </div>
+                            <h4>Multi-Location Access</h4>
+                            <p>Tests site accessibility from multiple regions.</p>
+                            <div class="includes"><strong>Includes:</strong> Regional access, Geo-blocking detection</div>
+                        </div>
+
+                        <div class="feature-card geo">
+                            <div class="feature-icon geo">
+                                <i class="bi bi-stopwatch"></i>
+                            </div>
+                            <h4>Latency Analysis</h4>
+                            <p>Measures response times from different locations.</p>
+                            <div class="includes"><strong>Includes:</strong> Response times, Latency variance, CDN</div>
+                        </div>
+
+                        <div class="feature-card geo">
+                            <div class="feature-icon geo">
+                                <i class="bi bi-translate"></i>
+                            </div>
+                            <h4>Content Variation</h4>
+                            <p>Detects geo-targeted content differences.</p>
+                            <div class="includes"><strong>Includes:</strong> Language switching, Currency detection</div>
+                        </div>
+
+                        <div class="feature-card geo">
+                            <div class="feature-icon geo">
+                                <i class="bi bi-shield-check"></i>
+                            </div>
+                            <h4>Regional Compliance</h4>
+                            <p>Checks for GDPR, CCPA compliance indicators.</p>
+                            <div class="includes"><strong>Includes:</strong> Cookie consent, Privacy notices</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Severity Levels -->
+                <section id="severity-levels" class="section">
+                    <h2 class="section-title">
+                        <i class="bi bi-exclamation-octagon" style="background: rgba(239, 68, 68, 0.2); color: var(--accent-red);"></i>
+                        Severity Levels
+                    </h2>
+
+                    <div class="card">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Level</th>
+                                    <th>Description</th>
+                                    <th>Action</th>
+                                    <th>Examples</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="severity-badge critical">Critical</span></td>
+                                    <td>Immediate exploitable risk</td>
+                                    <td>Fix immediately</td>
+                                    <td>SQL Injection, RCE</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="severity-badge high">High</span></td>
+                                    <td>Serious vulnerability</td>
+                                    <td>Fix within 24-48 hours</td>
+                                    <td>XSS, Auth bypass</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="severity-badge medium">Medium</span></td>
+                                    <td>Moderate risk</td>
+                                    <td>Fix within 1-2 weeks</td>
+                                    <td>Missing headers, Weak SSL</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="severity-badge low">Low</span></td>
+                                    <td>Minor issue</td>
+                                    <td>Fix when possible</td>
+                                    <td>Version disclosure</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="severity-badge info">Info</span></td>
+                                    <td>Informational</td>
+                                    <td>Review and consider</td>
+                                    <td>Detected technologies</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Advanced Options -->
+                <section id="advanced-options" class="section">
+                    <h2 class="section-title">
+                        <i class="bi bi-sliders" style="background: rgba(139, 92, 246, 0.2); color: var(--accent-purple);"></i>
+                        Advanced Options
+                    </h2>
+
+                    <div class="card">
+                        <div class="card-title">Test Intensity</div>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Level</th>
+                                    <th>Speed</th>
+                                    <th>Coverage</th>
+                                    <th>Best For</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="severity-badge low">Light</span></td>
+                                    <td>5-10 min</td>
+                                    <td>Basic</td>
+                                    <td>Quick assessment</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="severity-badge medium">Medium</span></td>
+                                    <td>15-25 min</td>
+                                    <td>Balanced</td>
+                                    <td>Regular testing (default)</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="severity-badge high">Aggressive</span></td>
+                                    <td>30-60 min</td>
+                                    <td>Thorough</td>
+                                    <td>Comprehensive audit</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="alert-box tip mt-3">
+                        <i class="bi bi-lightbulb"></i>
+                        <div>
+                            <strong>Pro Tip:</strong> Start with Light intensity for initial scans, then run Aggressive scans during off-peak hours for thorough testing.
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Best Practices -->
+                <section id="best-practices" class="section">
+                    <h2 class="section-title">
+                        <i class="bi bi-check2-circle" style="background: rgba(16, 185, 129, 0.2); color: var(--accent-green);"></i>
+                        Best Practices
+                    </h2>
+
+                    <div class="do-dont-grid">
+                        <div class="do-card">
+                            <h4><i class="bi bi-check-circle"></i> Do</h4>
+                            <ul>
+                                <li>Test in staging environment first</li>
+                                <li>Schedule scans during low-traffic periods</li>
+                                <li>Start with Light intensity</li>
+                                <li>Fix Critical/High findings first</li>
+                                <li>Re-test after applying fixes</li>
+                                <li>Keep scan reports for compliance</li>
+                                <li>Test regularly (weekly/monthly)</li>
+                            </ul>
+                        </div>
+                        <div class="dont-card">
+                            <h4><i class="bi bi-x-circle"></i> Don't</h4>
+                            <ul>
+                                <li>Test sites without authorization</li>
+                                <li>Run aggressive scans during peak hours</li>
+                                <li>Ignore Low/Info findings completely</li>
+                                <li>Share reports with sensitive URLs publicly</li>
+                                <li>Assume one clean scan means permanent security</li>
+                                <li>Use this tool for malicious purposes</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- FAQ -->
+                <section id="faq" class="section">
+                    <h2 class="section-title">
+                        <i class="bi bi-question-circle" style="background: rgba(251, 191, 36, 0.2); color: var(--accent-yellow);"></i>
+                        Frequently Asked Questions
+                    </h2>
+
+                    <div class="accordion">
+                        <div class="accordion-item active">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">
+                                <h4>How long does a scan take?</h4>
+                                <i class="bi bi-chevron-down"></i>
+                            </div>
+                            <div class="accordion-content">
+                                <p>Scan duration depends on the intensity level and selected tests:</p>
+                                <ul class="mt-2">
+                                    <li><strong>Light:</strong> 5-10 minutes</li>
+                                    <li><strong>Medium:</strong> 15-25 minutes</li>
+                                    <li><strong>Aggressive:</strong> 30-60 minutes</li>
+                                </ul>
+                                <p class="mt-2">Individual test categories (like Security Headers only) complete in 1-2 minutes.</p>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">
+                                <h4>Will scanning affect my website's performance?</h4>
+                                <i class="bi bi-chevron-down"></i>
+                            </div>
+                            <div class="accordion-content">
+                                <p>The scanner includes rate limiting (0.5 second delay between requests) to minimize impact. However, aggressive scans can generate significant traffic. We recommend:</p>
+                                <ul class="mt-2">
+                                    <li>Test during off-peak hours</li>
+                                    <li>Start with Light intensity</li>
+                                    <li>Use a staging environment if possible</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">
+                                <h4>Can I scan any website?</h4>
+                                <i class="bi bi-chevron-down"></i>
+                            </div>
+                            <div class="accordion-content">
+                                <p><strong>No.</strong> You should only scan websites that you own or have explicit written permission to test. Unauthorized scanning is illegal in most jurisdictions and may violate computer crime laws.</p>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">
+                                <h4>What should I do when vulnerabilities are found?</h4>
+                                <i class="bi bi-chevron-down"></i>
+                            </div>
+                            <div class="accordion-content">
+                                <ol class="mt-2">
+                                    <li>Prioritize by severity (Critical → High → Medium → Low)</li>
+                                    <li>Read the remediation guidance provided</li>
+                                    <li>Research the CWE ID for detailed fix information</li>
+                                    <li>Apply fixes in a staging environment first</li>
+                                    <li>Re-scan to verify the fix worked</li>
+                                    <li>Deploy to production</li>
+                                </ol>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">
+                                <h4>Does a clean scan mean my site is secure?</h4>
+                                <i class="bi bi-chevron-down"></i>
+                            </div>
+                            <div class="accordion-content">
+                                <p>No automated scanner can find all vulnerabilities. A clean scan means no <em>known</em> vulnerabilities were detected by these specific tests. You should:</p>
+                                <ul class="mt-2">
+                                    <li>Conduct regular scans</li>
+                                    <li>Perform manual penetration testing periodically</li>
+                                    <li>Keep all software updated</li>
+                                    <li>Follow security best practices</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">
+                                <h4>Where are scan reports stored?</h4>
+                                <i class="bi bi-chevron-down"></i>
+                            </div>
+                            <div class="accordion-content">
+                                <p>Reports are stored in the <code>reports/</code> directory as JSON files. Each report is named with a timestamp:</p>
+                                <div class="code-block mt-2">security_report_YYYYMMDD_HHMMSS.json</div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">
+                                <h4>How do I enable PageSpeed API for performance testing?</h4>
+                                <i class="bi bi-chevron-down"></i>
+                            </div>
+                            <div class="accordion-content">
+                                <p>To get Core Web Vitals data, you need a Google PageSpeed API key:</p>
+                                <ol class="mt-2">
+                                    <li>Go to <a href="https://developers.google.com/speed/docs/insights/v5/get-started" target="_blank" style="color: var(--accent-blue);">Google PageSpeed API</a></li>
+                                    <li>Create an API key</li>
+                                    <li>Set the environment variable: <code>PAGESPEED_API_KEY=your_key</code></li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <!-- Back to Top Button -->
+    <button class="back-to-top" onclick="scrollToTop()">
+        <i class="bi bi-arrow-up"></i>
+    </button>
+
+    <script>
+        // Accordion toggle
+        function toggleAccordion(header) {
+            const item = header.parentElement;
+            const wasActive = item.classList.contains('active');
+
+            // Close all
+            document.querySelectorAll('.accordion-item').forEach(i => {
+                i.classList.remove('active');
+            });
+
+            // Toggle current
+            if (!wasActive) {
+                item.classList.add('active');
+            }
+        }
+
+        // Back to top
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Show/hide back to top button
+        window.addEventListener('scroll', () => {
+            const btn = document.querySelector('.back-to-top');
+            if (window.scrollY > 300) {
+                btn.classList.add('visible');
+            } else {
+                btn.classList.remove('visible');
+            }
+        });
+
+        // Smooth scroll for TOC links
+        document.querySelectorAll('.toc-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = document.querySelector(link.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

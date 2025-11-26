@@ -1,0 +1,1532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SiteIQ - AI-Powered Website Intelligence</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --bg-card-hover: rgba(255, 255, 255, 0.06);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --text-primary: #ffffff;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --accent-pink: #ec4899;
+            --accent-cyan: #06b6d4;
+            --accent-green: #10b981;
+            --accent-orange: #f97316;
+            --accent-red: #ef4444;
+            --gradient-primary: linear-gradient(135deg, #3b82f6, #8b5cf6, #ec4899);
+            --gradient-security: linear-gradient(135deg, #ef4444, #f97316);
+            --gradient-seo: linear-gradient(135deg, #3b82f6, #06b6d4);
+            --gradient-geo: linear-gradient(135deg, #8b5cf6, #ec4899);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated background */
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bg-glow {
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 30%, rgba(59, 130, 246, 0.08) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 70%, rgba(139, 92, 246, 0.08) 0%, transparent 50%);
+            animation: glowMove 20s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes glowMove {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-5%, -5%); }
+        }
+
+        /* Navigation */
+        .navbar {
+            background: rgba(10, 10, 15, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .navbar-brand i {
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-primary);
+            background: var(--bg-card);
+        }
+
+        /* Main container */
+        .main-container {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 3rem 0;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* URL Input */
+        .url-input-container {
+            max-width: 700px;
+            margin: 2rem auto;
+        }
+
+        .url-input-wrapper {
+            position: relative;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+        }
+
+        .url-input-wrapper:focus-within {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        }
+
+        .url-input-wrapper .icon {
+            padding: 0.75rem 1rem;
+            color: var(--text-muted);
+        }
+
+        .url-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1rem;
+            padding: 0.75rem 0;
+            outline: none;
+        }
+
+        .url-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        /* Tab Navigation */
+        .tab-navigation {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            padding: 0.5rem;
+            background: var(--bg-card);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 0.95rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .tab-btn:hover {
+            color: var(--text-primary);
+            background: var(--bg-card-hover);
+        }
+
+        .tab-btn.active {
+            color: var(--text-primary);
+            background: var(--bg-secondary);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .tab-btn.active.security {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(249, 115, 22, 0.2));
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .tab-btn.active.seo-geo {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(139, 92, 246, 0.2));
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+
+        .tab-btn .badge {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            background: var(--accent-green);
+            color: white;
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Test Cards */
+        .test-section {
+            margin-bottom: 2rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-title i {
+            font-size: 1.2rem;
+        }
+
+        .select-btns {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .select-btn {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.75rem;
+            border: 1px solid var(--border-color);
+            background: transparent;
+            color: var(--text-secondary);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .select-btn:hover {
+            background: var(--bg-card-hover);
+            color: var(--text-primary);
+        }
+
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+
+        .test-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.25rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .test-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--gradient-primary);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .test-card:hover {
+            background: var(--bg-card-hover);
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .test-card.selected {
+            border-color: var(--accent-blue);
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .test-card.selected::before {
+            opacity: 1;
+        }
+
+        .test-card.security.selected {
+            border-color: var(--accent-orange);
+            background: rgba(249, 115, 22, 0.1);
+        }
+
+        .test-card.security.selected::before {
+            background: var(--gradient-security);
+        }
+
+        .test-card.seo.selected {
+            border-color: var(--accent-cyan);
+            background: rgba(6, 182, 212, 0.1);
+        }
+
+        .test-card.seo.selected::before {
+            background: var(--gradient-seo);
+        }
+
+        .test-card.geo.selected {
+            border-color: var(--accent-purple);
+            background: rgba(139, 92, 246, 0.1);
+        }
+
+        .test-card.geo.selected::before {
+            background: var(--gradient-geo);
+        }
+
+        .test-card-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .test-card-checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.2s;
+            margin-top: 2px;
+        }
+
+        .test-card.selected .test-card-checkbox {
+            background: var(--accent-blue);
+            border-color: var(--accent-blue);
+        }
+
+        .test-card.security.selected .test-card-checkbox {
+            background: var(--accent-orange);
+            border-color: var(--accent-orange);
+        }
+
+        .test-card.seo.selected .test-card-checkbox {
+            background: var(--accent-cyan);
+            border-color: var(--accent-cyan);
+        }
+
+        .test-card.geo.selected .test-card-checkbox {
+            background: var(--accent-purple);
+            border-color: var(--accent-purple);
+        }
+
+        .test-card-checkbox i {
+            color: white;
+            font-size: 0.7rem;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .test-card.selected .test-card-checkbox i {
+            opacity: 1;
+        }
+
+        .test-card-content {
+            flex: 1;
+        }
+
+        .test-card-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .test-card-desc {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            line-height: 1.4;
+        }
+
+        /* Advanced Options */
+        .advanced-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            cursor: pointer;
+            padding: 0.75rem 0;
+            transition: color 0.2s;
+        }
+
+        .advanced-toggle:hover {
+            color: var(--text-primary);
+        }
+
+        .advanced-options {
+            display: none;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .advanced-options.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .option-group label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .option-group select,
+        .option-group input[type="text"] {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .option-group select:focus,
+        .option-group input[type="text"]:focus {
+            border-color: var(--accent-blue);
+        }
+
+        .option-group select option {
+            background: var(--bg-secondary);
+        }
+
+        /* Scan Button */
+        .scan-button {
+            width: 100%;
+            padding: 1.25rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 12px;
+            background: var(--gradient-primary);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .scan-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .scan-button:hover::before {
+            left: 100%;
+        }
+
+        .scan-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px rgba(59, 130, 246, 0.3);
+        }
+
+        .scan-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Running Section */
+        .running-section {
+            display: none;
+        }
+
+        .running-section.active {
+            display: block;
+        }
+
+        .config-section {
+            display: block;
+        }
+
+        .config-section.hidden {
+            display: none;
+        }
+
+        .console-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .console-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .console-header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .console-dots {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .console-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .console-dot.red { background: #ef4444; }
+        .console-dot.yellow { background: #fbbf24; }
+        .console-dot.green { background: #22c55e; }
+
+        .console-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-badge.running {
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--accent-blue);
+        }
+
+        .status-badge.completed {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--accent-green);
+        }
+
+        .status-badge.failed {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--accent-red);
+        }
+
+        .console-output {
+            background: #0d0d12;
+            padding: 1.5rem;
+            height: 400px;
+            overflow-y: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        .console-output::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .console-output::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .console-output::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+
+        .console-line {
+            padding: 0.1rem 0;
+        }
+
+        .console-line.pass { color: #4ade80; }
+        .console-line.fail { color: #f87171; }
+        .console-line.info { color: #60a5fa; }
+        .console-line.warn { color: #fbbf24; }
+
+        .console-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .console-stats {
+            display: flex;
+            gap: 1rem;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        .console-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .btn-console {
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-stop {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: var(--accent-red);
+        }
+
+        .btn-stop:hover {
+            background: rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-new {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        .btn-new:hover {
+            background: var(--bg-card-hover);
+            color: var(--text-primary);
+        }
+
+        /* Results Summary */
+        .results-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            display: none;
+        }
+
+        .results-card.show {
+            display: block;
+        }
+
+        .results-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .result-item {
+            text-align: center;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+        }
+
+        .result-count {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .result-count.critical { color: #ef4444; }
+        .result-count.high { color: #f97316; }
+        .result-count.medium { color: #fbbf24; }
+        .result-count.low { color: #22c55e; }
+        .result-count.info { color: #06b6d4; }
+
+        .result-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .btn-results {
+            width: 100%;
+            padding: 1rem;
+            background: var(--gradient-primary);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-results:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(59, 130, 246, 0.3);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: sticky;
+            top: 100px;
+        }
+
+        .sidebar-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .sidebar-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .history-item {
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            margin-bottom: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: block;
+        }
+
+        .history-item:hover {
+            background: var(--bg-card-hover);
+        }
+
+        .history-url {
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 0.5rem;
+        }
+
+        .history-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .history-time {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .history-status {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+        }
+
+        .history-status.completed {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--accent-green);
+        }
+
+        .history-status.running {
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--accent-blue);
+        }
+
+        .history-status.failed {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--accent-red);
+        }
+
+        .features-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .features-list li {
+            padding: 0.5rem 0;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .features-list li i {
+            font-size: 1rem;
+        }
+
+        .feature-security i { color: var(--accent-orange); }
+        .feature-seo i { color: var(--accent-cyan); }
+        .feature-geo i { color: var(--accent-purple); }
+
+        .warning-box {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 10px;
+            padding: 1rem;
+            font-size: 0.8rem;
+            color: #fca5a5;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .warning-box i {
+            color: var(--accent-red);
+            font-size: 1rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+        }
+
+        .empty-state i {
+            font-size: 2.5rem;
+            margin-bottom: 0.75rem;
+            opacity: 0.5;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .results-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 1rem;
+            }
+
+            .tab-btn {
+                padding: 0.75rem 1rem;
+                font-size: 0.85rem;
+            }
+
+            .test-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .results-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animations */
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .spinner {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-grid"></div>
+    <div class="bg-glow"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container d-flex justify-content-between align-items-center">
+            <a class="navbar-brand" href="/">
+                <i class="bi bi-lightning-charge-fill"></i>
+                SiteIQ
+            </a>
+            <div class="nav-links d-flex gap-2">
+                <a href="/"><i class="bi bi-speedometer2 me-1"></i>Dashboard</a>
+                <a href="/help"><i class="bi bi-question-circle me-1"></i>Help</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <div class="row">
+            <div class="col-lg-8">
+                <!-- Config Section -->
+                <div class="config-section" id="configSection">
+                    <!-- Hero -->
+                    <div class="hero">
+                        <h1>Website Intelligence</h1>
+                        <p>AI-powered security analysis, SEO optimization, and global performance testing in one platform.</p>
+                    </div>
+
+                    <!-- URL Input -->
+                    <div class="url-input-container">
+                        <div class="url-input-wrapper">
+                            <span class="icon"><i class="bi bi-globe2"></i></span>
+                            <input type="url" class="url-input" id="targetUrl" placeholder="Enter website URL (e.g., https://example.com)" required>
+                        </div>
+                    </div>
+
+                    <!-- Tab Navigation -->
+                    <div class="tab-navigation">
+                        <button class="tab-btn security active" onclick="switchTab('security')">
+                            <i class="bi bi-shield-lock"></i>
+                            Security Testing
+                        </button>
+                        <button class="tab-btn seo-geo" onclick="switchTab('seo-geo')">
+                            <i class="bi bi-graph-up"></i>
+                            SEO & GEO Analysis
+                            <span class="badge">New</span>
+                        </button>
+                    </div>
+
+                    <!-- Security Tab -->
+                    <div class="tab-content active" id="security-tab">
+                        <div class="test-section">
+                            <div class="section-header">
+                                <div class="section-title">
+                                    <i class="bi bi-shield-check" style="color: var(--accent-orange);"></i>
+                                    Security Tests
+                                </div>
+                                <div class="select-btns">
+                                    <button class="select-btn" onclick="selectAll('security')">Select All</button>
+                                    <button class="select-btn" onclick="deselectAll('security')">Deselect All</button>
+                                </div>
+                            </div>
+                            <div class="test-grid">
+                                {% for key, cat in categories.items() %}
+                                {% if cat.category == 'security' %}
+                                <div class="test-card security selected" data-category="security" data-marker="{{ cat.marker }}" onclick="toggleCard(this)">
+                                    <div class="test-card-header">
+                                        <div class="test-card-checkbox">
+                                            <i class="bi bi-check"></i>
+                                        </div>
+                                        <div class="test-card-content">
+                                            <div class="test-card-title">{{ cat.name }}</div>
+                                            <div class="test-card-desc">{{ cat.description }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SEO & GEO Tab -->
+                    <div class="tab-content" id="seo-geo-tab">
+                        <!-- SEO Section -->
+                        <div class="test-section">
+                            <div class="section-header">
+                                <div class="section-title">
+                                    <i class="bi bi-search" style="color: var(--accent-cyan);"></i>
+                                    SEO Analysis
+                                </div>
+                                <div class="select-btns">
+                                    <button class="select-btn" onclick="selectAll('seo')">Select All</button>
+                                    <button class="select-btn" onclick="deselectAll('seo')">Deselect All</button>
+                                </div>
+                            </div>
+                            <div class="test-grid">
+                                {% for key, cat in categories.items() %}
+                                {% if cat.category == 'seo' %}
+                                <div class="test-card seo selected" data-category="seo" data-marker="{{ cat.marker }}" onclick="toggleCard(this)">
+                                    <div class="test-card-header">
+                                        <div class="test-card-checkbox">
+                                            <i class="bi bi-check"></i>
+                                        </div>
+                                        <div class="test-card-content">
+                                            <div class="test-card-title">{{ cat.name }}</div>
+                                            <div class="test-card-desc">{{ cat.description }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- GEO Section -->
+                        <div class="test-section">
+                            <div class="section-header">
+                                <div class="section-title">
+                                    <i class="bi bi-geo-alt" style="color: var(--accent-purple);"></i>
+                                    GEO Testing
+                                </div>
+                                <div class="select-btns">
+                                    <button class="select-btn" onclick="selectAll('geo')">Select All</button>
+                                    <button class="select-btn" onclick="deselectAll('geo')">Deselect All</button>
+                                </div>
+                            </div>
+                            <div class="test-grid">
+                                {% for key, cat in categories.items() %}
+                                {% if cat.category == 'geo' %}
+                                <div class="test-card geo selected" data-category="geo" data-marker="{{ cat.marker }}" onclick="toggleCard(this)">
+                                    <div class="test-card-header">
+                                        <div class="test-card-checkbox">
+                                            <i class="bi bi-check"></i>
+                                        </div>
+                                        <div class="test-card-content">
+                                            <div class="test-card-title">{{ cat.name }}</div>
+                                            <div class="test-card-desc">{{ cat.description }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Advanced Options -->
+                    <div class="advanced-toggle" onclick="toggleAdvanced()">
+                        <i class="bi bi-sliders" id="advancedIcon"></i>
+                        <span>Advanced Options</span>
+                        <i class="bi bi-chevron-down" id="advancedChevron"></i>
+                    </div>
+
+                    <div class="advanced-options" id="advancedOptions">
+                        <div class="options-grid">
+                            <div class="option-group">
+                                <label>Test Intensity</label>
+                                <select id="intensity">
+                                    <option value="light">Light (faster)</option>
+                                    <option value="medium" selected>Medium (balanced)</option>
+                                    <option value="aggressive">Aggressive (thorough)</option>
+                                </select>
+                            </div>
+                            <div class="option-group">
+                                <label>WordPress Path</label>
+                                <input type="text" id="wordpressPath" value="/blog" placeholder="/blog">
+                            </div>
+                            <div class="option-group">
+                                <label>Skip Options</label>
+                                <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.5rem;">
+                                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                        <input type="checkbox" id="skipSsl" style="width: 16px; height: 16px;">
+                                        <span style="font-size: 0.85rem;">Skip SSL tests</span>
+                                    </label>
+                                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                        <input type="checkbox" id="skipWordpress" style="width: 16px; height: 16px;">
+                                        <span style="font-size: 0.85rem;">Skip WordPress tests</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Scan Button -->
+                    <button class="scan-button" onclick="startScan()">
+                        <i class="bi bi-play-fill"></i>
+                        Start Analysis
+                    </button>
+                </div>
+
+                <!-- Running Section -->
+                <div class="running-section" id="runningSection">
+                    <div class="console-card">
+                        <div class="console-header">
+                            <div class="console-header-left">
+                                <div class="console-dots">
+                                    <div class="console-dot red"></div>
+                                    <div class="console-dot yellow"></div>
+                                    <div class="console-dot green"></div>
+                                </div>
+                                <span class="console-title" id="targetDisplay">Running scan...</span>
+                            </div>
+                            <div class="status-badge running" id="statusBadge">
+                                <i class="bi bi-arrow-repeat spinner"></i>
+                                <span>Running</span>
+                            </div>
+                        </div>
+                        <div class="console-output" id="consoleOutput"></div>
+                        <div class="console-footer">
+                            <div class="console-stats">
+                                <span><i class="bi bi-clock me-1"></i><span id="elapsedTime">00:00</span></span>
+                            </div>
+                            <div class="console-actions">
+                                <button class="btn-console btn-stop" onclick="stopScan()">
+                                    <i class="bi bi-stop-fill"></i>
+                                    Stop
+                                </button>
+                                <button class="btn-console btn-new" onclick="newScan()">
+                                    <i class="bi bi-plus"></i>
+                                    New Scan
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="results-card" id="resultsCard">
+                        <div class="results-title">Findings Summary</div>
+                        <div class="results-grid">
+                            <div class="result-item">
+                                <div class="result-count critical" id="criticalCount">0</div>
+                                <div class="result-label">Critical</div>
+                            </div>
+                            <div class="result-item">
+                                <div class="result-count high" id="highCount">0</div>
+                                <div class="result-label">High</div>
+                            </div>
+                            <div class="result-item">
+                                <div class="result-count medium" id="mediumCount">0</div>
+                                <div class="result-label">Medium</div>
+                            </div>
+                            <div class="result-item">
+                                <div class="result-count low" id="lowCount">0</div>
+                                <div class="result-label">Low</div>
+                            </div>
+                            <div class="result-item">
+                                <div class="result-count info" id="infoCount">0</div>
+                                <div class="result-label">Info</div>
+                            </div>
+                        </div>
+                        <a href="#" class="btn-results" id="resultsLink">
+                            <i class="bi bi-file-earmark-text me-2"></i>
+                            View Full Report
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <div class="sidebar">
+                    <div class="sidebar-card">
+                        <div class="sidebar-title">
+                            <i class="bi bi-clock-history"></i>
+                            Recent Scans
+                        </div>
+                        <div id="historyList">
+                            <div class="empty-state">
+                                <i class="bi bi-inbox"></i>
+                                <p>No recent scans</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-card">
+                        <div class="sidebar-title">
+                            <i class="bi bi-lightning-charge"></i>
+                            Features
+                        </div>
+                        <ul class="features-list">
+                            <li class="feature-security">
+                                <i class="bi bi-shield-check"></i>
+                                Security Testing (OWASP Top 10)
+                            </li>
+                            <li class="feature-seo">
+                                <i class="bi bi-search"></i>
+                                SEO Analysis & Optimization
+                            </li>
+                            <li class="feature-geo">
+                                <i class="bi bi-geo-alt"></i>
+                                Global Performance Testing
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="warning-box">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        <span>Only test websites you own or have explicit permission to test.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentTestId = null;
+        let eventSource = null;
+        let startTime = null;
+        let timerInterval = null;
+
+        // Tab switching
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+            if (tab === 'security') {
+                document.querySelector('.tab-btn.security').classList.add('active');
+                document.getElementById('security-tab').classList.add('active');
+            } else {
+                document.querySelector('.tab-btn.seo-geo').classList.add('active');
+                document.getElementById('seo-geo-tab').classList.add('active');
+            }
+        }
+
+        // Toggle card selection
+        function toggleCard(card) {
+            card.classList.toggle('selected');
+        }
+
+        // Select/Deselect by category
+        function selectAll(category) {
+            document.querySelectorAll(`.test-card.${category}`).forEach(card => {
+                card.classList.add('selected');
+            });
+        }
+
+        function deselectAll(category) {
+            document.querySelectorAll(`.test-card.${category}`).forEach(card => {
+                card.classList.remove('selected');
+            });
+        }
+
+        // Toggle advanced options
+        function toggleAdvanced() {
+            const options = document.getElementById('advancedOptions');
+            const chevron = document.getElementById('advancedChevron');
+            options.classList.toggle('show');
+            chevron.style.transform = options.classList.contains('show') ? 'rotate(180deg)' : '';
+        }
+
+        // Start scan
+        function startScan() {
+            const targetUrl = document.getElementById('targetUrl').value.trim();
+            if (!targetUrl) {
+                alert('Please enter a target URL');
+                return;
+            }
+
+            const selectedTests = [];
+            document.querySelectorAll('.test-card.selected').forEach(card => {
+                selectedTests.push(card.dataset.marker);
+            });
+
+            if (selectedTests.length === 0) {
+                alert('Please select at least one test');
+                return;
+            }
+
+            const config = {
+                target_url: targetUrl,
+                tests: selectedTests,
+                intensity: document.getElementById('intensity').value,
+                wordpress_path: document.getElementById('wordpressPath').value,
+                skip_ssl: document.getElementById('skipSsl').checked,
+                skip_wordpress: document.getElementById('skipWordpress').checked,
+            };
+
+            fetch('/api/scan', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(config)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert(data.error);
+                    return;
+                }
+                currentTestId = data.test_id;
+                showRunningSection(targetUrl);
+                connectToStream();
+            })
+            .catch(err => alert('Error starting scan: ' + err));
+        }
+
+        function showRunningSection(targetUrl) {
+            document.getElementById('configSection').classList.add('hidden');
+            document.getElementById('runningSection').classList.add('active');
+            document.getElementById('targetDisplay').textContent = targetUrl;
+            document.getElementById('consoleOutput').innerHTML = '';
+            document.getElementById('resultsCard').classList.remove('show');
+
+            const badge = document.getElementById('statusBadge');
+            badge.className = 'status-badge running';
+            badge.innerHTML = '<i class="bi bi-arrow-repeat spinner"></i><span>Running</span>';
+
+            startTime = new Date();
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        function updateTimer() {
+            if (!startTime) return;
+            const elapsed = Math.floor((new Date() - startTime) / 1000);
+            const mins = Math.floor(elapsed / 60).toString().padStart(2, '0');
+            const secs = (elapsed % 60).toString().padStart(2, '0');
+            document.getElementById('elapsedTime').textContent = `${mins}:${secs}`;
+        }
+
+        function connectToStream() {
+            eventSource = new EventSource(`/api/scan/${currentTestId}/stream`);
+
+            eventSource.onmessage = function(event) {
+                const data = JSON.parse(event.data);
+
+                if (data.type === 'output') {
+                    appendOutput(data.line);
+                } else if (data.type === 'complete') {
+                    handleComplete(data);
+                }
+            };
+
+            eventSource.onerror = function() {
+                eventSource.close();
+                loadHistory();
+            };
+        }
+
+        function appendOutput(line) {
+            const console = document.getElementById('consoleOutput');
+            const lineEl = document.createElement('div');
+            lineEl.className = 'console-line';
+
+            if (line.includes('PASSED')) {
+                lineEl.classList.add('pass');
+            } else if (line.includes('FAILED') || line.includes('ERROR')) {
+                lineEl.classList.add('fail');
+            } else if (line.includes('[INFO]') || line.includes('collecting')) {
+                lineEl.classList.add('info');
+            } else if (line.includes('WARNING') || line.includes('SKIPPED')) {
+                lineEl.classList.add('warn');
+            }
+
+            lineEl.textContent = line;
+            console.appendChild(lineEl);
+            console.scrollTop = console.scrollHeight;
+        }
+
+        function handleComplete(data) {
+            clearInterval(timerInterval);
+
+            const badge = document.getElementById('statusBadge');
+            if (data.status === 'completed') {
+                badge.className = 'status-badge completed';
+                badge.innerHTML = '<i class="bi bi-check-circle"></i><span>Completed</span>';
+            } else {
+                badge.className = 'status-badge failed';
+                badge.innerHTML = '<i class="bi bi-x-circle"></i><span>Failed</span>';
+            }
+
+            if (data.summary) {
+                document.getElementById('resultsCard').classList.add('show');
+                document.getElementById('criticalCount').textContent = data.summary.critical || 0;
+                document.getElementById('highCount').textContent = data.summary.high || 0;
+                document.getElementById('mediumCount').textContent = data.summary.medium || 0;
+                document.getElementById('lowCount').textContent = data.summary.low || 0;
+                document.getElementById('infoCount').textContent = data.summary.info || 0;
+                document.getElementById('resultsLink').href = `/results/${currentTestId}`;
+            }
+
+            loadHistory();
+
+            if (eventSource) {
+                eventSource.close();
+            }
+        }
+
+        function stopScan() {
+            if (!currentTestId) return;
+
+            fetch(`/api/scan/${currentTestId}/stop`, { method: 'POST' })
+                .then(() => {
+                    if (eventSource) eventSource.close();
+                    clearInterval(timerInterval);
+
+                    const badge = document.getElementById('statusBadge');
+                    badge.className = 'status-badge';
+                    badge.style.background = 'rgba(113, 113, 122, 0.2)';
+                    badge.style.color = '#a1a1aa';
+                    badge.innerHTML = '<i class="bi bi-stop-circle"></i><span>Stopped</span>';
+
+                    loadHistory();
+                });
+        }
+
+        function newScan() {
+            if (eventSource) eventSource.close();
+            clearInterval(timerInterval);
+            currentTestId = null;
+
+            document.getElementById('runningSection').classList.remove('active');
+            document.getElementById('configSection').classList.remove('hidden');
+        }
+
+        function loadHistory() {
+            fetch('/api/history')
+                .then(response => response.json())
+                .then(history => {
+                    const list = document.getElementById('historyList');
+
+                    if (history.length === 0) {
+                        list.innerHTML = `
+                            <div class="empty-state">
+                                <i class="bi bi-inbox"></i>
+                                <p>No recent scans</p>
+                            </div>`;
+                        return;
+                    }
+
+                    list.innerHTML = history.slice(0, 5).map(item => `
+                        <a href="/results/${item.id}" class="history-item">
+                            <div class="history-url">${item.target_url}</div>
+                            <div class="history-meta">
+                                <span class="history-time">${item.started_at ? new Date(item.started_at).toLocaleString() : 'Pending'}</span>
+                                <span class="history-status ${item.status}">${item.status}</span>
+                            </div>
+                        </a>
+                    `).join('');
+                });
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadHistory();
+        });
+    </script>
+</body>
+</html>

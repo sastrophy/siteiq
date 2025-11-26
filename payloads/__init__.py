@@ -1,0 +1,76 @@
+"""Security test payloads."""
+
+from .sql_injection import (
+    ALL_SQLI_PAYLOADS,
+    CLASSIC_SQLI,
+    UNION_SQLI,
+    ERROR_SQLI,
+    TIME_SQLI,
+    BOOLEAN_SQLI,
+    NOSQL_INJECTION,
+    SQL_ERROR_SIGNATURES,
+)
+
+from .xss import (
+    ALL_XSS_PAYLOADS,
+    BASIC_XSS,
+    EVENT_XSS,
+    ENCODED_XSS,
+    BYPASS_XSS,
+    TEMPLATE_INJECTION,
+    XSS_CANARIES,
+)
+
+from .directory_traversal import (
+    COMMON_LFI_PAYLOADS,
+    LINUX_SENSITIVE_FILES,
+    WINDOWS_SENSITIVE_FILES,
+    WEB_CONFIG_FILES,
+    PHP_WRAPPERS,
+    FILE_READ_SIGNATURES,
+    generate_traversal_payloads,
+)
+
+from .wordpress import (
+    WP_SENSITIVE_PATHS,
+    VULNERABLE_PLUGINS,
+    XMLRPC_PAYLOADS,
+    COMMON_WP_USERNAMES,
+    WP_REST_ENDPOINTS,
+    WP_VERSION_PATTERNS,
+    WP_SIGNATURES,
+    generate_plugin_paths,
+)
+
+__all__ = [
+    "ALL_SQLI_PAYLOADS",
+    "CLASSIC_SQLI",
+    "UNION_SQLI",
+    "ERROR_SQLI",
+    "TIME_SQLI",
+    "BOOLEAN_SQLI",
+    "NOSQL_INJECTION",
+    "SQL_ERROR_SIGNATURES",
+    "ALL_XSS_PAYLOADS",
+    "BASIC_XSS",
+    "EVENT_XSS",
+    "ENCODED_XSS",
+    "BYPASS_XSS",
+    "TEMPLATE_INJECTION",
+    "XSS_CANARIES",
+    "COMMON_LFI_PAYLOADS",
+    "LINUX_SENSITIVE_FILES",
+    "WINDOWS_SENSITIVE_FILES",
+    "WEB_CONFIG_FILES",
+    "PHP_WRAPPERS",
+    "FILE_READ_SIGNATURES",
+    "generate_traversal_payloads",
+    "WP_SENSITIVE_PATHS",
+    "VULNERABLE_PLUGINS",
+    "XMLRPC_PAYLOADS",
+    "COMMON_WP_USERNAMES",
+    "WP_REST_ENDPOINTS",
+    "WP_VERSION_PATTERNS",
+    "WP_SIGNATURES",
+    "generate_plugin_paths",
+]

@@ -60,3 +60,5 @@ logs/
 *.tmp
 *.temp
 .cache/
+report.html
+geo.txt
