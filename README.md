@@ -2,6 +2,16 @@
 
 A comprehensive website analysis and security testing platform. Currently features security testing with SEO and Geo analysis coming soon.
 
+## Screenshots
+
+![Dashboard](screenshots/1.png)
+
+![Scan Results](screenshots/2.png)
+
+![Scan Results](screenshots/3.png)
+
+![Help Page](screenshots/4.png)
+
 ## Features
 
 ### Current: Security Testing (OWASP Top 10)
