@@ -937,6 +937,11 @@
             .results-grid {
                 grid-template-columns: repeat(3, 1fr);
             }
+
+            .sidebar {
+                position: static;
+                margin-top: 2rem;
+            }
         }
 
         @media (max-width: 768px) {
@@ -944,21 +949,218 @@
                 padding: 1rem;
             }
 
-            .tab-btn {
-                padding: 0.75rem 1rem;
+            .hero {
+                padding: 1.5rem 0;
+            }
+
+            .hero h1 {
+                font-size: 1.75rem;
+            }
+
+            .hero p {
+                font-size: 0.95rem;
+            }
+
+            /* Navigation */
+            .navbar {
+                padding: 0.75rem 0;
+            }
+
+            .navbar-brand {
+                font-size: 1.25rem;
+            }
+
+            .nav-links a {
+                padding: 0.4rem 0.6rem;
                 font-size: 0.85rem;
             }
 
+            .nav-links a span {
+                display: none;
+            }
+
+            /* URL Input */
+            .url-input-container {
+                margin: 1.5rem auto;
+            }
+
+            .url-input-wrapper {
+                border-radius: 12px;
+            }
+
+            .url-input {
+                font-size: 0.9rem;
+            }
+
+            /* Tab Navigation */
+            .tab-navigation {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .tab-btn {
+                padding: 1rem;
+                font-size: 0.9rem;
+                border-radius: 10px;
+            }
+
+            .tab-btn .badge {
+                font-size: 0.65rem;
+            }
+
+            /* Test Cards */
             .test-grid {
                 grid-template-columns: 1fr;
+                gap: 0.75rem;
+            }
+
+            .test-card {
+                padding: 1rem;
+            }
+
+            .test-card-title {
+                font-size: 0.9rem;
+            }
+
+            .test-card-desc {
+                font-size: 0.75rem;
+            }
+
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.75rem;
+            }
+
+            .select-btns {
+                width: 100%;
+            }
+
+            .select-btn {
+                flex: 1;
+                text-align: center;
+            }
+
+            /* Advanced Options */
+            .advanced-options {
+                padding: 1rem;
+            }
+
+            .options-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            /* Scan Button */
+            .scan-button {
+                padding: 1rem;
+                font-size: 1rem;
+                border-radius: 10px;
+            }
+
+            /* Console */
+            .console-output {
+                height: 300px;
+                font-size: 0.75rem;
+                padding: 1rem;
+            }
+
+            .console-header {
+                padding: 0.75rem 1rem;
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+
+            .console-title {
+                font-size: 0.8rem;
+                max-width: 150px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            .console-footer {
+                padding: 0.75rem 1rem;
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+
+            .console-actions {
+                width: 100%;
+            }
+
+            .btn-console {
+                flex: 1;
+                justify-content: center;
+            }
+
+            /* Results */
+            .results-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 0.5rem;
+            }
+
+            .result-item {
+                padding: 0.75rem 0.5rem;
+            }
+
+            .result-count {
+                font-size: 1.5rem;
+            }
+
+            .result-label {
+                font-size: 0.7rem;
+            }
+
+            /* Sidebar */
+            .sidebar-card {
+                padding: 1rem;
+            }
+
+            .history-item {
+                padding: 0.75rem;
+            }
+
+            .warning-box {
+                font-size: 0.75rem;
+                padding: 0.75rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-container {
+                padding: 0.75rem;
+            }
+
+            .hero h1 {
+                font-size: 1.5rem;
+            }
+
+            .hero p {
+                font-size: 0.85rem;
+            }
+
+            .tab-btn {
+                padding: 0.85rem;
+                font-size: 0.85rem;
             }
 
             .results-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
 
-            .options-grid {
-                grid-template-columns: 1fr;
+            .result-count {
+                font-size: 1.25rem;
+            }
+
+            .console-output {
+                height: 250px;
+                font-size: 0.7rem;
+            }
+
+            .status-badge {
+                padding: 0.4rem 0.75rem;
+                font-size: 0.7rem;
             }
         }
 
@@ -1293,7 +1495,7 @@
         let startTime = null;
         let timerInterval = null;
 
-        // Tab switching
+        // Tab switching (view only - doesn't affect selections)
         function switchTab(tab) {
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
@@ -1307,13 +1509,42 @@
             }
         }
 
-        // Toggle card selection
+        // Deselect all tests in a category (internal helper)
+        function deselectCategory(category) {
+            document.querySelectorAll(`.test-card.${category}`).forEach(card => {
+                card.classList.remove('selected');
+            });
+        }
+
+        // Toggle card selection with mutual exclusivity
         function toggleCard(card) {
+            const category = card.dataset.category;
+
+            // If selecting a card (not deselecting)
+            if (!card.classList.contains('selected')) {
+                // Deselect tests from the other category
+                if (category === 'security') {
+                    deselectCategory('seo');
+                    deselectCategory('geo');
+                } else {
+                    // seo or geo category
+                    deselectCategory('security');
+                }
+            }
+
             card.classList.toggle('selected');
         }
 
-        // Select/Deselect by category
+        // Select all in category (deselects other category first)
         function selectAll(category) {
+            // Deselect other category first
+            if (category === 'security') {
+                deselectCategory('seo');
+                deselectCategory('geo');
+            } else {
+                deselectCategory('security');
+            }
+
             document.querySelectorAll(`.test-card.${category}`).forEach(card => {
                 card.classList.add('selected');
             });
@@ -1526,6 +1757,9 @@
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             loadHistory();
+            // Deselect SEO/GEO tests on load (Security tab is active by default)
+            deselectCategory('seo');
+            deselectCategory('geo');
         });
     </script>
 </body>
