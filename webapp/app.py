@@ -42,6 +42,13 @@ class TestRun:
         self.output_lines = []
         self.findings = []
         self.summary = {}
+        self.test_results = {"passed": 0, "failed": 0, "skipped": 0, "errors": 0}
+        self.test_results_by_category = {
+            "security": {"passed": 0, "failed": 0, "skipped": 0, "total": 0},
+            "seo": {"passed": 0, "failed": 0, "skipped": 0, "total": 0},
+            "geo": {"passed": 0, "failed": 0, "skipped": 0, "total": 0},
+        }
+        self.failed_tests = []  # List of failed test names with category
         self.process = None
         self.output_queue = Queue()
 
@@ -56,6 +63,9 @@ class TestRun:
             "output_lines": self.output_lines[-100:],  # Last 100 lines
             "findings": self.findings,
             "summary": self.summary,
+            "test_results": self.test_results,
+            "test_results_by_category": self.test_results_by_category,
+            "failed_tests": self.failed_tests,
         }
 
 
@@ -252,8 +262,15 @@ def run_tests_thread(test_run: TestRun):
             test_run.output_lines.append("")
             test_run.output_lines.append(f"[ERROR] Tests failed with return code: {process.returncode}")
 
+        # Parse test results from output
+        parse_test_results(test_run)
+
         # Load report if exists
         load_report_findings(test_run)
+
+        # Convert failed tests to findings if no findings from report
+        if not test_run.findings and test_run.failed_tests:
+            convert_failures_to_findings(test_run)
 
     except Exception as e:
         test_run.status = "failed"
@@ -276,6 +293,130 @@ def load_report_findings(test_run: TestRun):
             test_run.output_lines.append(f"[INFO] No findings report generated (no vulnerabilities detected or tests skipped)")
     except Exception as e:
         test_run.output_lines.append(f"[WARNING] Could not load report: {e}")
+
+
+def get_test_category(test_path):
+    """Determine the category of a test based on file path."""
+    test_path_lower = test_path.lower()
+    if 'test_seo' in test_path_lower or 'seo' in test_path_lower:
+        return 'seo'
+    elif 'test_geo' in test_path_lower or 'geo' in test_path_lower:
+        return 'geo'
+    else:
+        return 'security'
+
+
+def parse_test_results(test_run: TestRun):
+    """Parse pytest output to extract test results and failed test names."""
+    import re
+
+    for line in test_run.output_lines:
+        # Parse summary line with various formats:
+        # "==== 3 failed, 57 passed, 6 skipped ... ===="
+        # "==== 57 passed, 3 failed ===="
+        # "==== 60 passed, 6 skipped ===="
+
+        # Extract failed count
+        failed_match = re.search(r'(\d+)\s+failed', line)
+        if failed_match and '=' in line:
+            test_run.test_results["failed"] = int(failed_match.group(1))
+
+        # Extract passed count
+        passed_match = re.search(r'(\d+)\s+passed', line)
+        if passed_match and '=' in line:
+            test_run.test_results["passed"] = int(passed_match.group(1))
+
+        # Extract skipped count
+        skipped_match = re.search(r'(\d+)\s+skipped', line)
+        if skipped_match and '=' in line:
+            test_run.test_results["skipped"] = int(skipped_match.group(1))
+
+        # Parse individual test results - pytest verbose format
+        # Format: tests/test_seo.py::TestMetaTags::test_meta_description_length PASSED/FAILED/SKIPPED
+        if '::' in line and (' PASSED' in line or ' FAILED' in line or ' SKIPPED' in line):
+            test_path = line.split(' PASSED')[0].split(' FAILED')[0].split(' SKIPPED')[0].strip()
+            category = get_test_category(test_path)
+
+            if ' PASSED' in line:
+                test_run.test_results_by_category[category]["passed"] += 1
+                test_run.test_results_by_category[category]["total"] += 1
+            elif ' FAILED' in line:
+                test_run.test_results_by_category[category]["failed"] += 1
+                test_run.test_results_by_category[category]["total"] += 1
+                # Track failed test with category
+                if test_path not in [ft["name"] for ft in test_run.failed_tests]:
+                    test_run.failed_tests.append({"name": test_path, "category": category})
+            elif ' SKIPPED' in line:
+                test_run.test_results_by_category[category]["skipped"] += 1
+                test_run.test_results_by_category[category]["total"] += 1
+
+        # Also handle FAILED format at start of line
+        elif line.startswith("FAILED "):
+            test_name = line.replace("FAILED ", "").split(" - ")[0].strip()
+            if test_name:
+                category = get_test_category(test_name)
+                if test_name not in [ft["name"] for ft in test_run.failed_tests]:
+                    test_run.failed_tests.append({"name": test_name, "category": category})
+
+
+def convert_failures_to_findings(test_run: TestRun):
+    """Convert failed tests to findings for display."""
+    for failed_test in test_run.failed_tests:
+        # Handle both old format (string) and new format (dict)
+        if isinstance(failed_test, dict):
+            test_path = failed_test["name"]
+            category = failed_test["category"]
+        else:
+            test_path = failed_test
+            category = get_test_category(test_path)
+
+        # Parse test info from path: tests/test_seo.py::TestMetaTags::test_meta_description_length
+        parts = test_path.split("::")
+        test_file = parts[0] if len(parts) > 0 else "unknown"
+        test_class = parts[1] if len(parts) > 1 else ""
+        test_name = parts[2] if len(parts) > 2 else parts[-1]
+
+        # Determine severity based on category
+        if category == "security":
+            severity = "high"
+            category_label = "Security"
+        elif category == "seo":
+            severity = "medium"
+            category_label = "SEO"
+        elif category == "geo":
+            severity = "low"
+            category_label = "GEO"
+        else:
+            severity = "info"
+            category_label = "Test"
+
+        # Create human-readable title
+        title = test_name.replace("test_", "").replace("_", " ").title()
+        if test_class:
+            title = f"{test_class.replace('Test', '')}: {title}"
+
+        finding = {
+            "title": f"Failed: {title}",
+            "description": f"Test '{test_name}' in {test_class or 'tests'} did not pass. This indicates a potential issue that needs attention.",
+            "severity": severity,
+            "url": test_run.target_url,
+            "evidence": f"Test: {test_path}",
+            "remediation": "Review the test output for details and address the underlying issue.",
+            "cwe_id": "",
+            "owasp_category": category_label,
+            "category": category,
+        }
+        test_run.findings.append(finding)
+
+    # Update summary
+    if test_run.findings:
+        test_run.summary = {
+            "critical": sum(1 for f in test_run.findings if f["severity"] == "critical"),
+            "high": sum(1 for f in test_run.findings if f["severity"] == "high"),
+            "medium": sum(1 for f in test_run.findings if f["severity"] == "medium"),
+            "low": sum(1 for f in test_run.findings if f["severity"] == "low"),
+            "info": sum(1 for f in test_run.findings if f["severity"] == "info"),
+        }
 
 
 @app.route("/")
@@ -377,7 +518,7 @@ def stream_scan_output(test_id):
 
 @app.route("/api/scan/<test_id>/stop", methods=["POST"])
 def stop_scan(test_id):
-    """Stop a running scan."""
+    """Stop a running scan and generate partial report."""
     with tests_lock:
         test_run = tests_store.get(test_id)
 
@@ -388,8 +529,31 @@ def stop_scan(test_id):
         test_run.process.terminate()
         test_run.status = "stopped"
         test_run.completed_at = datetime.now()
+        test_run.output_lines.append("")
         test_run.output_lines.append("[INFO] Test stopped by user")
-        return jsonify({"status": "stopped"})
+        test_run.output_lines.append("[INFO] Generating partial report from completed tests...")
+
+        # Parse results from tests that have already run
+        parse_test_results(test_run)
+
+        # Try to load any report that was generated
+        load_report_findings(test_run)
+
+        # Convert failed tests to findings if no findings from report
+        if not test_run.findings and test_run.failed_tests:
+            convert_failures_to_findings(test_run)
+
+        # Add summary to output
+        total_tests = test_run.test_results["passed"] + test_run.test_results["failed"] + test_run.test_results["skipped"]
+        if total_tests > 0:
+            test_run.output_lines.append(f"[INFO] Partial results: {test_run.test_results['passed']} passed, {test_run.test_results['failed']} failed, {test_run.test_results['skipped']} skipped")
+
+        return jsonify({
+            "status": "stopped",
+            "test_results": test_run.test_results,
+            "test_results_by_category": test_run.test_results_by_category,
+            "findings_count": len(test_run.findings)
+        })
 
     return jsonify({"status": test_run.status})
 
