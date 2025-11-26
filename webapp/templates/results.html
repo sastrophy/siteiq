@@ -6,280 +6,628 @@
     <title>Scan Results - SiteIQ</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-dark: #1a1a2e;
-            --secondary-dark: #16213e;
-            --accent: #0f3460;
-            --highlight: #e94560;
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --bg-card-hover: rgba(255, 255, 255, 0.06);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --text-primary: #ffffff;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --accent-cyan: #06b6d4;
+            --accent-green: #10b981;
+            --accent-orange: #f97316;
+            --accent-red: #ef4444;
+            --accent-yellow: #fbbf24;
+            --gradient-primary: linear-gradient(135deg, #3b82f6, #8b5cf6, #ec4899);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
-            background-color: #f8f9fa;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
         }
 
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bg-glow {
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 30%, rgba(59, 130, 246, 0.08) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 70%, rgba(139, 92, 246, 0.08) 0%, transparent 50%);
+            animation: glowMove 20s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes glowMove {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-5%, -5%); }
+        }
+
+        /* Navigation */
         .navbar {
-            background: linear-gradient(135deg, var(--primary-dark), var(--secondary-dark));
+            background: rgba(10, 10, 15, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
 
-        .card {
-            border: none;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            border-radius: 10px;
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
         }
 
-        .finding-card {
-            border-left: 4px solid;
-            margin-bottom: 15px;
+        .btn-new-scan {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.2s;
+            text-decoration: none;
         }
 
-        .finding-card.severity-critical {
-            border-left-color: #dc3545;
+        .btn-new-scan:hover {
+            background: var(--bg-card-hover);
+            color: var(--text-primary);
+            border-color: rgba(255, 255, 255, 0.15);
         }
 
-        .finding-card.severity-high {
-            border-left-color: #fd7e14;
+        /* Main Container */
+        .main-container {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
         }
 
-        .finding-card.severity-medium {
-            border-left-color: #ffc107;
+        /* Header Card */
+        .header-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
         }
 
-        .finding-card.severity-low {
-            border-left-color: #20c997;
+        .target-url {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--bg-secondary);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            color: var(--accent-cyan);
+            font-size: 0.9rem;
+            word-break: break-all;
         }
 
-        .finding-card.severity-info {
-            border-left-color: #0dcaf0;
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.85rem;
         }
 
-        .severity-badge {
-            font-size: 0.75rem;
-            padding: 4px 10px;
-            border-radius: 20px;
+        .status-badge.completed {
+            background: rgba(16, 185, 129, 0.2);
+            color: #4ade80;
         }
 
-        .severity-badge.critical {
-            background-color: #dc3545;
-            color: white;
+        .status-badge.running {
+            background: rgba(251, 191, 36, 0.2);
+            color: #fbbf24;
         }
 
-        .severity-badge.high {
-            background-color: #fd7e14;
-            color: white;
+        .status-badge.failed {
+            background: rgba(239, 68, 68, 0.2);
+            color: #f87171;
         }
 
-        .severity-badge.medium {
-            background-color: #ffc107;
-            color: #000;
-        }
-
-        .severity-badge.low {
-            background-color: #20c997;
-            color: white;
-        }
-
-        .severity-badge.info {
-            background-color: #0dcaf0;
-            color: #000;
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
         }
 
         .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
             text-align: center;
-            padding: 20px;
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.15);
         }
 
         .stat-card h2 {
             font-size: 2.5rem;
-            font-weight: bold;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
         }
 
-        .stat-card.critical h2 { color: #dc3545; }
-        .stat-card.high h2 { color: #fd7e14; }
-        .stat-card.medium h2 { color: #ffc107; }
-        .stat-card.low h2 { color: #20c997; }
-        .stat-card.info h2 { color: #0dcaf0; }
+        .stat-card.critical { border-top: 3px solid var(--accent-red); }
+        .stat-card.critical h2 { color: #f87171; }
 
-        .console-output {
-            background-color: #1e1e1e;
-            color: #d4d4d4;
-            font-family: 'Consolas', 'Monaco', monospace;
-            font-size: 12px;
-            padding: 15px;
-            border-radius: 8px;
-            max-height: 400px;
-            overflow-y: auto;
-        }
+        .stat-card.high { border-top: 3px solid var(--accent-orange); }
+        .stat-card.high h2 { color: #fb923c; }
 
-        .evidence-box {
-            background-color: #f8f9fa;
-            border: 1px solid #dee2e6;
-            border-radius: 5px;
-            padding: 10px;
-            font-family: monospace;
+        .stat-card.medium { border-top: 3px solid var(--accent-yellow); }
+        .stat-card.medium h2 { color: #fbbf24; }
+
+        .stat-card.low { border-top: 3px solid var(--accent-green); }
+        .stat-card.low h2 { color: #4ade80; }
+
+        .stat-card.info { border-top: 3px solid var(--accent-cyan); }
+        .stat-card.info h2 { color: #22d3ee; }
+
+        .stat-label {
+            color: var(--text-muted);
             font-size: 0.85rem;
-            word-break: break-all;
+            font-weight: 500;
         }
 
+        /* Card Styles */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .card-header {
+            background: transparent;
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 1.5rem;
+        }
+
+        .card-header h5 {
+            color: var(--text-primary);
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        /* Filter Buttons */
         .filter-btn {
-            margin-right: 5px;
-            margin-bottom: 5px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .filter-btn:hover {
+            background: var(--bg-card-hover);
+            color: var(--text-primary);
         }
 
         .filter-btn.active {
-            box-shadow: 0 0 0 3px rgba(233, 69, 96, 0.3);
+            background: var(--accent-blue);
+            border-color: var(--accent-blue);
+            color: white;
         }
 
-        .url-display {
-            font-family: monospace;
-            background-color: #e9ecef;
-            padding: 2px 6px;
-            border-radius: 3px;
+        /* Finding Cards */
+        .finding-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid;
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            transition: all 0.2s;
+        }
+
+        .finding-card:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateX(4px);
+        }
+
+        .finding-card.severity-critical { border-left-color: var(--accent-red); }
+        .finding-card.severity-high { border-left-color: var(--accent-orange); }
+        .finding-card.severity-medium { border-left-color: var(--accent-yellow); }
+        .finding-card.severity-low { border-left-color: var(--accent-green); }
+        .finding-card.severity-info { border-left-color: var(--accent-cyan); }
+
+        .finding-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .finding-description {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .severity-badge {
+            display: inline-block;
+            padding: 0.3rem 0.7rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .severity-badge.critical {
+            background: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+        }
+
+        .severity-badge.high {
+            background: rgba(249, 115, 22, 0.2);
+            color: #fb923c;
+        }
+
+        .severity-badge.medium {
+            background: rgba(251, 191, 36, 0.2);
+            color: #fbbf24;
+        }
+
+        .severity-badge.low {
+            background: rgba(16, 185, 129, 0.2);
+            color: #4ade80;
+        }
+
+        .severity-badge.info {
+            background: rgba(6, 182, 212, 0.2);
+            color: #22d3ee;
+        }
+
+        /* Evidence Box */
+        .evidence-box {
+            background: #0d0d12;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: #e2e8f0;
             word-break: break-all;
+            margin-top: 0.5rem;
+        }
+
+        .finding-url {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--accent-cyan);
+            word-break: break-all;
+        }
+
+        .finding-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 0.75rem;
+        }
+
+        .remediation {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            margin-top: 0.75rem;
+            font-size: 0.85rem;
+            color: #6ee7b7;
+        }
+
+        .remediation strong {
+            color: var(--accent-green);
+        }
+
+        /* Console Output */
+        .console-wrapper {
+            background: #0d0d12;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .console-header {
+            background: #1a1a24;
+            padding: 0.75rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .console-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .console-dot.red { background: #ff5f56; }
+        .console-dot.yellow { background: #ffbd2e; }
+        .console-dot.green { background: #27ca40; }
+
+        .console-title {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            margin-left: 0.5rem;
+        }
+
+        .console-output {
+            padding: 1rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: #d4d4d4;
+            max-height: 400px;
+            overflow-y: auto;
+            line-height: 1.6;
+        }
+
+        .console-output::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .console-output::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .console-output::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+
+        /* Config Table */
+        .config-table {
+            width: 100%;
+        }
+
+        .config-table td {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .config-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .config-table td:first-child {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            width: 40%;
+        }
+
+        .config-table td:last-child {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .config-table .badge {
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            margin-right: 0.25rem;
+        }
+
+        /* No Findings */
+        .no-findings {
+            text-align: center;
+            padding: 3rem;
+        }
+
+        .no-findings i {
+            font-size: 4rem;
+            color: var(--accent-green);
+            margin-bottom: 1rem;
+        }
+
+        .no-findings h5 {
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .no-findings p {
+            color: var(--text-muted);
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .stats-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .main-container {
+                padding: 1rem;
+            }
         }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-dark mb-4">
-        <div class="container">
+    <div class="bg-grid"></div>
+    <div class="bg-glow"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container d-flex justify-content-between align-items-center">
             <a class="navbar-brand" href="/">
-                <i class="bi bi-lightning-charge-fill me-2"></i>
+                <i class="bi bi-lightning-charge-fill"></i>
                 SiteIQ
             </a>
-            <a href="/" class="btn btn-outline-light btn-sm">
-                <i class="bi bi-plus-circle me-1"></i>New Scan
+            <a href="/" class="btn-new-scan">
+                <i class="bi bi-plus-circle me-2"></i>New Scan
             </a>
         </div>
     </nav>
 
-    <div class="container">
+    <div class="main-container">
         <!-- Header -->
-        <div class="card mb-4">
-            <div class="card-body">
-                <div class="row align-items-center">
-                    <div class="col-md-8">
-                        <h4 class="mb-1">
-                            <i class="bi bi-file-earmark-text me-2"></i>
-                            Scan Report
-                        </h4>
-                        <p class="mb-0 text-muted">
-                            <span class="url-display">{{ test.target_url }}</span>
-                        </p>
+        <div class="header-card">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h4 class="mb-2">
+                        <i class="bi bi-file-earmark-text me-2"></i>
+                        Scan Report
+                    </h4>
+                    <div class="target-url">{{ test.target_url }}</div>
+                </div>
+                <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                    <span class="status-badge {% if test.status == 'completed' %}completed{% elif test.status == 'running' %}running{% else %}failed{% endif %}">
+                        <i class="bi bi-{% if test.status == 'completed' %}check-circle{% elif test.status == 'running' %}arrow-repeat{% else %}x-circle{% endif %} me-1"></i>
+                        {{ test.status | capitalize }}
+                    </span>
+                    {% if test.started_at %}
+                    <div class="text-muted small mt-2" style="color: var(--text-muted);">
+                        {{ test.started_at }}
                     </div>
-                    <div class="col-md-4 text-md-end">
-                        <span class="badge {% if test.status == 'completed' %}bg-success{% elif test.status == 'running' %}bg-warning{% else %}bg-danger{% endif %} fs-6">
-                            {{ test.status | capitalize }}
-                        </span>
-                        {% if test.started_at %}
-                        <div class="text-muted small mt-1">
-                            {{ test.started_at }}
-                        </div>
-                        {% endif %}
-                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
 
         <!-- Summary Stats -->
-        <div class="row mb-4">
-            <div class="col">
-                <div class="card stat-card critical">
-                    <h2>{{ test.summary.critical or 0 }}</h2>
-                    <div class="text-muted">Critical</div>
-                </div>
+        <div class="stats-grid">
+            <div class="stat-card critical">
+                <h2>{{ test.summary.critical or 0 }}</h2>
+                <div class="stat-label">Critical</div>
             </div>
-            <div class="col">
-                <div class="card stat-card high">
-                    <h2>{{ test.summary.high or 0 }}</h2>
-                    <div class="text-muted">High</div>
-                </div>
+            <div class="stat-card high">
+                <h2>{{ test.summary.high or 0 }}</h2>
+                <div class="stat-label">High</div>
             </div>
-            <div class="col">
-                <div class="card stat-card medium">
-                    <h2>{{ test.summary.medium or 0 }}</h2>
-                    <div class="text-muted">Medium</div>
-                </div>
+            <div class="stat-card medium">
+                <h2>{{ test.summary.medium or 0 }}</h2>
+                <div class="stat-label">Medium</div>
             </div>
-            <div class="col">
-                <div class="card stat-card low">
-                    <h2>{{ test.summary.low or 0 }}</h2>
-                    <div class="text-muted">Low</div>
-                </div>
+            <div class="stat-card low">
+                <h2>{{ test.summary.low or 0 }}</h2>
+                <div class="stat-label">Low</div>
             </div>
-            <div class="col">
-                <div class="card stat-card info">
-                    <h2>{{ test.summary.info or 0 }}</h2>
-                    <div class="text-muted">Info</div>
-                </div>
+            <div class="stat-card info">
+                <h2>{{ test.summary.info or 0 }}</h2>
+                <div class="stat-label">Info</div>
             </div>
         </div>
 
         <div class="row">
             <!-- Findings -->
-            <div class="col-lg-8">
-                <div class="card mb-4">
-                    <div class="card-header bg-white">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h5 class="mb-0">
-                                <i class="bi bi-exclamation-triangle me-2"></i>
-                                Findings ({{ test.findings | length }})
-                            </h5>
-                            <div>
-                                <button class="btn btn-sm btn-outline-secondary filter-btn active" data-filter="all">All</button>
-                                <button class="btn btn-sm btn-outline-danger filter-btn" data-filter="critical">Critical</button>
-                                <button class="btn btn-sm btn-outline-warning filter-btn" data-filter="high">High</button>
-                                <button class="btn btn-sm btn-outline-info filter-btn" data-filter="medium">Medium</button>
-                            </div>
+            <div class="col-lg-8 mb-4">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5>
+                            <i class="bi bi-exclamation-triangle me-2"></i>
+                            Findings ({{ test.findings | length }})
+                        </h5>
+                        <div class="d-flex gap-2">
+                            <button class="filter-btn active" data-filter="all">All</button>
+                            <button class="filter-btn" data-filter="critical">Critical</button>
+                            <button class="filter-btn" data-filter="high">High</button>
+                            <button class="filter-btn" data-filter="medium">Medium</button>
                         </div>
                     </div>
                     <div class="card-body">
                         {% if test.findings %}
                             {% for finding in test.findings %}
-                            <div class="card finding-card severity-{{ finding.severity }}" data-severity="{{ finding.severity }}">
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-between align-items-start mb-2">
-                                        <h6 class="mb-0">{{ finding.title }}</h6>
-                                        <span class="severity-badge {{ finding.severity }}">
-                                            {{ finding.severity | upper }}
-                                        </span>
-                                    </div>
+                            <div class="finding-card severity-{{ finding.severity }}" data-severity="{{ finding.severity }}">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <div class="finding-title">{{ finding.title }}</div>
+                                    <span class="severity-badge {{ finding.severity }}">
+                                        {{ finding.severity }}
+                                    </span>
+                                </div>
 
-                                    <p class="text-muted small mb-2">{{ finding.description }}</p>
+                                <p class="finding-description">{{ finding.description }}</p>
 
-                                    <div class="mb-2">
-                                        <strong class="small">URL:</strong>
-                                        <code class="small">{{ finding.url[:100] }}{% if finding.url|length > 100 %}...{% endif %}</code>
-                                    </div>
+                                <div class="mb-2">
+                                    <strong class="small" style="color: var(--text-muted);">URL:</strong>
+                                    <span class="finding-url">{{ finding.url[:100] }}{% if finding.url|length > 100 %}...{% endif %}</span>
+                                </div>
 
-                                    {% if finding.evidence %}
-                                    <div class="mb-2">
-                                        <strong class="small">Evidence:</strong>
-                                        <div class="evidence-box">{{ finding.evidence }}</div>
-                                    </div>
+                                {% if finding.evidence %}
+                                <div>
+                                    <strong class="small" style="color: var(--text-muted);">Evidence:</strong>
+                                    <div class="evidence-box">{{ finding.evidence }}</div>
+                                </div>
+                                {% endif %}
+
+                                {% if finding.remediation %}
+                                <div class="remediation">
+                                    <strong><i class="bi bi-shield-check me-1"></i>Remediation:</strong>
+                                    {{ finding.remediation }}
+                                </div>
+                                {% endif %}
+
+                                <div class="finding-meta">
+                                    {% if finding.cwe_id %}
+                                    <span><i class="bi bi-tag me-1"></i>{{ finding.cwe_id }}</span>
                                     {% endif %}
-
-                                    {% if finding.remediation %}
-                                    <div class="mb-2">
-                                        <strong class="small text-success">Remediation:</strong>
-                                        <p class="small mb-0">{{ finding.remediation }}</p>
-                                    </div>
+                                    {% if finding.owasp_category %}
+                                    <span><i class="bi bi-shield me-1"></i>{{ finding.owasp_category }}</span>
                                     {% endif %}
-
-                                    <div class="d-flex gap-3 small text-muted">
-                                        {% if finding.cwe_id %}
-                                        <span><i class="bi bi-tag me-1"></i>{{ finding.cwe_id }}</span>
-                                        {% endif %}
-                                        {% if finding.owasp_category %}
-                                        <span><i class="bi bi-shield me-1"></i>{{ finding.owasp_category }}</span>
-                                        {% endif %}
-                                    </div>
                                 </div>
                             </div>
                             {% endfor %}
                         {% else %}
-                            <div class="text-center text-muted py-5">
-                                <i class="bi bi-check-circle fs-1 text-success"></i>
-                                <h5 class="mt-3">No Vulnerabilities Found</h5>
+                            <div class="no-findings">
+                                <i class="bi bi-check-circle"></i>
+                                <h5>No Vulnerabilities Found</h5>
                                 <p>No security issues were detected during this scan.</p>
                             </div>
                         {% endif %}
@@ -291,26 +639,26 @@
             <div class="col-lg-4">
                 <!-- Test Configuration -->
                 <div class="card mb-4">
-                    <div class="card-header bg-white">
-                        <h6 class="mb-0"><i class="bi bi-gear me-2"></i>Scan Configuration</h6>
+                    <div class="card-header">
+                        <h5><i class="bi bi-gear me-2"></i>Configuration</h5>
                     </div>
                     <div class="card-body">
-                        <table class="table table-sm table-borderless mb-0">
+                        <table class="config-table">
                             <tr>
-                                <td class="text-muted">Intensity</td>
-                                <td><strong>{{ test.options.intensity | capitalize }}</strong></td>
+                                <td>Intensity</td>
+                                <td>{{ test.options.intensity | capitalize }}</td>
                             </tr>
                             <tr>
-                                <td class="text-muted">Tests Run</td>
+                                <td>Tests Run</td>
                                 <td>
                                     {% for t in test.options.tests %}
-                                    <span class="badge bg-secondary">{{ t }}</span>
+                                    <span class="badge">{{ t }}</span>
                                     {% endfor %}
                                 </td>
                             </tr>
                             <tr>
-                                <td class="text-muted">WordPress Path</td>
-                                <td><code>{{ test.options.wordpress_path }}</code></td>
+                                <td>WordPress Path</td>
+                                <td><code style="color: var(--accent-cyan);">{{ test.options.wordpress_path }}</code></td>
                             </tr>
                         </table>
                     </div>
@@ -318,17 +666,25 @@
 
                 <!-- Console Output -->
                 <div class="card">
-                    <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                        <h6 class="mb-0"><i class="bi bi-terminal me-2"></i>Console Output</h6>
-                        <button class="btn btn-sm btn-outline-secondary" onclick="toggleConsole()">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5><i class="bi bi-terminal me-2"></i>Console</h5>
+                        <button class="filter-btn" onclick="toggleConsole()">
                             <i class="bi bi-arrows-expand"></i>
                         </button>
                     </div>
                     <div class="card-body p-0">
-                        <div class="console-output" id="consoleOutput">
-                            {% for line in test.output_lines %}
-                            <div>{{ line }}</div>
-                            {% endfor %}
+                        <div class="console-wrapper">
+                            <div class="console-header">
+                                <span class="console-dot red"></span>
+                                <span class="console-dot yellow"></span>
+                                <span class="console-dot green"></span>
+                                <span class="console-title">output</span>
+                            </div>
+                            <div class="console-output" id="consoleOutput">
+                                {% for line in test.output_lines %}
+                                <div>{{ line }}</div>
+                                {% endfor %}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -339,9 +695,9 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // Filter functionality
-        document.querySelectorAll('.filter-btn').forEach(btn => {
+        document.querySelectorAll('.filter-btn[data-filter]').forEach(btn => {
             btn.addEventListener('click', function() {
-                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.filter-btn[data-filter]').forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
 
                 const filter = this.dataset.filter;
