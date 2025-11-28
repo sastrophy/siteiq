@@ -122,7 +122,7 @@ A comprehensive website analysis and security testing platform featuring securit
 - Debug log exposure
 - wp-admin accessibility
 
-### LLM Security Testing 
+### LLM Security Testing
 
 Test your LLM-powered API endpoints for security vulnerabilities:
 
@@ -134,8 +134,21 @@ Test your LLM-powered API endpoints for security vulnerabilities:
 - **Jailbreaking**
   - DAN-style jailbreaks
   - Role-play bypasses
-  - Encoding tricks (Base64, etc.)
   - Context manipulation
+
+- **Encoding Bypass**
+  - Base64, ROT13, Hex, Binary encoding
+  - Leetspeak and Pig Latin
+  - Unicode escapes and Morse code
+
+- **Language Switching**
+  - Multilingual filter bypass (Spanish, French, German, Chinese, etc.)
+  - Mixed language attacks
+
+- **Multi-turn Manipulation**
+  - Fake conversation history injection
+  - Trust building attacks
+  - Context window overflow
 
 - **System Prompt Leakage**
   - Prompt extraction attempts
@@ -148,10 +161,63 @@ Test your LLM-powered API endpoints for security vulnerabilities:
   - Cost exploitation detection
   - Rate limiting verification
 
-- **Data Exfiltration**
-  - Sensitive data exposure
-  - PII leakage detection
-  - Credential exposure
+- **Tool/Function Abuse**
+  - Function call injection
+  - Tool enumeration
+  - Privilege escalation via tools
+
+- **Indirect URL Injection**
+  - URL parameter injection
+  - Markdown link attacks
+  - Data URI injection
+
+- **PII Handling**
+  - SSN, credit card, password exposure
+  - API key leakage
+  - Cross-session data leakage
+
+- **Markdown/HTML Injection**
+  - XSS via LLM output
+  - Phishing link injection
+  - Tracking pixel injection
+
+- **Unicode/Homoglyph Attacks**
+  - Zero-width character injection
+  - Cyrillic/Greek homoglyphs
+  - RTL override attacks
+  - Full-width character bypass
+
+- **Emotional Manipulation**
+  - Urgency/Emergency appeals
+  - Authority impersonation
+  - Guilt/Sympathy exploitation
+  - Reverse psychology
+
+- **RAG Poisoning**
+  - Document context injection
+  - Metadata manipulation
+  - Fake source attribution
+  - Context overflow attacks
+
+- **Model Fingerprinting**
+  - Model identity disclosure
+  - Version detection
+  - Capability enumeration
+
+- **Training Data Extraction**
+  - Memorized content extraction
+  - PII leakage from training
+  - Code memorization probing
+
+- **Cross-Tenant Leakage**
+  - Session confusion attacks
+  - Memory probing
+  - Tenant isolation testing
+
+- **Instruction Hierarchy**
+  - System prompt override
+  - Priority escalation
+  - Boundary delimiter injection
 
 - **Authentication**
   - Unauthenticated access testing
@@ -254,14 +320,28 @@ python3 -m pytest -m compliance       # Regional compliance
 python3 -m pytest -m cdn              # CDN tests
 
 # LLM Security Tests (use --llm-endpoint instead of --target-url)
-python3 -m pytest -m llm --llm-endpoint=https://api.example.com/chat    # All LLM tests
-python3 -m pytest -m llm_injection --llm-endpoint=https://api.example.com/chat   # Prompt injection
-python3 -m pytest -m llm_jailbreak --llm-endpoint=https://api.example.com/chat   # Jailbreaking
-python3 -m pytest -m llm_leakage --llm-endpoint=https://api.example.com/chat     # System prompt leak
-python3 -m pytest -m llm_dos --llm-endpoint=https://api.example.com/chat         # Denial of Wallet
-python3 -m pytest -m llm_data --llm-endpoint=https://api.example.com/chat        # Data exfiltration
-python3 -m pytest -m llm_rate --llm-endpoint=https://api.example.com/chat        # Rate limiting
-python3 -m pytest -m llm_auth --llm-endpoint=https://api.example.com/chat        # Auth bypass
+python3 -m pytest -m llm --llm-endpoint=https://api.example.com/chat           # All LLM tests
+python3 -m pytest -m llm_injection --llm-endpoint=https://api.example.com/chat # Prompt injection
+python3 -m pytest -m llm_jailbreak --llm-endpoint=https://api.example.com/chat # Jailbreaking
+python3 -m pytest -m llm_leakage --llm-endpoint=https://api.example.com/chat   # System prompt leak
+python3 -m pytest -m llm_dos --llm-endpoint=https://api.example.com/chat       # Denial of Wallet
+python3 -m pytest -m llm_data --llm-endpoint=https://api.example.com/chat      # Data exfiltration
+python3 -m pytest -m llm_encoding --llm-endpoint=https://api.example.com/chat  # Encoding bypass
+python3 -m pytest -m llm_language --llm-endpoint=https://api.example.com/chat  # Language switching
+python3 -m pytest -m llm_multiturn --llm-endpoint=https://api.example.com/chat # Multi-turn attacks
+python3 -m pytest -m llm_tools --llm-endpoint=https://api.example.com/chat     # Tool/function abuse
+python3 -m pytest -m llm_url --llm-endpoint=https://api.example.com/chat       # Indirect URL injection
+python3 -m pytest -m llm_pii --llm-endpoint=https://api.example.com/chat       # PII handling
+python3 -m pytest -m llm_markdown --llm-endpoint=https://api.example.com/chat   # Markdown/HTML injection
+python3 -m pytest -m llm_unicode --llm-endpoint=https://api.example.com/chat   # Unicode/homoglyph bypass
+python3 -m pytest -m llm_emotional --llm-endpoint=https://api.example.com/chat # Emotional manipulation
+python3 -m pytest -m llm_rag --llm-endpoint=https://api.example.com/chat       # RAG poisoning
+python3 -m pytest -m llm_fingerprint --llm-endpoint=https://api.example.com/chat # Model fingerprinting
+python3 -m pytest -m llm_training --llm-endpoint=https://api.example.com/chat  # Training data extraction
+python3 -m pytest -m llm_tenant --llm-endpoint=https://api.example.com/chat    # Cross-tenant leakage
+python3 -m pytest -m llm_hierarchy --llm-endpoint=https://api.example.com/chat # Instruction hierarchy
+python3 -m pytest -m llm_rate --llm-endpoint=https://api.example.com/chat      # Rate limiting
+python3 -m pytest -m llm_auth --llm-endpoint=https://api.example.com/chat      # Auth bypass
 ```
 
 ## Test Intensity Levels

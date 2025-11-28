@@ -220,6 +220,90 @@ TEST_CATEGORIES = {
         "marker": "llm_data",
         "category": "llm",
     },
+    "llm_encoding": {
+        "name": "Encoding Bypass",
+        "description": "Test Base64, ROT13, leetspeak bypasses",
+        "marker": "llm_encoding",
+        "category": "llm",
+    },
+    "llm_language": {
+        "name": "Language Switching",
+        "description": "Test multilingual filter bypass",
+        "marker": "llm_language",
+        "category": "llm",
+    },
+    "llm_multiturn": {
+        "name": "Multi-turn Manipulation",
+        "description": "Test conversation history attacks",
+        "marker": "llm_multiturn",
+        "category": "llm",
+    },
+    "llm_tools": {
+        "name": "Tool/Function Abuse",
+        "description": "Test for tool calling vulnerabilities",
+        "marker": "llm_tools",
+        "category": "llm",
+    },
+    "llm_url": {
+        "name": "Indirect URL Injection",
+        "description": "Test injection via fetched content",
+        "marker": "llm_url",
+        "category": "llm",
+    },
+    "llm_pii": {
+        "name": "PII Handling",
+        "description": "Test for sensitive data exposure",
+        "marker": "llm_pii",
+        "category": "llm",
+    },
+    "llm_markdown": {
+        "name": "Markdown/HTML Injection",
+        "description": "Test for XSS in LLM outputs",
+        "marker": "llm_markdown",
+        "category": "llm",
+    },
+    "llm_fingerprint": {
+        "name": "Model Fingerprinting",
+        "description": "Detect model identity disclosure",
+        "marker": "llm_fingerprint",
+        "category": "llm",
+    },
+    "llm_training": {
+        "name": "Training Data Extraction",
+        "description": "Test for memorized data leakage",
+        "marker": "llm_training",
+        "category": "llm",
+    },
+    "llm_unicode": {
+        "name": "Unicode/Homoglyph",
+        "description": "Test invisible character bypass",
+        "marker": "llm_unicode",
+        "category": "llm",
+    },
+    "llm_emotional": {
+        "name": "Emotional Manipulation",
+        "description": "Test social engineering bypass",
+        "marker": "llm_emotional",
+        "category": "llm",
+    },
+    "llm_rag": {
+        "name": "RAG Poisoning",
+        "description": "Test retrieval context injection",
+        "marker": "llm_rag",
+        "category": "llm",
+    },
+    "llm_tenant": {
+        "name": "Cross-Tenant Leakage",
+        "description": "Test multi-user data isolation",
+        "marker": "llm_tenant",
+        "category": "llm",
+    },
+    "llm_hierarchy": {
+        "name": "Instruction Hierarchy",
+        "description": "Test system prompt override",
+        "marker": "llm_hierarchy",
+        "category": "llm",
+    },
 }
 
 

@@ -1161,6 +1161,132 @@
                             <p>Tests for unauthenticated access to LLM endpoints.</p>
                             <div class="includes"><strong>Includes:</strong> API key validation, Auth bypass</div>
                         </div>
+
+                        <div class="feature-card llm">
+                            <div class="feature-icon llm">
+                                <i class="bi bi-code-slash"></i>
+                            </div>
+                            <h4>Encoding Bypass</h4>
+                            <p>Tests for filter bypass using encoded payloads.</p>
+                            <div class="includes"><strong>Includes:</strong> Base64, ROT13, Hex, Leetspeak, Unicode</div>
+                        </div>
+
+                        <div class="feature-card llm">
+                            <div class="feature-icon llm">
+                                <i class="bi bi-translate"></i>
+                            </div>
+                            <h4>Language Switching</h4>
+                            <p>Tests for multilingual safety filter bypass.</p>
+                            <div class="includes"><strong>Includes:</strong> Spanish, French, Chinese, Russian, Mixed</div>
+                        </div>
+
+                        <div class="feature-card llm">
+                            <div class="feature-icon llm">
+                                <i class="bi bi-chat-left-dots"></i>
+                            </div>
+                            <h4>Multi-turn Manipulation</h4>
+                            <p>Tests for conversation history attacks.</p>
+                            <div class="includes"><strong>Includes:</strong> Fake history, Trust building, Context overflow</div>
+                        </div>
+
+                        <div class="feature-card llm">
+                            <div class="feature-icon llm">
+                                <i class="bi bi-tools"></i>
+                            </div>
+                            <h4>Tool/Function Abuse</h4>
+                            <p>Tests for function calling vulnerabilities.</p>
+                            <div class="includes"><strong>Includes:</strong> Function injection, Tool enumeration, Privilege escalation</div>
+                        </div>
+
+                        <div class="feature-card llm">
+                            <div class="feature-icon llm">
+                                <i class="bi bi-link-45deg"></i>
+                            </div>
+                            <h4>Indirect URL Injection</h4>
+                            <p>Tests for injection via fetched content.</p>
+                            <div class="includes"><strong>Includes:</strong> URL params, Markdown links, Data URIs</div>
+                        </div>
+
+                        <div class="feature-card llm">
+                            <div class="feature-icon llm">
+                                <i class="bi bi-person-badge"></i>
+                            </div>
+                            <h4>PII Handling</h4>
+                            <p>Tests for sensitive data exposure in responses.</p>
+                            <div class="includes"><strong>Includes:</strong> SSN, Credit cards, Passwords, API keys</div>
+                        </div>
+
+                        <div class="feature-card llm">
+                            <div class="feature-icon llm">
+                                <i class="bi bi-filetype-html"></i>
+                            </div>
+                            <h4>Markdown/HTML Injection</h4>
+                            <p>Tests for XSS vulnerabilities in LLM outputs.</p>
+                            <div class="includes"><strong>Includes:</strong> Script injection, Phishing links, Tracking pixels</div>
+                        </div>
+
+                        <div class="feature-card llm">
+                            <div class="feature-icon llm">
+                                <i class="bi bi-type"></i>
+                            </div>
+                            <h4>Unicode/Homoglyph</h4>
+                            <p>Tests for invisible character filter bypass.</p>
+                            <div class="includes"><strong>Includes:</strong> Zero-width chars, Cyrillic/Greek, RTL override</div>
+                        </div>
+
+                        <div class="feature-card llm">
+                            <div class="feature-icon llm">
+                                <i class="bi bi-emoji-angry"></i>
+                            </div>
+                            <h4>Emotional Manipulation</h4>
+                            <p>Tests for social engineering safety bypass.</p>
+                            <div class="includes"><strong>Includes:</strong> Urgency, Authority, Guilt, Threats</div>
+                        </div>
+
+                        <div class="feature-card llm">
+                            <div class="feature-icon llm">
+                                <i class="bi bi-database"></i>
+                            </div>
+                            <h4>RAG Poisoning</h4>
+                            <p>Tests for retrieval context injection attacks.</p>
+                            <div class="includes"><strong>Includes:</strong> Document injection, Metadata attacks</div>
+                        </div>
+
+                        <div class="feature-card llm">
+                            <div class="feature-icon llm">
+                                <i class="bi bi-fingerprint"></i>
+                            </div>
+                            <h4>Model Fingerprinting</h4>
+                            <p>Tests for model identity disclosure.</p>
+                            <div class="includes"><strong>Includes:</strong> Version detection, Capability enumeration</div>
+                        </div>
+
+                        <div class="feature-card llm">
+                            <div class="feature-icon llm">
+                                <i class="bi bi-archive"></i>
+                            </div>
+                            <h4>Training Data Extraction</h4>
+                            <p>Tests for memorized data leakage.</p>
+                            <div class="includes"><strong>Includes:</strong> Content extraction, PII leakage</div>
+                        </div>
+
+                        <div class="feature-card llm">
+                            <div class="feature-icon llm">
+                                <i class="bi bi-people"></i>
+                            </div>
+                            <h4>Cross-Tenant Leakage</h4>
+                            <p>Tests for multi-user data isolation.</p>
+                            <div class="includes"><strong>Includes:</strong> Session confusion, Memory probing</div>
+                        </div>
+
+                        <div class="feature-card llm">
+                            <div class="feature-icon llm">
+                                <i class="bi bi-diagram-3"></i>
+                            </div>
+                            <h4>Instruction Hierarchy</h4>
+                            <p>Tests for system prompt override attacks.</p>
+                            <div class="includes"><strong>Includes:</strong> Priority escalation, Boundary injection</div>
+                        </div>
                     </div>
 
                     <div class="card mt-4">
