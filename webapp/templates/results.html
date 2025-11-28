@@ -709,7 +709,8 @@
                     {% set categories = [
                         ('security', 'Security Tests', 'bi-shield-lock', 'var(--accent-red)'),
                         ('seo', 'SEO Tests', 'bi-search', 'var(--accent-purple)'),
-                        ('geo', 'GEO Tests', 'bi-globe', 'var(--accent-cyan)')
+                        ('geo', 'GEO Tests', 'bi-globe', 'var(--accent-cyan)'),
+                        ('llm', 'LLM Tests', 'bi-robot', 'var(--accent-green)')
                     ] %}
                     {% for cat_key, cat_name, cat_icon, cat_color in categories %}
                     {% set cat_results = test.test_results_by_category[cat_key] if test.test_results_by_category else {} %}
@@ -822,6 +823,9 @@
                                 <button class="filter-btn category-filter" data-category="geo" style="border-color: var(--accent-cyan);">
                                     <i class="bi bi-globe" style="color: var(--accent-cyan);"></i>
                                 </button>
+                                <button class="filter-btn category-filter" data-category="llm" style="border-color: var(--accent-green);">
+                                    <i class="bi bi-robot" style="color: var(--accent-green);"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -831,7 +835,7 @@
                             <div class="finding-card severity-{{ finding.severity }}" data-severity="{{ finding.severity }}" data-category="{{ finding.category or 'security' }}">
                                 <div class="d-flex justify-content-between align-items-start mb-2">
                                     <div class="d-flex align-items-center gap-2">
-                                        <span style="font-size: 0.65rem; font-weight: 600; text-transform: uppercase; padding: 0.2rem 0.4rem; border-radius: 4px; {% if finding.category == 'seo' %}background: rgba(139,92,246,0.2); color: #a78bfa;{% elif finding.category == 'geo' %}background: rgba(6,182,212,0.2); color: #22d3ee;{% else %}background: rgba(239,68,68,0.2); color: #f87171;{% endif %}">
+                                        <span style="font-size: 0.65rem; font-weight: 600; text-transform: uppercase; padding: 0.2rem 0.4rem; border-radius: 4px; {% if finding.category == 'seo' %}background: rgba(139,92,246,0.2); color: #a78bfa;{% elif finding.category == 'geo' %}background: rgba(6,182,212,0.2); color: #22d3ee;{% elif finding.category == 'llm' %}background: rgba(16,185,129,0.2); color: #34d399;{% else %}background: rgba(239,68,68,0.2); color: #f87171;{% endif %}">
                                             {{ finding.category or 'security' | upper }}
                                         </span>
                                         <div class="finding-title">{{ finding.title }}</div>
@@ -883,8 +887,8 @@
                                     <strong style="color: var(--text-secondary);">Failed Tests:</strong>
                                     <div style="margin-top: 0.5rem;">
                                         {% for ft in test.failed_tests %}
-                                        <div style="display: flex; align-items: center; margin: 0.5rem 0; padding: 0.5rem 0.75rem; background: var(--bg-secondary); border-radius: 6px; border-left: 3px solid {% if ft.category == 'security' %}var(--accent-red){% elif ft.category == 'seo' %}var(--accent-purple){% else %}var(--accent-cyan){% endif %};">
-                                            <span style="font-size: 0.7rem; font-weight: 600; text-transform: uppercase; padding: 0.2rem 0.5rem; border-radius: 4px; margin-right: 0.75rem; background: {% if ft.category == 'security' %}rgba(239,68,68,0.2); color: #f87171;{% elif ft.category == 'seo' %}rgba(139,92,246,0.2); color: #a78bfa;{% else %}rgba(6,182,212,0.2); color: #22d3ee;{% endif %}">
+                                        <div style="display: flex; align-items: center; margin: 0.5rem 0; padding: 0.5rem 0.75rem; background: var(--bg-secondary); border-radius: 6px; border-left: 3px solid {% if ft.category == 'security' %}var(--accent-red){% elif ft.category == 'seo' %}var(--accent-purple){% elif ft.category == 'llm' %}var(--accent-green){% else %}var(--accent-cyan){% endif %};">
+                                            <span style="font-size: 0.7rem; font-weight: 600; text-transform: uppercase; padding: 0.2rem 0.5rem; border-radius: 4px; margin-right: 0.75rem; background: {% if ft.category == 'security' %}rgba(239,68,68,0.2); color: #f87171;{% elif ft.category == 'seo' %}rgba(139,92,246,0.2); color: #a78bfa;{% elif ft.category == 'llm' %}rgba(16,185,129,0.2); color: #34d399;{% else %}rgba(6,182,212,0.2); color: #22d3ee;{% endif %}">
                                                 {{ ft.category | upper }}
                                             </span>
                                             <span style="color: var(--text-muted); font-size: 0.85rem; font-family: 'JetBrains Mono', monospace;">{{ ft.name.split('::')[-1] }}</span>

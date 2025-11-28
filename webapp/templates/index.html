@@ -422,6 +422,11 @@
             border-color: var(--accent-purple);
         }
 
+        .test-card.llm.selected .test-card-checkbox {
+            background: var(--accent-green);
+            border-color: var(--accent-green);
+        }
+
         .test-card-checkbox i {
             color: white;
             font-size: 0.7rem;
@@ -1231,6 +1236,10 @@
                             <i class="bi bi-graph-up"></i>
                             SEO & GEO Analysis
                         </button>
+                        <button class="tab-btn llm" onclick="switchTab('llm')">
+                            <i class="bi bi-robot"></i>
+                            LLM Security
+                        </button>
                     </div>
 
                     <!-- Security Tab -->
@@ -1327,6 +1336,68 @@
                                 </div>
                                 {% endif %}
                                 {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- LLM Tab -->
+                    <div class="tab-content" id="llm-tab">
+                        <!-- LLM Endpoint Input -->
+                        <div class="test-section">
+                            <div class="section-header">
+                                <div class="section-title">
+                                    <i class="bi bi-link-45deg" style="color: var(--accent-green);"></i>
+                                    LLM API Endpoint
+                                </div>
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <input type="text" class="form-control" id="llmEndpoint"
+                                    placeholder="Enter LLM API endpoint (e.g., https://api.example.com/v1/chat)"
+                                    style="background: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.75rem 1rem; border-radius: 10px; width: 100%;">
+                                <small style="color: var(--accent-green); font-size: 0.75rem; margin-top: 0.5rem; display: block;">
+                                    <i class="bi bi-info-circle me-1"></i>
+                                    Enter the full URL to your LLM API endpoint. The website URL above is not required for LLM testing.
+                                </small>
+                            </div>
+                        </div>
+
+                        <!-- LLM Tests Section -->
+                        <div class="test-section">
+                            <div class="section-header">
+                                <div class="section-title">
+                                    <i class="bi bi-robot" style="color: var(--accent-green);"></i>
+                                    LLM Security Tests
+                                </div>
+                                <div class="select-btns">
+                                    <button class="select-btn" onclick="selectAll('llm')">Select All</button>
+                                    <button class="select-btn" onclick="deselectAll('llm')">Deselect All</button>
+                                </div>
+                            </div>
+                            <div class="test-grid">
+                                {% for key, cat in categories.items() %}
+                                {% if cat.category == 'llm' %}
+                                <div class="test-card llm" data-category="llm" data-marker="{{ cat.marker }}" onclick="toggleCard(this)">
+                                    <div class="test-card-header">
+                                        <div class="test-card-checkbox">
+                                            <i class="bi bi-check"></i>
+                                        </div>
+                                        <div class="test-card-content">
+                                            <div class="test-card-title">{{ cat.name }}</div>
+                                            <div class="test-card-desc">{{ cat.description }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- LLM Warning -->
+                        <div class="warning-box" style="margin-top: 1rem; background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.2);">
+                            <i class="bi bi-lightbulb" style="color: var(--accent-green);"></i>
+                            <div>
+                                <strong style="color: var(--accent-green);">LLM Testing Note:</strong>
+                                These tests check for prompt injection, jailbreaking, cost exploitation (Denial of Wallet), and data exfiltration vulnerabilities in LLM-powered endpoints.
                             </div>
                         </div>
                     </div>
@@ -1502,6 +1573,9 @@
             if (tab === 'security') {
                 document.querySelector('.tab-btn.security').classList.add('active');
                 document.getElementById('security-tab').classList.add('active');
+            } else if (tab === 'llm') {
+                document.querySelector('.tab-btn.llm').classList.add('active');
+                document.getElementById('llm-tab').classList.add('active');
             } else {
                 document.querySelector('.tab-btn.seo-geo').classList.add('active');
                 document.getElementById('seo-geo-tab').classList.add('active');
@@ -1521,27 +1595,40 @@
 
             // If selecting a card (not deselecting)
             if (!card.classList.contains('selected')) {
-                // Deselect tests from the other category
+                // Deselect tests from other categories (mutual exclusivity)
                 if (category === 'security') {
+                    deselectCategory('seo');
+                    deselectCategory('geo');
+                    deselectCategory('llm');
+                } else if (category === 'llm') {
+                    deselectCategory('security');
                     deselectCategory('seo');
                     deselectCategory('geo');
                 } else {
                     // seo or geo category
                     deselectCategory('security');
+                    deselectCategory('llm');
                 }
             }
 
             card.classList.toggle('selected');
         }
 
-        // Select all in category (deselects other category first)
+        // Select all in category (deselects other categories first)
         function selectAll(category) {
-            // Deselect other category first
+            // Deselect other categories first (mutual exclusivity)
             if (category === 'security') {
                 deselectCategory('seo');
                 deselectCategory('geo');
-            } else {
+                deselectCategory('llm');
+            } else if (category === 'llm') {
                 deselectCategory('security');
+                deselectCategory('seo');
+                deselectCategory('geo');
+            } else {
+                // seo or geo
+                deselectCategory('security');
+                deselectCategory('llm');
             }
 
             document.querySelectorAll(`.test-card.${category}`).forEach(card => {
@@ -1566,10 +1653,8 @@
         // Start scan
         function startScan() {
             const targetUrl = document.getElementById('targetUrl').value.trim();
-            if (!targetUrl) {
-                alert('Please enter a target URL');
-                return;
-            }
+            const llmEndpointEl = document.getElementById('llmEndpoint');
+            const llmEndpoint = llmEndpointEl ? llmEndpointEl.value.trim() : '';
 
             const selectedTests = [];
             document.querySelectorAll('.test-card.selected').forEach(card => {
@@ -1581,13 +1666,36 @@
                 return;
             }
 
+            // Check if only LLM tests are selected
+            const hasLlmTests = selectedTests.some(t => t.includes('llm'));
+            const hasNonLlmTests = selectedTests.some(t => !t.includes('llm'));
+
+            // For LLM-only tests, require LLM endpoint; for other tests, require target URL
+            if (hasLlmTests && !hasNonLlmTests) {
+                // LLM-only testing
+                if (!llmEndpoint) {
+                    alert('Please enter an LLM API endpoint');
+                    return;
+                }
+            } else {
+                // Non-LLM or mixed testing
+                if (!targetUrl) {
+                    alert('Please enter a target URL');
+                    return;
+                }
+            }
+
+            // Use LLM endpoint as target URL if no target URL provided (LLM-only mode)
+            const effectiveTargetUrl = targetUrl || llmEndpoint;
+
             const config = {
-                target_url: targetUrl,
+                target_url: effectiveTargetUrl,
                 tests: selectedTests,
                 intensity: document.getElementById('intensity').value,
                 wordpress_path: document.getElementById('wordpressPath').value,
                 skip_ssl: document.getElementById('skipSsl').checked,
                 skip_wordpress: document.getElementById('skipWordpress').checked,
+                llm_endpoint: llmEndpoint,
             };
 
             fetch('/api/scan', {
@@ -1602,7 +1710,7 @@
                     return;
                 }
                 currentTestId = data.test_id;
-                showRunningSection(targetUrl);
+                showRunningSection(effectiveTargetUrl);
                 connectToStream();
             })
             .catch(err => alert('Error starting scan: ' + err));

@@ -47,6 +47,7 @@ class TestRun:
             "security": {"passed": 0, "failed": 0, "skipped": 0, "total": 0},
             "seo": {"passed": 0, "failed": 0, "skipped": 0, "total": 0},
             "geo": {"passed": 0, "failed": 0, "skipped": 0, "total": 0},
+            "llm": {"passed": 0, "failed": 0, "skipped": 0, "total": 0},
         }
         self.failed_tests = []  # List of failed test names with category
         self.process = None
@@ -182,6 +183,43 @@ TEST_CATEGORIES = {
         "marker": "compliance",
         "category": "geo",
     },
+    # LLM Tests
+    "llm": {
+        "name": "LLM Security",
+        "description": "Full LLM security analysis (injection, jailbreak, DoW)",
+        "marker": "llm",
+        "category": "llm",
+    },
+    "llm_injection": {
+        "name": "Prompt Injection",
+        "description": "Test for prompt injection vulnerabilities",
+        "marker": "llm_injection",
+        "category": "llm",
+    },
+    "llm_jailbreak": {
+        "name": "Jailbreaking",
+        "description": "Test for jailbreaking attempts",
+        "marker": "llm_jailbreak",
+        "category": "llm",
+    },
+    "llm_leakage": {
+        "name": "System Prompt Leak",
+        "description": "Test for system prompt leakage",
+        "marker": "llm_leakage",
+        "category": "llm",
+    },
+    "llm_dos": {
+        "name": "Denial of Wallet",
+        "description": "Test for cost exploitation attacks",
+        "marker": "llm_dos",
+        "category": "llm",
+    },
+    "llm_data": {
+        "name": "Data Exfiltration",
+        "description": "Test for data exfiltration via LLM",
+        "marker": "llm_data",
+        "category": "llm",
+    },
 }
 
 
@@ -217,6 +255,10 @@ def run_tests_thread(test_run: TestRun):
             cmd.append("--skip-ssl")
         if test_run.options.get("skip_wordpress"):
             cmd.append("--skip-wordpress")
+
+        # Add LLM endpoint if provided
+        if test_run.options.get("llm_endpoint"):
+            cmd.extend([f"--llm-endpoint={test_run.options['llm_endpoint']}"])
 
         # Add report ID so the report file is named after this test run
         cmd.append(f"--report-id={test_run.id}")
@@ -302,6 +344,8 @@ def get_test_category(test_path):
         return 'seo'
     elif 'test_geo' in test_path_lower or 'geo' in test_path_lower:
         return 'geo'
+    elif 'test_llm' in test_path_lower or 'llm' in test_path_lower:
+        return 'llm'
     else:
         return 'security'
 
@@ -386,6 +430,9 @@ def convert_failures_to_findings(test_run: TestRun):
         elif category == "geo":
             severity = "low"
             category_label = "GEO"
+        elif category == "llm":
+            severity = "high"
+            category_label = "LLM"
         else:
             severity = "info"
             category_label = "Test"
@@ -452,6 +499,7 @@ def start_scan():
         "wordpress_path": data.get("wordpress_path", "/blog"),
         "skip_ssl": data.get("skip_ssl", False),
         "skip_wordpress": data.get("skip_wordpress", False),
+        "llm_endpoint": data.get("llm_endpoint", ""),
     }
 
     test_run = TestRun(test_id, target_url, options)

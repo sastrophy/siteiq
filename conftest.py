@@ -66,6 +66,12 @@ def pytest_addoption(parser):
         default=None,
         help="Custom report ID for filename (used by webapp)",
     )
+    parser.addoption(
+        "--llm-endpoint",
+        action="store",
+        default=None,
+        help="LLM API endpoint to test (e.g., /api/chat)",
+    )
 
 
 def pytest_configure(config):
@@ -109,6 +115,16 @@ def pytest_configure(config):
     config.addinivalue_line("markers", "cdn: CDN and edge tests")
     config.addinivalue_line("markers", "international_seo: International SEO tests")
 
+    # LLM test markers
+    config.addinivalue_line("markers", "llm: LLM security tests")
+    config.addinivalue_line("markers", "llm_injection: Prompt injection tests")
+    config.addinivalue_line("markers", "llm_jailbreak: Jailbreaking tests")
+    config.addinivalue_line("markers", "llm_leakage: System prompt leakage tests")
+    config.addinivalue_line("markers", "llm_dos: Denial of Wallet tests")
+    config.addinivalue_line("markers", "llm_data: Data exfiltration tests")
+    config.addinivalue_line("markers", "llm_rate: Rate limiting tests")
+    config.addinivalue_line("markers", "llm_auth: Authentication tests")
+
 
 @pytest.fixture(scope="session")
 def test_config(request) -> SecurityTestConfig:
@@ -151,6 +167,18 @@ def target_url(test_config) -> str:
 def wordpress_url(test_config) -> str:
     """Get the WordPress URL."""
     return test_config.wordpress_url
+
+
+@pytest.fixture(scope="session")
+def llm_endpoint(request, target_url) -> str:
+    """Get the LLM API endpoint."""
+    endpoint = request.config.getoption("--llm-endpoint")
+    if endpoint:
+        # If it's a relative path, prepend target_url
+        if endpoint.startswith("/"):
+            return f"{target_url.rstrip('/')}{endpoint}"
+        return endpoint
+    return None
 
 
 @pytest.fixture(scope="session")
