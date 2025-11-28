@@ -6,11 +6,13 @@ A comprehensive website analysis and security testing platform featuring securit
 
 ![Dashboard](screenshots/1.png)
 
-![Scan Results](screenshots/2.png)
+![SEO Tests](screenshots/2.png)
 
-![Scan Results](screenshots/3.png)
+![LLM Tests](screenshots/3.png)
 
-![Help Page](screenshots/4.png)
+![Scan Results](screenshots/4.png)
+
+![Help Page](screenshots/5.png)
 
 ## Features
 
