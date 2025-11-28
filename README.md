@@ -1,6 +1,6 @@
 # SiteIQ - Website Intelligence Platform
 
-A comprehensive website analysis and security testing platform. Currently features security testing with SEO and Geo analysis coming soon.
+A comprehensive website analysis and security testing platform featuring security testing, SEO analysis, GEO testing, and LLM security testing.
 
 ## Screenshots
 
@@ -120,6 +120,41 @@ A comprehensive website analysis and security testing platform. Currently featur
 - Debug log exposure
 - wp-admin accessibility
 
+### LLM Security Testing (New!)
+
+Test your LLM-powered API endpoints for security vulnerabilities:
+
+- **Prompt Injection**
+  - Direct prompt injection attacks
+  - Indirect injection (RAG/context attacks)
+  - Instruction override attempts
+
+- **Jailbreaking**
+  - DAN-style jailbreaks
+  - Role-play bypasses
+  - Encoding tricks (Base64, etc.)
+  - Context manipulation
+
+- **System Prompt Leakage**
+  - Prompt extraction attempts
+  - Configuration disclosure
+  - Instruction revelation
+
+- **Denial of Wallet (DoW)**
+  - Token multiplication attacks
+  - Context window stuffing
+  - Cost exploitation detection
+  - Rate limiting verification
+
+- **Data Exfiltration**
+  - Sensitive data exposure
+  - PII leakage detection
+  - Credential exposure
+
+- **Authentication**
+  - Unauthenticated access testing
+  - API key validation
+
 ## Quick Start
 
 ### 1. Setup
@@ -170,7 +205,8 @@ Access the help guide at **http://localhost:5000/help**
 
 | Option | Description | Default |
 |--------|-------------|---------|
-| `--target-url` | Target URL to test (required) | - |
+| `--target-url` | Target URL to test (required for non-LLM tests) | - |
+| `--llm-endpoint` | LLM API endpoint URL (for LLM tests) | - |
 | `--wordpress-path` | Path to WordPress installation | `/blog` |
 | `--intensity` | Test intensity: light, medium, aggressive | `medium` |
 | `--auth-username` | Username for authenticated testing | - |
@@ -214,6 +250,16 @@ python3 -m pytest -m latency          # Response time tests
 python3 -m pytest -m content          # Geo content tests
 python3 -m pytest -m compliance       # Regional compliance
 python3 -m pytest -m cdn              # CDN tests
+
+# LLM Security Tests (use --llm-endpoint instead of --target-url)
+python3 -m pytest -m llm --llm-endpoint=https://api.example.com/chat    # All LLM tests
+python3 -m pytest -m llm_injection --llm-endpoint=https://api.example.com/chat   # Prompt injection
+python3 -m pytest -m llm_jailbreak --llm-endpoint=https://api.example.com/chat   # Jailbreaking
+python3 -m pytest -m llm_leakage --llm-endpoint=https://api.example.com/chat     # System prompt leak
+python3 -m pytest -m llm_dos --llm-endpoint=https://api.example.com/chat         # Denial of Wallet
+python3 -m pytest -m llm_data --llm-endpoint=https://api.example.com/chat        # Data exfiltration
+python3 -m pytest -m llm_rate --llm-endpoint=https://api.example.com/chat        # Rate limiting
+python3 -m pytest -m llm_auth --llm-endpoint=https://api.example.com/chat        # Auth bypass
 ```
 
 ## Test Intensity Levels
@@ -240,7 +286,8 @@ siteiq/
 │   ├── directory_traversal.py
 │   ├── wordpress.py
 │   ├── seo.py             # SEO test data & thresholds
-│   └── geo.py             # GEO test data & regions
+│   ├── geo.py             # GEO test data & regions
+│   └── llm.py             # LLM attack payloads
 ├── utils/
 │   └── scanner.py         # Core scanner utilities
 ├── tests/                 # Test modules
@@ -253,7 +300,8 @@ siteiq/
 │   ├── test_directory_traversal.py
 │   ├── test_csrf_owasp.py
 │   ├── test_seo.py        # SEO analysis tests
-│   └── test_geo.py        # GEO testing
+│   ├── test_geo.py        # GEO testing
+│   └── test_llm.py        # LLM security tests
 ├── webapp/                # Web application
 │   ├── app.py
 │   └── templates/

@@ -288,6 +288,10 @@
             border-top: 3px solid var(--accent-purple);
         }
 
+        .feature-card.llm {
+            border-top: 3px solid var(--accent-green);
+        }
+
         .feature-icon {
             width: 48px;
             height: 48px;
@@ -312,6 +316,11 @@
         .feature-icon.geo {
             background: rgba(139, 92, 246, 0.2);
             color: var(--accent-purple);
+        }
+
+        .feature-icon.llm {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--accent-green);
         }
 
         .feature-card h4 {
@@ -810,7 +819,7 @@
         <!-- Hero -->
         <div class="hero">
             <h1><i class="bi bi-book me-2"></i>User Guide</h1>
-            <p>Learn how to use SiteIQ to analyze your websites for security vulnerabilities, SEO issues, and global performance.</p>
+            <p>Learn how to use SiteIQ to analyze your websites for security vulnerabilities, SEO issues, global performance, and LLM security.</p>
         </div>
 
         <div class="row">
@@ -825,6 +834,7 @@
                     <a href="#security-tests" class="toc-link">Security Testing</a>
                     <a href="#seo-tests" class="toc-link">SEO Analysis</a>
                     <a href="#geo-tests" class="toc-link">GEO Testing</a>
+                    <a href="#llm-tests" class="toc-link">LLM Security</a>
                     <a href="#severity-levels" class="toc-link">Severity Levels</a>
                     <a href="#advanced-options" class="toc-link">Advanced Options</a>
                     <a href="#best-practices" class="toc-link">Best Practices</a>
@@ -855,7 +865,7 @@
                                 <div class="step-number">2</div>
                                 <div class="step-content">
                                     <h4>Choose Test Category</h4>
-                                    <p>Select between Security Testing or SEO & GEO Analysis tabs based on your needs.</p>
+                                    <p>Select between Security Testing, SEO & GEO Analysis, or LLM Security tabs based on your needs.</p>
                                 </div>
                             </div>
                             <div class="step">
@@ -1077,6 +1087,114 @@
                             <h4>Regional Compliance</h4>
                             <p>Checks for GDPR, CCPA compliance indicators.</p>
                             <div class="includes"><strong>Includes:</strong> Cookie consent, Privacy notices</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- LLM Tests -->
+                <section id="llm-tests" class="section">
+                    <h2 class="section-title">
+                        <i class="bi bi-robot" style="background: rgba(16, 185, 129, 0.2); color: var(--accent-green);"></i>
+                        LLM Security Testing
+                    </h2>
+
+                    <p class="text-secondary mb-4">Test your LLM-powered API endpoints for security vulnerabilities and cost exploitation attacks.</p>
+
+                    <div class="alert-box info mb-4">
+                        <i class="bi bi-info-circle"></i>
+                        <div>
+                            <strong>Note:</strong> LLM testing requires an API endpoint URL. The website URL is not required - just enter your LLM endpoint directly in the LLM Security tab.
+                        </div>
+                    </div>
+
+                    <div class="feature-grid">
+                        <div class="feature-card llm">
+                            <div class="feature-icon llm">
+                                <i class="bi bi-input-cursor-text"></i>
+                            </div>
+                            <h4>Prompt Injection</h4>
+                            <p>Tests for direct and indirect prompt injection vulnerabilities.</p>
+                            <div class="includes"><strong>Includes:</strong> Instruction override, Context injection, Role manipulation</div>
+                        </div>
+
+                        <div class="feature-card llm">
+                            <div class="feature-icon llm">
+                                <i class="bi bi-unlock"></i>
+                            </div>
+                            <h4>Jailbreaking</h4>
+                            <p>Tests for safety bypass and jailbreaking attempts.</p>
+                            <div class="includes"><strong>Includes:</strong> DAN-style, Role-play, Encoding tricks, Context manipulation</div>
+                        </div>
+
+                        <div class="feature-card llm">
+                            <div class="feature-icon llm">
+                                <i class="bi bi-file-earmark-lock"></i>
+                            </div>
+                            <h4>System Prompt Leakage</h4>
+                            <p>Tests for system prompt extraction vulnerabilities.</p>
+                            <div class="includes"><strong>Includes:</strong> Prompt extraction, Configuration disclosure</div>
+                        </div>
+
+                        <div class="feature-card llm">
+                            <div class="feature-icon llm">
+                                <i class="bi bi-currency-dollar"></i>
+                            </div>
+                            <h4>Denial of Wallet</h4>
+                            <p>Tests for token/cost exploitation attacks.</p>
+                            <div class="includes"><strong>Includes:</strong> Token multiplication, Context stuffing, Rate limiting</div>
+                        </div>
+
+                        <div class="feature-card llm">
+                            <div class="feature-icon llm">
+                                <i class="bi bi-box-arrow-right"></i>
+                            </div>
+                            <h4>Data Exfiltration</h4>
+                            <p>Tests for sensitive data leakage via LLM responses.</p>
+                            <div class="includes"><strong>Includes:</strong> PII exposure, Credential leakage, API key disclosure</div>
+                        </div>
+
+                        <div class="feature-card llm">
+                            <div class="feature-icon llm">
+                                <i class="bi bi-key"></i>
+                            </div>
+                            <h4>Authentication</h4>
+                            <p>Tests for unauthenticated access to LLM endpoints.</p>
+                            <div class="includes"><strong>Includes:</strong> API key validation, Auth bypass</div>
+                        </div>
+                    </div>
+
+                    <div class="card mt-4">
+                        <div class="card-title">How to Test LLM Endpoints</div>
+                        <div class="steps">
+                            <div class="step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <h4>Go to LLM Security Tab</h4>
+                                    <p>Click on the "LLM Security" tab in the dashboard.</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <h4>Enter LLM Endpoint</h4>
+                                    <p>Enter the full URL to your LLM API endpoint (e.g., https://api.example.com/v1/chat)</p>
+                                    <div class="code-block mt-2">https://api.example.com/v1/chat/completions</div>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <h4>Select Tests</h4>
+                                    <p>Choose which LLM security tests to run (Prompt Injection, Jailbreaking, etc.)</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">4</div>
+                                <div class="step-content">
+                                    <h4>Run Analysis</h4>
+                                    <p>Click "Start Analysis" to begin testing your LLM endpoint.</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </section>
