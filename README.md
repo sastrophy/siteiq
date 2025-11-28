@@ -57,7 +57,7 @@ A comprehensive website analysis and security testing platform featuring securit
   - URL parameter injection
   - Webhook endpoint testing
 
-### SEO Analysis (New!)
+### SEO Analysis 
 
 - **On-Page SEO**
   - Meta tags (title, description, viewport)
@@ -86,7 +86,7 @@ A comprehensive website analysis and security testing platform featuring securit
   - Hreflang validation
   - Language targeting
 
-### GEO Testing (New!)
+### GEO Testing
 
 - **Multi-Location Accessibility**
   - Site accessibility from multiple regions
@@ -122,7 +122,7 @@ A comprehensive website analysis and security testing platform featuring securit
 - Debug log exposure
 - wp-admin accessibility
 
-### LLM Security Testing (New!)
+### LLM Security Testing 
 
 Test your LLM-powered API endpoints for security vulnerabilities:
 
