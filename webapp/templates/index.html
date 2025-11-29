@@ -1705,7 +1705,10 @@
 
             fetch('/api/scan', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-Token': '{{ csrf_token() }}'
+                },
                 body: JSON.stringify(config)
             })
             .then(response => response.json())
@@ -1815,7 +1818,10 @@
         function stopScan() {
             if (!currentTestId) return;
 
-            fetch(`/api/scan/${currentTestId}/stop`, { method: 'POST' })
+            fetch(`/api/scan/${currentTestId}/stop`, {
+                method: 'POST',
+                headers: { 'X-CSRF-Token': '{{ csrf_token() }}' }
+            })
                 .then(() => {
                     if (eventSource) eventSource.close();
                     clearInterval(timerInterval);

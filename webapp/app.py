@@ -2,22 +2,277 @@
 Security Test Web Application
 
 A Jenkins-like web interface for running security tests against websites.
+
+SECURITY NOTE: This application is designed to run LOCALLY (localhost) only.
+Do NOT expose this application to the internet without proper security measures.
 """
 
+import hashlib
+import ipaddress
 import json
 import os
+import re
+import secrets
+import socket
 import subprocess
 import sys
 import threading
+import time
 import uuid
+from collections import defaultdict
 from datetime import datetime
+from functools import wraps
 from pathlib import Path
 from queue import Queue
+from urllib.parse import urlparse
 
-from flask import Flask, render_template, request, jsonify, Response, stream_with_context
+from flask import Flask, render_template, request, jsonify, Response, stream_with_context, session, abort
 
 app = Flask(__name__)
-app.secret_key = os.urandom(24)
+app.secret_key = os.environ.get("FLASK_SECRET_KEY", secrets.token_hex(32))
+
+# =============================================================================
+# SECURITY CONFIGURATION
+# =============================================================================
+
+# Optional API key authentication (set via environment variable)
+API_KEY = os.environ.get("SITEIQ_API_KEY", None)
+REQUIRE_AUTH = os.environ.get("SITEIQ_REQUIRE_AUTH", "false").lower() == "true"
+
+# SSRF Protection - Block internal/private IPs
+SSRF_PROTECTION = os.environ.get("SITEIQ_SSRF_PROTECTION", "true").lower() == "true"
+BLOCKED_IP_RANGES = [
+    ipaddress.ip_network("127.0.0.0/8"),       # Loopback
+    ipaddress.ip_network("10.0.0.0/8"),        # Private Class A
+    ipaddress.ip_network("172.16.0.0/12"),     # Private Class B
+    ipaddress.ip_network("192.168.0.0/16"),    # Private Class C
+    ipaddress.ip_network("169.254.0.0/16"),    # Link-local
+    ipaddress.ip_network("::1/128"),           # IPv6 loopback
+    ipaddress.ip_network("fc00::/7"),          # IPv6 private
+    ipaddress.ip_network("fe80::/10"),         # IPv6 link-local
+]
+BLOCKED_HOSTNAMES = ["localhost", "127.0.0.1", "0.0.0.0", "::1"]
+
+# Rate limiting configuration
+RATE_LIMIT_ENABLED = os.environ.get("SITEIQ_RATE_LIMIT", "true").lower() == "true"
+RATE_LIMIT_REQUESTS = int(os.environ.get("SITEIQ_RATE_LIMIT_REQUESTS", "10"))  # requests per window
+RATE_LIMIT_WINDOW = int(os.environ.get("SITEIQ_RATE_LIMIT_WINDOW", "60"))  # seconds
+
+# Request tracking for rate limiting
+request_counts = defaultdict(list)
+request_counts_lock = threading.Lock()
+
+
+# =============================================================================
+# SECURITY HELPERS
+# =============================================================================
+
+def get_client_ip():
+    """Get client IP address."""
+    if request.headers.get("X-Forwarded-For"):
+        return request.headers.get("X-Forwarded-For").split(",")[0].strip()
+    return request.remote_addr or "127.0.0.1"
+
+
+def check_rate_limit():
+    """Check if request is within rate limit. Returns True if allowed."""
+    if not RATE_LIMIT_ENABLED:
+        return True
+
+    client_ip = get_client_ip()
+    current_time = time.time()
+
+    with request_counts_lock:
+        # Clean old entries
+        request_counts[client_ip] = [
+            t for t in request_counts[client_ip]
+            if current_time - t < RATE_LIMIT_WINDOW
+        ]
+
+        # Check limit
+        if len(request_counts[client_ip]) >= RATE_LIMIT_REQUESTS:
+            return False
+
+        # Add current request
+        request_counts[client_ip].append(current_time)
+        return True
+
+
+def require_auth(f):
+    """Decorator to require API key authentication."""
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if REQUIRE_AUTH and API_KEY:
+            auth_header = request.headers.get("X-API-Key", "")
+            if not secrets.compare_digest(auth_header, API_KEY):
+                return jsonify({"error": "Unauthorized - Invalid or missing API key"}), 401
+        return f(*args, **kwargs)
+    return decorated_function
+
+
+def require_rate_limit(f):
+    """Decorator to enforce rate limiting."""
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not check_rate_limit():
+            return jsonify({
+                "error": "Rate limit exceeded. Please try again later.",
+                "retry_after": RATE_LIMIT_WINDOW
+            }), 429
+        return f(*args, **kwargs)
+    return decorated_function
+
+
+def generate_csrf_token():
+    """Generate a CSRF token for the session."""
+    if "_csrf_token" not in session:
+        session["_csrf_token"] = secrets.token_hex(32)
+    return session["_csrf_token"]
+
+
+def validate_csrf_token():
+    """Validate CSRF token from request."""
+    token = request.headers.get("X-CSRF-Token") or request.form.get("csrf_token")
+    if not token or not session.get("_csrf_token"):
+        return False
+    return secrets.compare_digest(token, session["_csrf_token"])
+
+
+def require_csrf(f):
+    """Decorator to require CSRF token validation."""
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if request.method == "POST":
+            if not validate_csrf_token():
+                return jsonify({"error": "Invalid or missing CSRF token"}), 403
+        return f(*args, **kwargs)
+    return decorated_function
+
+
+def is_ip_blocked(ip_str):
+    """Check if an IP address is in blocked ranges."""
+    try:
+        ip = ipaddress.ip_address(ip_str)
+        for network in BLOCKED_IP_RANGES:
+            if ip in network:
+                return True
+        return False
+    except ValueError:
+        return False
+
+
+def is_url_safe(url):
+    """
+    Validate URL for SSRF protection.
+    Returns (is_safe, error_message)
+    """
+    if not SSRF_PROTECTION:
+        return True, None
+
+    try:
+        parsed = urlparse(url)
+        hostname = parsed.hostname
+
+        if not hostname:
+            return False, "Invalid URL - no hostname"
+
+        # Check blocked hostnames
+        if hostname.lower() in BLOCKED_HOSTNAMES:
+            return False, f"Blocked hostname: {hostname}"
+
+        # Resolve hostname and check IP
+        try:
+            ip = socket.gethostbyname(hostname)
+            if is_ip_blocked(ip):
+                return False, f"Blocked IP range: {ip}"
+        except socket.gaierror:
+            # Can't resolve - allow it (might be valid external host)
+            pass
+
+        return True, None
+
+    except Exception as e:
+        return False, f"URL validation error: {str(e)}"
+
+
+def sanitize_url(url):
+    """Sanitize and validate URL input."""
+    if not url or not isinstance(url, str):
+        return None, "URL is required"
+
+    url = url.strip()
+
+    # Basic length check
+    if len(url) > 2048:
+        return None, "URL too long"
+
+    # Ensure scheme
+    if not url.startswith(("http://", "https://")):
+        url = f"https://{url}"
+
+    # Validate URL format
+    try:
+        parsed = urlparse(url)
+        if not parsed.netloc:
+            return None, "Invalid URL format"
+    except Exception:
+        return None, "Invalid URL format"
+
+    # Check for command injection characters
+    dangerous_chars = [";", "|", "&", "$", "`", "(", ")", "{", "}", "[", "]", "!", "\n", "\r"]
+    for char in dangerous_chars:
+        if char in url:
+            return None, f"Invalid character in URL: {char}"
+
+    return url, None
+
+
+def sanitize_path(path, default="/blog"):
+    """Sanitize path input."""
+    if not path or not isinstance(path, str):
+        return default
+
+    path = path.strip()
+
+    # Basic validation
+    if len(path) > 256:
+        return default
+
+    # Only allow alphanumeric, /, -, _, .
+    if not re.match(r"^[a-zA-Z0-9/_\-\.]+$", path):
+        return default
+
+    # Prevent path traversal
+    if ".." in path:
+        return default
+
+    return path
+
+
+def sanitize_intensity(intensity, default="medium"):
+    """Sanitize intensity input."""
+    allowed = ["light", "medium", "aggressive"]
+    if intensity in allowed:
+        return intensity
+    return default
+
+
+def sanitize_tests(tests, allowed_tests):
+    """Sanitize and validate test markers."""
+    if not tests or not isinstance(tests, list):
+        return []
+
+    # Only allow known test markers
+    valid_tests = []
+    for test in tests:
+        if isinstance(test, str) and test in allowed_tests:
+            valid_tests.append(test)
+
+    return valid_tests
+
+
+# Make CSRF token available in templates
+app.jinja_env.globals["csrf_token"] = generate_csrf_token
 
 # Store for running tests and their status
 tests_store = {}
@@ -563,27 +818,46 @@ def help_page():
 
 
 @app.route("/api/scan", methods=["POST"])
+@require_rate_limit
+@require_auth
 def start_scan():
     """Start a new security scan."""
-    data = request.json
+    data = request.json or {}
 
-    target_url = data.get("target_url", "").strip()
-    if not target_url:
-        return jsonify({"error": "Target URL is required"}), 400
+    # Validate and sanitize target URL
+    target_url, url_error = sanitize_url(data.get("target_url", ""))
+    if url_error:
+        return jsonify({"error": url_error}), 400
 
-    # Ensure URL has scheme
-    if not target_url.startswith(("http://", "https://")):
-        target_url = f"https://{target_url}"
+    # SSRF protection - check if URL is safe
+    is_safe, ssrf_error = is_url_safe(target_url)
+    if not is_safe:
+        return jsonify({"error": f"URL blocked: {ssrf_error}"}), 400
 
-    # Create test run
+    # Validate and sanitize LLM endpoint if provided
+    llm_endpoint = data.get("llm_endpoint", "")
+    if llm_endpoint:
+        llm_endpoint, llm_error = sanitize_url(llm_endpoint)
+        if llm_error:
+            return jsonify({"error": f"Invalid LLM endpoint: {llm_error}"}), 400
+
+        # SSRF check for LLM endpoint too
+        is_safe, ssrf_error = is_url_safe(llm_endpoint)
+        if not is_safe:
+            return jsonify({"error": f"LLM endpoint blocked: {ssrf_error}"}), 400
+
+    # Get allowed test markers
+    allowed_markers = set(TEST_CATEGORIES.keys())
+
+    # Create test run with sanitized inputs
     test_id = str(uuid.uuid4())[:8]
     options = {
-        "tests": data.get("tests", []),
-        "intensity": data.get("intensity", "medium"),
-        "wordpress_path": data.get("wordpress_path", "/blog"),
-        "skip_ssl": data.get("skip_ssl", False),
-        "skip_wordpress": data.get("skip_wordpress", False),
-        "llm_endpoint": data.get("llm_endpoint", ""),
+        "tests": sanitize_tests(data.get("tests", []), allowed_markers),
+        "intensity": sanitize_intensity(data.get("intensity", "medium")),
+        "wordpress_path": sanitize_path(data.get("wordpress_path", "/blog")),
+        "skip_ssl": bool(data.get("skip_ssl", False)),
+        "skip_wordpress": bool(data.get("skip_wordpress", False)),
+        "llm_endpoint": llm_endpoint or "",
     }
 
     test_run = TestRun(test_id, target_url, options)
@@ -649,6 +923,8 @@ def stream_scan_output(test_id):
 
 
 @app.route("/api/scan/<test_id>/stop", methods=["POST"])
+@require_rate_limit
+@require_auth
 def stop_scan(test_id):
     """Stop a running scan and generate partial report."""
     with tests_lock:

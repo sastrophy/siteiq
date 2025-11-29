@@ -2,6 +2,27 @@
 
 A comprehensive website analysis and security testing platform featuring security testing, SEO analysis, GEO testing, and LLM security testing.
 
+## ⚠️ Security Notice
+
+**This application is designed to run LOCALLY (localhost) only.**
+
+Do NOT expose this application to the internet without proper security configuration. If you must deploy it remotely:
+
+1. **Enable Authentication**: Set `SITEIQ_REQUIRE_AUTH=true` and `SITEIQ_API_KEY=your-secret-key`
+2. **Use HTTPS**: Deploy behind a reverse proxy with TLS
+3. **Restrict Access**: Use firewall rules to limit access
+
+### Security Features
+
+| Feature | Environment Variable | Default |
+|---------|---------------------|---------|
+| API Key Auth | `SITEIQ_REQUIRE_AUTH=true` + `SITEIQ_API_KEY=xxx` | Disabled |
+| SSRF Protection | `SITEIQ_SSRF_PROTECTION=true` | Enabled |
+| Rate Limiting | `SITEIQ_RATE_LIMIT=true` | Enabled |
+| Rate Limit (requests) | `SITEIQ_RATE_LIMIT_REQUESTS=10` | 10/min |
+| CSRF Protection | Built-in | Enabled |
+| Input Sanitization | Built-in | Enabled |
+
 ## Screenshots
 
 ![Dashboard](screenshots/1.png)
