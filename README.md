@@ -143,7 +143,7 @@ Do NOT expose this application to the internet without proper security configura
 - Debug log exposure
 - wp-admin accessibility
 
-### LLM Security Testing
+### LLM Security Testing (36 Tests)
 
 Test your LLM-powered API endpoints for security vulnerabilities:
 
@@ -157,10 +157,34 @@ Test your LLM-powered API endpoints for security vulnerabilities:
   - Role-play bypasses
   - Context manipulation
 
+- **Persona/Character Continuation** *(NEW)*
+  - Story continuation attacks
+  - "Grandma exploit" style attacks
+  - Fictional world framing
+  - Split personality manipulation
+
+- **Educational Framing** *(NEW)*
+  - Academic research claims
+  - Security researcher impersonation
+  - Teaching example manipulation
+  - Ethical hacking framing
+
+- **Developer Mode** *(NEW)*
+  - Fake debug/admin mode activation
+  - Sudo command injection
+  - Legacy version claims
+  - Configuration override attempts
+
 - **Encoding Bypass**
   - Base64, ROT13, Hex, Binary encoding
   - Leetspeak and Pig Latin
   - Unicode escapes and Morse code
+
+- **Nested Encoding** *(NEW)*
+  - Double/triple Base64
+  - Base64 + ROT13 combinations
+  - Hex + Base64 chains
+  - Multi-layer encoding bypass
 
 - **Language Switching**
   - Multilingual filter bypass (Spanish, French, German, Chinese, etc.)
@@ -170,6 +194,36 @@ Test your LLM-powered API endpoints for security vulnerabilities:
   - Fake conversation history injection
   - Trust building attacks
   - Context window overflow
+
+- **Few-Shot Jailbreaking** *(NEW)*
+  - Malicious example injection
+  - Behavior cloning via examples
+  - Reinforcement framing
+  - Pattern demonstration attacks
+
+- **Completion Baiting** *(NEW)*
+  - Sentence/code completion traps
+  - Pattern completion manipulation
+  - JSON/list completion attacks
+  - Fill-in-the-blank exploitation
+
+- **Context Boundary Attacks** *(NEW)*
+  - Token limit exploitation
+  - Attention dilution attacks
+  - Middle injection techniques
+  - Newline/unicode flooding
+
+- **Negation Logic** *(NEW)*
+  - Opposite day attacks
+  - Double negative confusion
+  - Logical contradiction exploitation
+  - Exception logic bypass
+
+- **Token Manipulation** *(NEW)*
+  - Token splitting/concatenation
+  - Acronym expansion attacks
+  - Phonetic bypass
+  - Variable substitution tricks
 
 - **System Prompt Leakage**
   - Prompt extraction attempts
@@ -243,6 +297,36 @@ Test your LLM-powered API endpoints for security vulnerabilities:
 - **Authentication**
   - Unauthenticated access testing
   - API key validation
+
+- **Hallucination Induction** *(NEW)*
+  - Fake library/package requests
+  - Non-existent CVE fabrication
+  - Fake API endpoint generation
+  - Package hallucination attacks
+
+- **ASCII Art Jailbreak** *(NEW)*
+  - Visual text representation bypass
+  - Figlet/block letter attacks
+  - Dot matrix encoding
+  - Box drawing character injection
+
+- **Refusal Suppression** *(NEW)*
+  - Refusal word blocking
+  - Output format constraints
+  - Character limit abuse
+  - JSON format forcing
+
+- **Cipher/Encryption Games** *(NEW)*
+  - Custom cipher bypass (Atbash, vowel shift)
+  - Number-letter encoding
+  - First-letter acrostics
+  - Invented cipher attacks
+
+- **Recursive Prompt DoS** *(NEW)*
+  - Quine-style self-replication
+  - Infinite explanation loops
+  - Fibonacci expansion attacks
+  - Binary tree generation
 
 ## Quick Start
 
@@ -341,7 +425,7 @@ python3 -m pytest -m compliance       # Regional compliance
 python3 -m pytest -m cdn              # CDN tests
 
 # LLM Security Tests (use --llm-endpoint instead of --target-url)
-python3 -m pytest -m llm --llm-endpoint=https://api.example.com/chat           # All LLM tests
+python3 -m pytest -m llm --llm-endpoint=https://api.example.com/chat           # All LLM tests (36 tests)
 python3 -m pytest -m llm_injection --llm-endpoint=https://api.example.com/chat # Prompt injection
 python3 -m pytest -m llm_jailbreak --llm-endpoint=https://api.example.com/chat # Jailbreaking
 python3 -m pytest -m llm_leakage --llm-endpoint=https://api.example.com/chat   # System prompt leak
@@ -353,7 +437,7 @@ python3 -m pytest -m llm_multiturn --llm-endpoint=https://api.example.com/chat #
 python3 -m pytest -m llm_tools --llm-endpoint=https://api.example.com/chat     # Tool/function abuse
 python3 -m pytest -m llm_url --llm-endpoint=https://api.example.com/chat       # Indirect URL injection
 python3 -m pytest -m llm_pii --llm-endpoint=https://api.example.com/chat       # PII handling
-python3 -m pytest -m llm_markdown --llm-endpoint=https://api.example.com/chat   # Markdown/HTML injection
+python3 -m pytest -m llm_markdown --llm-endpoint=https://api.example.com/chat  # Markdown/HTML injection
 python3 -m pytest -m llm_unicode --llm-endpoint=https://api.example.com/chat   # Unicode/homoglyph bypass
 python3 -m pytest -m llm_emotional --llm-endpoint=https://api.example.com/chat # Emotional manipulation
 python3 -m pytest -m llm_rag --llm-endpoint=https://api.example.com/chat       # RAG poisoning
@@ -363,6 +447,24 @@ python3 -m pytest -m llm_tenant --llm-endpoint=https://api.example.com/chat    #
 python3 -m pytest -m llm_hierarchy --llm-endpoint=https://api.example.com/chat # Instruction hierarchy
 python3 -m pytest -m llm_rate --llm-endpoint=https://api.example.com/chat      # Rate limiting
 python3 -m pytest -m llm_auth --llm-endpoint=https://api.example.com/chat      # Auth bypass
+
+# NEW LLM Jailbreak Tests
+python3 -m pytest -m llm_persona --llm-endpoint=https://api.example.com/chat   # Persona/character jailbreak
+python3 -m pytest -m llm_educational --llm-endpoint=https://api.example.com/chat # Educational framing
+python3 -m pytest -m llm_devmode --llm-endpoint=https://api.example.com/chat   # Developer mode bypass
+python3 -m pytest -m llm_completion --llm-endpoint=https://api.example.com/chat # Completion baiting
+python3 -m pytest -m llm_nested --llm-endpoint=https://api.example.com/chat    # Nested encoding bypass
+python3 -m pytest -m llm_boundary --llm-endpoint=https://api.example.com/chat  # Context boundary attacks
+python3 -m pytest -m llm_fewshot --llm-endpoint=https://api.example.com/chat   # Few-shot jailbreaking
+python3 -m pytest -m llm_negation --llm-endpoint=https://api.example.com/chat  # Negation logic bypass
+python3 -m pytest -m llm_token --llm-endpoint=https://api.example.com/chat     # Token manipulation
+
+# ADVANCED LLM Tests
+python3 -m pytest -m llm_hallucination --llm-endpoint=https://api.example.com/chat # Hallucination induction
+python3 -m pytest -m llm_ascii --llm-endpoint=https://api.example.com/chat     # ASCII art jailbreak
+python3 -m pytest -m llm_refusal --llm-endpoint=https://api.example.com/chat   # Refusal suppression
+python3 -m pytest -m llm_cipher --llm-endpoint=https://api.example.com/chat    # Cipher game bypass
+python3 -m pytest -m llm_recursive --llm-endpoint=https://api.example.com/chat # Recursive prompt DoS
 ```
 
 ## Test Intensity Levels

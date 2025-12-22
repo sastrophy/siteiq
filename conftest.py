@@ -138,6 +138,22 @@ def pytest_configure(config):
     config.addinivalue_line("markers", "llm_rag: RAG poisoning tests")
     config.addinivalue_line("markers", "llm_tenant: Cross-tenant leakage tests")
     config.addinivalue_line("markers", "llm_hierarchy: Instruction hierarchy tests")
+    # New LLM test markers
+    config.addinivalue_line("markers", "llm_persona: Persona/character continuation jailbreak tests")
+    config.addinivalue_line("markers", "llm_educational: Educational/research framing bypass tests")
+    config.addinivalue_line("markers", "llm_devmode: Developer/debug mode bypass tests")
+    config.addinivalue_line("markers", "llm_completion: Completion baiting tests")
+    config.addinivalue_line("markers", "llm_nested: Nested encoding bypass tests")
+    config.addinivalue_line("markers", "llm_boundary: Context boundary attack tests")
+    config.addinivalue_line("markers", "llm_fewshot: Few-shot jailbreaking tests")
+    config.addinivalue_line("markers", "llm_negation: Opposite/negation logic bypass tests")
+    config.addinivalue_line("markers", "llm_token: Token manipulation bypass tests")
+    # Advanced LLM test markers
+    config.addinivalue_line("markers", "llm_hallucination: Hallucination induction tests (fake libs, CVEs)")
+    config.addinivalue_line("markers", "llm_ascii: ASCII art / visual jailbreak tests")
+    config.addinivalue_line("markers", "llm_refusal: Refusal suppression tests")
+    config.addinivalue_line("markers", "llm_cipher: Cipher/encryption game bypass tests")
+    config.addinivalue_line("markers", "llm_recursive: Recursive/self-replicating prompt DoS tests")
 
 
 @pytest.fixture(scope="session")

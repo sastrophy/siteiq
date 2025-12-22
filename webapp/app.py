@@ -559,6 +559,92 @@ TEST_CATEGORIES = {
         "marker": "llm_hierarchy",
         "category": "llm",
     },
+    # New LLM test categories
+    "llm_persona": {
+        "name": "Persona/Character Jailbreak",
+        "description": "Test persona continuation attacks",
+        "marker": "llm_persona",
+        "category": "llm",
+    },
+    "llm_educational": {
+        "name": "Educational Framing",
+        "description": "Test research/academic framing bypass",
+        "marker": "llm_educational",
+        "category": "llm",
+    },
+    "llm_devmode": {
+        "name": "Developer Mode",
+        "description": "Test fake debug/admin mode bypass",
+        "marker": "llm_devmode",
+        "category": "llm",
+    },
+    "llm_completion": {
+        "name": "Completion Baiting",
+        "description": "Test completion-based manipulation",
+        "marker": "llm_completion",
+        "category": "llm",
+    },
+    "llm_nested": {
+        "name": "Nested Encoding",
+        "description": "Test multi-layer encoding bypass",
+        "marker": "llm_nested",
+        "category": "llm",
+    },
+    "llm_boundary": {
+        "name": "Context Boundary",
+        "description": "Test context window boundary attacks",
+        "marker": "llm_boundary",
+        "category": "llm",
+    },
+    "llm_fewshot": {
+        "name": "Few-Shot Jailbreak",
+        "description": "Test few-shot example manipulation",
+        "marker": "llm_fewshot",
+        "category": "llm",
+    },
+    "llm_negation": {
+        "name": "Negation Logic",
+        "description": "Test opposite/negation bypass",
+        "marker": "llm_negation",
+        "category": "llm",
+    },
+    "llm_token": {
+        "name": "Token Manipulation",
+        "description": "Test token splitting/reassembly bypass",
+        "marker": "llm_token",
+        "category": "llm",
+    },
+    # Advanced LLM test categories
+    "llm_hallucination": {
+        "name": "Hallucination Induction",
+        "description": "Test fake library/CVE fabrication",
+        "marker": "llm_hallucination",
+        "category": "llm",
+    },
+    "llm_ascii": {
+        "name": "ASCII Art Jailbreak",
+        "description": "Test visual/text art bypass",
+        "marker": "llm_ascii",
+        "category": "llm",
+    },
+    "llm_refusal": {
+        "name": "Refusal Suppression",
+        "description": "Test refusal mechanism bypass",
+        "marker": "llm_refusal",
+        "category": "llm",
+    },
+    "llm_cipher": {
+        "name": "Cipher Game",
+        "description": "Test custom cipher bypass",
+        "marker": "llm_cipher",
+        "category": "llm",
+    },
+    "llm_recursive": {
+        "name": "Recursive Prompt DoS",
+        "description": "Test self-replicating prompt attacks",
+        "marker": "llm_recursive",
+        "category": "llm",
+    },
 }
 
 
