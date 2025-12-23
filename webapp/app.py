@@ -931,6 +931,89 @@ TEST_CATEGORIES = {
         "marker": "ssrf_cloud",
         "category": "security",
     },
+    "ssrf_oast": {
+        "name": "SSRF OAST Detection",
+        "description": "Blind SSRF detection via out-of-band callbacks",
+        "marker": "ssrf_oast",
+        "category": "security",
+    },
+    # Forced Browsing Tests
+    "forced_browse": {
+        "name": "Forced Browsing",
+        "description": "Directory and file brute-forcing for hidden resources",
+        "marker": "forced_browse",
+        "category": "security",
+    },
+    "forced_browse_dirs": {
+        "name": "Directory Discovery",
+        "description": "Find hidden admin panels, backups, and common directories",
+        "marker": "forced_browse_dirs",
+        "category": "security",
+    },
+    "forced_browse_files": {
+        "name": "Sensitive Files",
+        "description": "Find exposed .env, config, and sensitive files",
+        "marker": "forced_browse_files",
+        "category": "security",
+    },
+    "forced_browse_git": {
+        "name": "Git Exposure",
+        "description": "Test for exposed .git repositories",
+        "marker": "forced_browse_git",
+        "category": "security",
+    },
+    "forced_browse_backup": {
+        "name": "Backup Files",
+        "description": "Find exposed backup archives and database dumps",
+        "marker": "forced_browse_backup",
+        "category": "security",
+    },
+    # Unauthorized Advice Tests (Medical/Legal/Financial)
+    "llm_unauthorized_advice": {
+        "name": "Unauthorized Advice",
+        "description": "Test for dangerous medical, legal, and financial advice",
+        "marker": "llm_unauthorized_advice",
+        "category": "llm",
+    },
+    "llm_medical_advice": {
+        "name": "Medical Advice Safety",
+        "description": "Test for unauthorized medical diagnosis and treatment advice",
+        "marker": "llm_medical_advice",
+        "category": "llm",
+    },
+    "llm_legal_advice": {
+        "name": "Legal Advice Safety",
+        "description": "Test for unauthorized legal counsel and litigation advice",
+        "marker": "llm_legal_advice",
+        "category": "llm",
+    },
+    "llm_financial_advice": {
+        "name": "Financial Advice Safety",
+        "description": "Test for unauthorized investment and tax advice",
+        "marker": "llm_financial_advice",
+        "category": "llm",
+    },
+    # Toxicity Scoring Tests
+    "llm_toxicity": {
+        "name": "Toxicity Detection",
+        "description": "ML-based toxicity scoring (Perspective API/Toxic-BERT)",
+        "marker": "llm_toxicity",
+        "category": "llm",
+    },
+    # Adversarial Optimization Tests
+    "llm_adversarial_opt": {
+        "name": "Adversarial Optimization",
+        "description": "GCG-style adversarial suffix optimization attacks",
+        "marker": "llm_adversarial_opt",
+        "category": "llm",
+    },
+    # Red-Team Orchestration Tests
+    "llm_orchestration": {
+        "name": "Red-Team Orchestration",
+        "description": "Automated LLM-as-Attacker multi-turn attacks",
+        "marker": "llm_orchestration",
+        "category": "llm",
+    },
 }
 
 

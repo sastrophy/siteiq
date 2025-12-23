@@ -1,0 +1,209 @@
+# Sensitive Files Wordlist for Forced Browsing
+# Part of SiteIQ Security Testing Framework
+
+# Environment and Config Files
+.env
+.env.local
+.env.development
+.env.production
+.env.staging
+.env.backup
+.env.old
+.env.example
+.env.sample
+config.php
+config.inc.php
+configuration.php
+settings.php
+settings.py
+settings.json
+config.json
+config.yml
+config.yaml
+app.config
+web.config
+application.properties
+application.yml
+
+# Git Exposure
+.git/config
+.git/HEAD
+.git/index
+.git/logs/HEAD
+.git/objects/
+.gitconfig
+.gitignore
+.git-credentials
+
+# SSH/Keys
+.ssh/id_rsa
+.ssh/id_rsa.pub
+.ssh/authorized_keys
+.ssh/known_hosts
+id_rsa
+id_rsa.pub
+private.key
+private.pem
+server.key
+server.pem
+
+# Credentials
+credentials.json
+credentials.xml
+secrets.json
+secrets.yml
+passwords.txt
+passwd
+htpasswd
+.htpasswd
+shadow
+master.key
+credentials
+.netrc
+.npmrc
+.pypirc
+
+# AWS
+.aws/credentials
+.aws/config
+aws.json
+aws.yml
+
+# Docker/Container
+docker-compose.yml
+docker-compose.yaml
+Dockerfile
+.dockerenv
+.docker/config.json
+
+# Database
+database.yml
+database.json
+db.sqlite
+db.sqlite3
+database.sql
+dump.sql
+backup.sql
+mysql.dump
+
+# CI/CD
+.travis.yml
+.gitlab-ci.yml
+Jenkinsfile
+.circleci/config.yml
+azure-pipelines.yml
+.github/workflows/
+
+# Logs
+access.log
+error.log
+debug.log
+application.log
+app.log
+server.log
+php_errors.log
+mysql.log
+laravel.log
+
+# Backup Files
+backup.zip
+backup.tar.gz
+backup.sql
+site-backup.zip
+db-backup.sql
+www.zip
+html.zip
+public_html.zip
+
+# IDE/Editor
+.idea/
+.vscode/settings.json
+.sublime-project
+.sublime-workspace
+.project
+.classpath
+*.swp
+*.swo
+*~
+
+# PHP Info and Debug
+phpinfo.php
+info.php
+test.php
+debug.php
+status.php
+health.php
+adminer.php
+phpmyadmin/
+
+# Package Managers
+package.json
+package-lock.json
+composer.json
+composer.lock
+Gemfile
+Gemfile.lock
+requirements.txt
+Pipfile
+Pipfile.lock
+yarn.lock
+pnpm-lock.yaml
+
+# Source Maps
+main.js.map
+bundle.js.map
+app.js.map
+*.map
+
+# Build artifacts
+build.xml
+pom.xml
+build.gradle
+Makefile
+gulpfile.js
+webpack.config.js
+
+# API Documentation
+swagger.json
+swagger.yaml
+openapi.json
+openapi.yaml
+api-docs.json
+
+# CMS Config
+wp-config.php
+wp-config.php.bak
+wp-config.php~
+wp-config-sample.php
+configuration.php
+LocalSettings.php
+local_settings.py
+
+# Server Config
+nginx.conf
+apache2.conf
+httpd.conf
+.htaccess
+.htaccess.bak
+robots.txt
+sitemap.xml
+crossdomain.xml
+clientaccesspolicy.xml
+
+# Certificates
+server.crt
+server.key
+ca-bundle.crt
+certificate.pem
+cert.pem
+
+# Miscellaneous
+readme.md
+README.md
+CHANGELOG.md
+TODO.md
+VERSION
+license.txt
+LICENSE
+INSTALL.md
+CONTRIBUTING.md

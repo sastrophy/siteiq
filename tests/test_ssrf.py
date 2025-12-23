@@ -6,6 +6,7 @@ Tests for SSRF vulnerabilities including:
 - Cloud metadata service access (AWS, GCP, Azure)
 - Protocol smuggling
 - Blind SSRF detection
+- Out-of-Band (OAST) detection
 """
 
 import re
@@ -22,7 +23,9 @@ from payloads.ssrf import (
     SSRF_PROTOCOL_PAYLOADS,
     SSRF_VULNERABLE_PARAMS,
     SSRF_SUCCESS_SIGNATURES,
+    generate_oast_payloads,
 )
+from utils.oast_client import OASTClient, OASTConfig
 
 
 @pytest.fixture
@@ -397,3 +400,87 @@ class TestSSRFVulnerabilities:
             )
             findings_collector.add(finding)
             ssrf_scanner.add_finding(finding)
+
+    @pytest.mark.security
+    @pytest.mark.ssrf
+    @pytest.mark.ssrf_oast
+    def test_ssrf_oast_detection(self, ssrf_scanner, target_url, findings_collector, request):
+        """Test for blind SSRF using Out-of-Band Application Security Testing (OAST)."""
+        # Check if OAST is enabled via CLI option
+        oast_server = request.config.getoption("--oast-server", default=None)
+        if not oast_server:
+            pytest.skip("OAST testing requires --oast-server option")
+
+        resp = ssrf_scanner.request("GET", target_url)
+        if not resp or resp.status_code != 200:
+            pytest.skip("Could not access target URL")
+
+        vulnerabilities = []
+
+        # Initialize OAST client
+        oast_config = OASTConfig(
+            use_interactsh=True,
+            interactsh_server=oast_server,
+            poll_timeout=30.0,
+        )
+        oast_client = OASTClient(oast_config)
+
+        try:
+            for param in SSRF_VULNERABLE_PARAMS[:10]:
+                # Generate unique callback for this parameter test
+                test_id = f"ssrf_{param}"
+                callback_url = oast_client.generate_http_callback(test_id)
+                dns_callback = oast_client.generate_dns_callback(f"{test_id}_dns")
+
+                # Generate OAST payloads
+                oast_payloads = generate_oast_payloads(callback_url, dns_callback)
+
+                for payload_info in oast_payloads[:5]:
+                    payload = payload_info["payload"]
+                    description = payload_info["description"]
+
+                    # Test via GET parameter
+                    test_url = f"{target_url}?{urlencode({param: payload})}"
+                    ssrf_scanner.request("GET", test_url, timeout=10)
+
+                    # Test via POST
+                    ssrf_scanner.request(
+                        "POST",
+                        target_url,
+                        data={param: payload},
+                        headers={"Content-Type": "application/x-www-form-urlencoded"},
+                        timeout=10
+                    )
+
+                # Check for OAST interactions
+                if oast_client.has_interaction(test_id, wait=True):
+                    interactions = oast_client.check_interactions(test_id, wait=False)
+                    vulnerabilities.append({
+                        "param": param,
+                        "interactions": len(interactions),
+                        "interaction_types": [i.interaction_type.value for i in interactions],
+                        "source_ips": [i.source_ip for i in interactions[:3]],
+                    })
+
+            for vuln in vulnerabilities:
+                finding = Finding(
+                    title=f"Blind SSRF Confirmed via OAST",
+                    severity=Severity.CRITICAL,
+                    description=f"Blind SSRF vulnerability confirmed through out-of-band callback. "
+                               f"The server made {vuln['interactions']} request(s) to our callback server. "
+                               f"Parameter: {vuln['param']}, Interaction types: {vuln['interaction_types']}",
+                    url=target_url,
+                    evidence=f"Param: {vuln['param']} | Callbacks received: {vuln['interactions']} | "
+                            f"Source IPs: {vuln['source_ips']}",
+                    remediation="This is a confirmed blind SSRF vulnerability. "
+                               "Implement strict URL validation with domain allowlists. "
+                               "Block requests to internal IP ranges and cloud metadata services. "
+                               "Consider using a proxy that enforces URL policies.",
+                    cwe_id="CWE-918",
+                    owasp_category="A10:2021 - Server-Side Request Forgery",
+                )
+                findings_collector.add(finding)
+                ssrf_scanner.add_finding(finding)
+
+        finally:
+            oast_client.stop()

