@@ -974,6 +974,24 @@
                             <p>Tests for CSRF, SSRF, and other OWASP vulnerabilities.</p>
                             <div class="includes"><strong>Includes:</strong> CSRF tokens, Open redirects, IDOR</div>
                         </div>
+
+                        <div class="feature-card security">
+                            <div class="feature-icon security">
+                                <i class="bi bi-broadcast"></i>
+                            </div>
+                            <h4>OAST Detection</h4>
+                            <p>Out-of-Band Application Security Testing for blind vulnerabilities.</p>
+                            <div class="includes"><strong>Includes:</strong> Blind SSRF, Blind SQLi, DNS callbacks, HTTP callbacks</div>
+                        </div>
+
+                        <div class="feature-card security">
+                            <div class="feature-icon security">
+                                <i class="bi bi-folder-symlink"></i>
+                            </div>
+                            <h4>Forced Browsing</h4>
+                            <p>Directory and file brute-forcing to discover hidden resources.</p>
+                            <div class="includes"><strong>Includes:</strong> Common directories, Sensitive files, Git exposure, Backup files</div>
+                        </div>
                     </div>
                 </section>
 
@@ -1287,6 +1305,42 @@
                             <p>Tests for system prompt override attacks.</p>
                             <div class="includes"><strong>Includes:</strong> Priority escalation, Boundary injection</div>
                         </div>
+
+                        <div class="feature-card llm">
+                            <div class="feature-icon llm">
+                                <i class="bi bi-exclamation-diamond"></i>
+                            </div>
+                            <h4>Toxicity Detection</h4>
+                            <p>ML-based detection of toxic or harmful LLM outputs.</p>
+                            <div class="includes"><strong>Includes:</strong> Perspective API, Toxic-BERT, Hate speech, Threats</div>
+                        </div>
+
+                        <div class="feature-card llm">
+                            <div class="feature-icon llm">
+                                <i class="bi bi-bandaid"></i>
+                            </div>
+                            <h4>Unauthorized Advice</h4>
+                            <p>Tests if LLM provides dangerous professional advice.</p>
+                            <div class="includes"><strong>Includes:</strong> Medical advice, Legal advice, Financial advice</div>
+                        </div>
+
+                        <div class="feature-card llm">
+                            <div class="feature-icon llm">
+                                <i class="bi bi-lightning-charge"></i>
+                            </div>
+                            <h4>Adversarial Optimization</h4>
+                            <p>GCG-style adversarial suffix attacks to bypass safety.</p>
+                            <div class="includes"><strong>Includes:</strong> Static suffixes, Random search, Genetic algorithms</div>
+                        </div>
+
+                        <div class="feature-card llm">
+                            <div class="feature-icon llm">
+                                <i class="bi bi-bullseye"></i>
+                            </div>
+                            <h4>Red-Team Orchestration</h4>
+                            <p>Automated multi-turn attack conversations using LLM-as-Attacker.</p>
+                            <div class="includes"><strong>Includes:</strong> Jailbreak, Extraction, Manipulation, Escalation</div>
+                        </div>
                     </div>
 
                     <div class="card mt-4">
@@ -1419,10 +1473,87 @@
                         </table>
                     </div>
 
+                    <div class="card mt-3">
+                        <div class="card-title"><i class="bi bi-shield-exclamation me-2" style="color: var(--accent-orange);"></i>Advanced Security Options</div>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Option</th>
+                                    <th>Description</th>
+                                    <th>Example</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>OAST Server</strong></td>
+                                    <td>Out-of-Band Application Security Testing server for blind vulnerability detection via DNS/HTTP callbacks</td>
+                                    <td><code>oast.live</code> or <code>interact.sh</code></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Custom Wordlist</strong></td>
+                                    <td>Path to custom wordlist file for directory/file brute-forcing</td>
+                                    <td><code>/path/to/wordlist.txt</code></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="card mt-3">
+                        <div class="card-title"><i class="bi bi-robot me-2" style="color: var(--accent-green);"></i>Advanced LLM Options</div>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Option</th>
+                                    <th>Description</th>
+                                    <th>Values</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Toxicity Scorer</strong></td>
+                                    <td>ML backend for detecting toxic LLM outputs</td>
+                                    <td><code>auto</code>, <code>perspective</code>, <code>toxic_bert</code>, <code>signature</code></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Toxicity Threshold</strong></td>
+                                    <td>Score threshold for flagging toxic content (0.0-1.0)</td>
+                                    <td>Default: <code>0.7</code></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Perspective API Key</strong></td>
+                                    <td>Google Perspective API key for toxicity scoring</td>
+                                    <td>Your API key</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Adversarial Mode</strong></td>
+                                    <td>GCG-style adversarial suffix optimization strategy</td>
+                                    <td><code>static</code>, <code>random</code>, <code>genetic</code></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Attacker LLM</strong></td>
+                                    <td>LLM endpoint for red-team orchestration (LLM-as-Attacker)</td>
+                                    <td><code>https://api.example.com/chat</code></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Max Attack Turns</strong></td>
+                                    <td>Maximum conversation turns for orchestrated attacks</td>
+                                    <td>Default: <code>10</code></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
                     <div class="alert-box tip mt-3">
                         <i class="bi bi-lightbulb"></i>
                         <div>
                             <strong>Pro Tip:</strong> Start with Light intensity for initial scans, then run Aggressive scans during off-peak hours for thorough testing.
+                        </div>
+                    </div>
+
+                    <div class="alert-box info mt-3">
+                        <i class="bi bi-info-circle"></i>
+                        <div>
+                            <strong>OAST Setup:</strong> For blind vulnerability detection, you can use public OAST servers like <code>oast.live</code> or <code>interact.sh</code>, or set up your own Interactsh server.
                         </div>
                     </div>
                 </section>
@@ -1566,6 +1697,72 @@
                                     <li>Create an API key</li>
                                     <li>Set the environment variable: <code>PAGESPEED_API_KEY=your_key</code></li>
                                 </ol>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">
+                                <h4>What is OAST and how does it work?</h4>
+                                <i class="bi bi-chevron-down"></i>
+                            </div>
+                            <div class="accordion-content">
+                                <p><strong>Out-of-Band Application Security Testing (OAST)</strong> detects blind vulnerabilities that don't show immediate responses:</p>
+                                <ul class="mt-2">
+                                    <li><strong>Blind SSRF:</strong> Server makes requests to external server you control</li>
+                                    <li><strong>Blind SQLi:</strong> Database makes DNS lookups or HTTP requests</li>
+                                    <li><strong>How it works:</strong> Payloads include unique callback URLs. If the vulnerability exists, your OAST server receives callbacks.</li>
+                                </ul>
+                                <p class="mt-2">Use public servers (<code>oast.live</code>, <code>interact.sh</code>) or deploy your own Interactsh instance.</p>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">
+                                <h4>What is Red-Team Orchestration?</h4>
+                                <i class="bi bi-chevron-down"></i>
+                            </div>
+                            <div class="accordion-content">
+                                <p><strong>Red-Team Orchestration</strong> uses an "attacker LLM" to automatically probe your "target LLM" through multi-turn conversations:</p>
+                                <ul class="mt-2">
+                                    <li><strong>Jailbreak:</strong> Attempts to bypass safety guidelines</li>
+                                    <li><strong>Extraction:</strong> Tries to extract system prompts or sensitive data</li>
+                                    <li><strong>Manipulation:</strong> Attempts to alter target behavior</li>
+                                    <li><strong>Escalation:</strong> Gradually escalates from benign to harmful requests</li>
+                                </ul>
+                                <p class="mt-2">Inspired by PyRIT's RedTeamingOrchestrator and PAIR (Prompt Automatic Iterative Refinement).</p>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">
+                                <h4>How does adversarial optimization work?</h4>
+                                <i class="bi bi-chevron-down"></i>
+                            </div>
+                            <div class="accordion-content">
+                                <p><strong>Adversarial Optimization</strong> appends specially crafted suffixes to prompts to bypass LLM safety filters:</p>
+                                <ul class="mt-2">
+                                    <li><strong>Static:</strong> Uses known effective suffixes from research</li>
+                                    <li><strong>Random Search:</strong> Randomly generates and tests suffix variations</li>
+                                    <li><strong>Genetic Algorithm:</strong> Evolves suffixes over generations to maximize bypass success</li>
+                                </ul>
+                                <p class="mt-2">Based on GCG (Greedy Coordinate Gradient) research on adversarial attacks against LLMs.</p>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">
+                                <h4>What toxicity scoring backends are available?</h4>
+                                <i class="bi bi-chevron-down"></i>
+                            </div>
+                            <div class="accordion-content">
+                                <p>SiteIQ supports multiple backends for detecting toxic LLM outputs:</p>
+                                <ul class="mt-2">
+                                    <li><strong>Auto:</strong> Automatically selects the best available backend</li>
+                                    <li><strong>Perspective API:</strong> Google's production-grade toxicity detection (requires API key)</li>
+                                    <li><strong>Toxic-BERT:</strong> Local transformer model for offline scoring</li>
+                                    <li><strong>Signature:</strong> Fast keyword-based fallback detection</li>
+                                </ul>
+                                <p class="mt-2">The threshold (0.0-1.0) controls sensitivity. Lower values flag more content as toxic.</p>
                             </div>
                         </div>
                     </div>
