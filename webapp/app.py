@@ -856,6 +856,81 @@ TEST_CATEGORIES = {
         "marker": "llm_misinfo",
         "category": "llm",
     },
+    # Garak/PyRIT Gap Categories
+    "llm_package_hallucination": {
+        "name": "Package Hallucination",
+        "description": "Test if LLM suggests non-existent/malicious packages in code",
+        "marker": "llm_package_hallucination",
+        "category": "llm",
+    },
+    "llm_glitch_token": {
+        "name": "Glitch Token Attacks",
+        "description": "Test exploitation of model-specific token anomalies",
+        "marker": "llm_glitch_token",
+        "category": "llm",
+    },
+    "llm_crescendo": {
+        "name": "Crescendo Attacks",
+        "description": "Test gradual escalation from benign to harmful requests",
+        "marker": "llm_crescendo",
+        "category": "llm",
+    },
+    "llm_cbrn": {
+        "name": "CBRN Content",
+        "description": "Test Chemical/Biological/Radiological/Nuclear content safety",
+        "marker": "llm_cbrn",
+        "category": "llm",
+    },
+    "llm_code_chameleon": {
+        "name": "Code Chameleon",
+        "description": "Test prompts hidden in data structures (JSON/XML/YAML)",
+        "marker": "llm_code_chameleon",
+        "category": "llm",
+    },
+    "llm_math_framing": {
+        "name": "Math Prompt Framing",
+        "description": "Test harmful requests disguised as math/logic puzzles",
+        "marker": "llm_math_framing",
+        "category": "llm",
+    },
+    "llm_persuasion": {
+        "name": "Persuasion Techniques",
+        "description": "Test fake authority, social proof, expert endorsement attacks",
+        "marker": "llm_persuasion",
+        "category": "llm",
+    },
+    "llm_snowball": {
+        "name": "Snowball Hallucination",
+        "description": "Test acceptance of false premises and cascading fabrication",
+        "marker": "llm_snowball",
+        "category": "llm",
+    },
+    # Malware and Dynamic Multi-Turn
+    "llm_malware": {
+        "name": "Malware Generation",
+        "description": "Test EICAR signature and malware code generation",
+        "marker": "llm_malware",
+        "category": "llm",
+    },
+    "llm_dynamic_multiturn": {
+        "name": "Dynamic Multi-Turn",
+        "description": "Test dynamic conversation escalation attacks",
+        "marker": "llm_dynamic_multiturn",
+        "category": "llm",
+    },
+    # SSRF Tests
+    "ssrf": {
+        "name": "SSRF Testing",
+        "description": "Test Server-Side Request Forgery vulnerabilities",
+        "marker": "ssrf",
+        "category": "security",
+    },
+    "ssrf_cloud": {
+        "name": "SSRF Cloud Metadata",
+        "description": "Test SSRF to AWS/GCP/Azure metadata services",
+        "marker": "ssrf_cloud",
+        "category": "security",
+    },
 }
 
 

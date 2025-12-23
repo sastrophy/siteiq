@@ -173,6 +173,26 @@ def pytest_configure(config):
     config.addinivalue_line("markers", "llm_cognitive: Cognitive overload and paradox attack tests")
     config.addinivalue_line("markers", "llm_multiagent: Multi-agent compromise and privilege escalation tests")
     config.addinivalue_line("markers", "llm_misinfo: Misinformation and disinformation generation tests")
+    # Garak/PyRIT Gap Categories
+    config.addinivalue_line("markers", "llm_package_hallucination: Package hallucination tests for code generation")
+    config.addinivalue_line("markers", "llm_glitch_token: Glitch token exploitation tests")
+    config.addinivalue_line("markers", "llm_crescendo: Crescendo (gradual escalation) attack tests")
+    config.addinivalue_line("markers", "llm_cbrn: CBRN (Chemical/Biological/Radiological/Nuclear) content tests")
+    config.addinivalue_line("markers", "llm_code_chameleon: Code chameleon (data structure injection) tests")
+    config.addinivalue_line("markers", "llm_math_framing: Math prompt framing bypass tests")
+    config.addinivalue_line("markers", "llm_persuasion: Persuasion technique (fake authority/social proof) tests")
+    config.addinivalue_line("markers", "llm_snowball: Snowball hallucination (false premise) tests")
+    # Malware and Dynamic Multi-Turn
+    config.addinivalue_line("markers", "llm_malware: Malware/EICAR signature generation tests")
+    config.addinivalue_line("markers", "llm_dynamic_multiturn: Dynamic multi-turn escalation attack tests")
+
+    # SSRF test markers
+    config.addinivalue_line("markers", "ssrf: Server-Side Request Forgery tests")
+    config.addinivalue_line("markers", "ssrf_localhost: SSRF localhost/127.0.0.1 access tests")
+    config.addinivalue_line("markers", "ssrf_cloud: SSRF cloud metadata (AWS/GCP/Azure) tests")
+    config.addinivalue_line("markers", "ssrf_internal: SSRF internal network access tests")
+    config.addinivalue_line("markers", "ssrf_protocol: SSRF protocol smuggling (file://, gopher://) tests")
+    config.addinivalue_line("markers", "ssrf_blind: Blind SSRF detection tests")
 
     # API Security test markers
     config.addinivalue_line("markers", "api_security: API security tests")

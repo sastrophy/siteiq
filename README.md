@@ -165,7 +165,7 @@ Do NOT expose this application to the internet without proper security configura
 - Debug log exposure
 - wp-admin accessibility
 
-### LLM Security Testing (53 Tests)
+### LLM Security Testing (61 Tests)
 
 Test your LLM-powered API endpoints for security vulnerabilities:
 
@@ -179,19 +179,19 @@ Test your LLM-powered API endpoints for security vulnerabilities:
   - Role-play bypasses
   - Context manipulation
 
-- **Persona/Character Continuation** *(NEW)*
+- **Persona/Character Continuation** 
   - Story continuation attacks
   - "Grandma exploit" style attacks
   - Fictional world framing
   - Split personality manipulation
 
-- **Educational Framing** *(NEW)*
+- **Educational Framing** 
   - Academic research claims
   - Security researcher impersonation
   - Teaching example manipulation
   - Ethical hacking framing
 
-- **Developer Mode** *(NEW)*
+- **Developer Mode** 
   - Fake debug/admin mode activation
   - Sudo command injection
   - Legacy version claims
@@ -202,7 +202,7 @@ Test your LLM-powered API endpoints for security vulnerabilities:
   - Leetspeak and Pig Latin
   - Unicode escapes and Morse code
 
-- **Nested Encoding** *(NEW)*
+- **Nested Encoding** 
   - Double/triple Base64
   - Base64 + ROT13 combinations
   - Hex + Base64 chains
@@ -217,31 +217,31 @@ Test your LLM-powered API endpoints for security vulnerabilities:
   - Trust building attacks
   - Context window overflow
 
-- **Few-Shot Jailbreaking** *(NEW)*
+- **Few-Shot Jailbreaking** 
   - Malicious example injection
   - Behavior cloning via examples
   - Reinforcement framing
   - Pattern demonstration attacks
 
-- **Completion Baiting** *(NEW)*
+- **Completion Baiting** 
   - Sentence/code completion traps
   - Pattern completion manipulation
   - JSON/list completion attacks
   - Fill-in-the-blank exploitation
 
-- **Context Boundary Attacks** *(NEW)*
+- **Context Boundary Attacks** 
   - Token limit exploitation
   - Attention dilution attacks
   - Middle injection techniques
   - Newline/unicode flooding
 
-- **Negation Logic** *(NEW)*
+- **Negation Logic** 
   - Opposite day attacks
   - Double negative confusion
   - Logical contradiction exploitation
   - Exception logic bypass
 
-- **Token Manipulation** *(NEW)*
+- **Token Manipulation** 
   - Token splitting/concatenation
   - Acronym expansion attacks
   - Phonetic bypass
@@ -320,61 +320,61 @@ Test your LLM-powered API endpoints for security vulnerabilities:
   - Unauthenticated access testing
   - API key validation
 
-- **Hallucination Induction** *(NEW)*
+- **Hallucination Induction** 
   - Fake library/package requests
   - Non-existent CVE fabrication
   - Fake API endpoint generation
   - Package hallucination attacks
 
-- **ASCII Art Jailbreak** *(NEW)*
+- **ASCII Art Jailbreak** 
   - Visual text representation bypass
   - Figlet/block letter attacks
   - Dot matrix encoding
   - Box drawing character injection
 
-- **Refusal Suppression** *(NEW)*
+- **Refusal Suppression** 
   - Refusal word blocking
   - Output format constraints
   - Character limit abuse
   - JSON format forcing
 
-- **Cipher/Encryption Games** *(NEW)*
+- **Cipher/Encryption Games** 
   - Custom cipher bypass (Atbash, vowel shift)
   - Number-letter encoding
   - First-letter acrostics
   - Invented cipher attacks
 
-- **Recursive Prompt DoS** *(NEW)*
+- **Recursive Prompt DoS** 
   - Quine-style self-replication
   - Infinite explanation loops
   - Fibonacci expansion attacks
   - Binary tree generation
 
-- **Semantic Dissociation** *(NEW)*
+- **Semantic Dissociation** 
   - Educational misdirection attacks
   - Fictional framing bypass
   - Positive spin on harmful content
   - Metaphor and abstract game theory attacks
 
-- **Fine-tuning Data Inference** *(NEW)*
+- **Fine-tuning Data Inference** 
   - Internal documentation probing
   - Company-specific knowledge extraction
   - HR/personnel data inference
   - Customer data probing
 
-- **Adversarial Suffixes** *(NEW)*
+- **Adversarial Suffixes** 
   - Control character injection
   - Token boundary exploitation
   - Unicode BOM injection
   - Special token attempts
 
-- **Implicit Instruction Following** *(NEW)*
+- **Implicit Instruction Following** 
   - Hidden document commands
   - Conversational pattern inference
   - False memory/authorization claims
   - Behavioral classification bypass
 
-- **Sensitive File Output** *(NEW)*
+- **Sensitive File Output** 
   - RAG context file disclosure
   - Environment variable extraction
   - Source code leakage via context
@@ -382,70 +382,70 @@ Test your LLM-powered API endpoints for security vulnerabilities:
 
 #### 2025 Advanced LLM Security Tests (OWASP LLM Top 10 2025)
 
-- **MCP/Tool Attacks** *(NEW - CRITICAL)*
+- **MCP/Tool Attacks** 
   - Line jumping (tool description injection)
   - Tool impersonation and hijacking
   - Context manipulation via tools
   - Cross-tool pollution attacks
   - MCP server authentication bypass
 
-- **Memory/Context Poisoning** *(NEW - CRITICAL)*
+- **Memory/Context Poisoning** 
   - Echo Chamber attacks (90%+ success on GPT-4o/Gemini)
   - MemoryGraft (persistent compromise)
   - MINJA (memory injection via queries)
   - Cross-session pollution
   - Fabricated conversation history
 
-- **Chain-of-Thought Manipulation** *(NEW)*
+- **Chain-of-Thought Manipulation** 
   - H-CoT (Hijacking Chain-of-Thought)
   - `<think>` token injection
   - Reasoning step disruption
   - Safety reasoning hijacking
   - CoT forging attacks
 
-- **Structured Output Attacks** *(NEW)*
+- **Structured Output Attacks** 
   - Chain Enum Attack (96.2% ASR on GPT-4o)
   - JSON key injection (duplicate key override)
   - Schema constraint bypass
   - Output format manipulation
   - Constrained decoding exploitation
 
-- **Vector/Embedding Attacks** *(NEW - OWASP LLM08:2025)*
+- **Vector/Embedding Attacks**
   - Embedding extraction attempts
   - Vector similarity exploitation
   - Cross-tenant vector leakage
   - RAG retrieval manipulation
   - Semantic collision attacks
 
-- **CVE Attack Patterns** *(NEW)*
+- **CVE Attack Patterns** 
   - CVE-2025-32711 (EchoLeak) patterns
   - CVE-2025-54135 (CurXecute) patterns
   - GitHub Copilot RCE patterns
   - Document-embedded prompt injection
   - Log-to-prompt injection
 
-- **Unbounded Consumption** *(NEW - OWASP LLM10:2025)*
+- **Unbounded Consumption** 
   - Model extraction query patterns
   - Compute exhaustion attacks
   - Economic denial of service
   - Token multiplication attacks
   - Rate limit evasion techniques
 
-- **Multimodal Attack Simulation** *(NEW)*
+- **Multimodal Attack Simulation** 
   - Image-based injection patterns
   - Audio transcription attacks
   - PDF hidden prompt detection
   - Cross-modal exploitation
   - OCR bypass techniques
 
-- **Supply Chain Attacks** *(NEW - OWASP LLM03:2025)*
+- **Supply Chain Attacks** 
   - Backdoor trigger detection
   - Plugin impersonation
   - Poisoned model claims
   - Dependency confusion patterns
   - Training data poisoning indicators
 
-- **Cognitive Overload / Paradox Attacks** *(NEW)*
+- **Cognitive Overload / Paradox Attacks** 
   - Instruction paradox exploitation
   - Liar paradox / self-reference attacks
   - Trolley problem coercion
@@ -454,7 +454,7 @@ Test your LLM-powered API endpoints for security vulnerabilities:
   - Parallel task flooding
   - Utilitarian ethics bypass
 
-- **Multi-Agent Compromise** *(NEW)*
+- **Multi-Agent Compromise** 
   - Agent-to-agent message poisoning
   - Agent chain injection
   - Privilege escalation via agents
@@ -463,7 +463,7 @@ Test your LLM-powered API endpoints for security vulnerabilities:
   - Pipeline stage injection
   - Agent delegation attacks
 
-- **Misinformation / Disinformation** *(NEW)*
+- **Misinformation / Disinformation** 
   - Political propaganda generation
   - Health misinformation requests
   - Executive/government impersonation
@@ -472,6 +472,54 @@ Test your LLM-powered API endpoints for security vulnerabilities:
   - Demographic bias content
   - Election interference content
   - Financial panic / bank run content
+
+- **Package Hallucination** 
+  - Non-existent package suggestions
+  - Supply chain attack via fake packages
+  - Typosquatting package names
+  - Bulk requirements hallucination
+
+- **Glitch Token Attacks** 
+  - Known glitch tokens (SolidGoldMagikarp, petertodd)
+  - Tokenization boundary exploitation
+  - Null/invisible character tokens
+  - Mixed script token confusion
+
+- **Crescendo Attacks** 
+  - Gradual benign-to-harmful escalation
+  - Academic/fiction framing escalation
+  - Multi-stage context building
+  - Trust-then-exploit patterns
+
+- **CBRN Content** 
+  - Chemical weapon information requests
+  - Biological agent/toxin information
+  - Radiological/nuclear content
+  - Dual-use research concerns
+
+- **Code Chameleon** 
+  - JSON-embedded injection
+  - XML/YAML structure attacks
+  - SQL-style query injection
+  - GraphQL/CSV hidden prompts
+
+- **Math Prompt Framing** 
+  - Harmful requests as word problems
+  - Optimization problems for attacks
+  - Game theory for attack strategy
+  - Bayesian reasoning bypass
+
+- **Persuasion Techniques** 
+  - Fake expert endorsement
+  - Fabricated organizational authority
+  - Social proof pressure
+  - Fake statistics/evidence
+
+- **Snowball Hallucination** 
+  - False premise acceptance
+  - Future event fabrication
+  - Pseudoscience confirmation
+  - Conspiracy detail generation
 
 ## Quick Start
 
@@ -605,7 +653,7 @@ python3 -m pytest -m compliance       # Regional compliance
 python3 -m pytest -m cdn              # CDN tests
 
 # LLM Security Tests (use --llm-endpoint instead of --target-url)
-python3 -m pytest -m llm --llm-endpoint=https://api.example.com/chat           # All LLM tests (36 tests)
+python3 -m pytest -m llm --llm-endpoint=https://api.example.com/chat           # All LLM tests (61 tests)
 python3 -m pytest -m llm_injection --llm-endpoint=https://api.example.com/chat # Prompt injection
 python3 -m pytest -m llm_jailbreak --llm-endpoint=https://api.example.com/chat # Jailbreaking
 python3 -m pytest -m llm_leakage --llm-endpoint=https://api.example.com/chat   # System prompt leak
@@ -664,6 +712,16 @@ python3 -m pytest -m llm_supplychain --llm-endpoint=https://api.example.com/chat
 python3 -m pytest -m llm_cognitive --llm-endpoint=https://api.example.com/chat   # Cognitive overload/paradox
 python3 -m pytest -m llm_multiagent --llm-endpoint=https://api.example.com/chat  # Multi-agent compromise
 python3 -m pytest -m llm_misinfo --llm-endpoint=https://api.example.com/chat     # Misinformation generation
+
+# GARAK/PYRIT GAP Coverage Tests (NEW)
+python3 -m pytest -m llm_package_hallucination --llm-endpoint=https://api.example.com/chat  # Package hallucination
+python3 -m pytest -m llm_glitch_token --llm-endpoint=https://api.example.com/chat  # Glitch token attacks
+python3 -m pytest -m llm_crescendo --llm-endpoint=https://api.example.com/chat     # Crescendo attacks
+python3 -m pytest -m llm_cbrn --llm-endpoint=https://api.example.com/chat          # CBRN content
+python3 -m pytest -m llm_code_chameleon --llm-endpoint=https://api.example.com/chat # Code chameleon
+python3 -m pytest -m llm_math_framing --llm-endpoint=https://api.example.com/chat  # Math prompt framing
+python3 -m pytest -m llm_persuasion --llm-endpoint=https://api.example.com/chat    # Persuasion techniques
+python3 -m pytest -m llm_snowball --llm-endpoint=https://api.example.com/chat      # Snowball hallucination
 ```
 
 ## Test Intensity Levels
