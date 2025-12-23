@@ -313,6 +313,41 @@ def pytest_configure(config):
     config.addinivalue_line("markers", "xinclude: XInclude injection tests")
     config.addinivalue_line("markers", "xxe_content_type: Content-Type XXE manipulation tests")
 
+    # NoSQL Injection test markers
+    config.addinivalue_line("markers", "nosql: NoSQL injection tests")
+    config.addinivalue_line("markers", "nosql_mongodb: MongoDB-specific injection tests")
+    config.addinivalue_line("markers", "nosql_operators: NoSQL operator abuse tests")
+    config.addinivalue_line("markers", "nosql_where: NoSQL $where clause injection tests")
+    config.addinivalue_line("markers", "nosql_blind: Blind NoSQL injection tests")
+
+    # Prototype Pollution test markers
+    config.addinivalue_line("markers", "prototype_pollution: Prototype pollution tests")
+    config.addinivalue_line("markers", "proto_json: JSON body prototype pollution tests")
+    config.addinivalue_line("markers", "proto_query: Query parameter prototype pollution tests")
+    config.addinivalue_line("markers", "proto_merge: Merge function pollution tests")
+    config.addinivalue_line("markers", "proto_rce: RCE via prototype pollution tests")
+    config.addinivalue_line("markers", "proto_auth_bypass: Auth bypass via pollution tests")
+
+    # JWT Security test markers
+    config.addinivalue_line("markers", "jwt: JWT security tests")
+    config.addinivalue_line("markers", "jwt_none: Algorithm 'none' attack tests")
+    config.addinivalue_line("markers", "jwt_confusion: Algorithm confusion attack tests")
+    config.addinivalue_line("markers", "jwt_weak_secret: Weak secret brute force tests")
+    config.addinivalue_line("markers", "jwt_kid: KID header injection tests")
+    config.addinivalue_line("markers", "jwt_jku: JKU/JWK injection tests")
+    config.addinivalue_line("markers", "jwt_expiration: Token expiration bypass tests")
+    config.addinivalue_line("markers", "jwt_signature: Signature verification bypass tests")
+
+    # Web Cache Poisoning test markers
+    config.addinivalue_line("markers", "cache_poisoning: Web cache poisoning tests")
+    config.addinivalue_line("markers", "cache_unkeyed: Unkeyed header poisoning tests")
+    config.addinivalue_line("markers", "cache_host: Host header cache poisoning tests")
+    config.addinivalue_line("markers", "cache_deception: Web cache deception tests")
+    config.addinivalue_line("markers", "cache_parameter: Parameter cloaking tests")
+    config.addinivalue_line("markers", "cache_vary: Vary header exploitation tests")
+    config.addinivalue_line("markers", "cache_crlf: CRLF cache poisoning tests")
+    config.addinivalue_line("markers", "cache_dos: Cache poisoning DoS tests")
+
 
 @pytest.fixture(scope="session")
 def test_config(request) -> SecurityTestConfig:

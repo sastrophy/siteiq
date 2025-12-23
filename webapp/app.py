@@ -1014,6 +1014,76 @@ TEST_CATEGORIES = {
         "marker": "llm_orchestration",
         "category": "llm",
     },
+    # NoSQL Injection Tests
+    "nosql": {
+        "name": "NoSQL Injection",
+        "description": "Advanced NoSQL injection with operators and $where",
+        "marker": "nosql",
+        "category": "security",
+    },
+    "nosql_mongodb": {
+        "name": "MongoDB Injection",
+        "description": "MongoDB-specific operator and authentication bypass",
+        "marker": "nosql_mongodb",
+        "category": "security",
+    },
+    # Prototype Pollution Tests
+    "prototype_pollution": {
+        "name": "Prototype Pollution",
+        "description": "Server-side prototype pollution attacks",
+        "marker": "prototype_pollution",
+        "category": "security",
+    },
+    "proto_rce": {
+        "name": "Prototype RCE",
+        "description": "Remote code execution via prototype pollution",
+        "marker": "proto_rce",
+        "category": "security",
+    },
+    # JWT Security Tests
+    "jwt": {
+        "name": "JWT Security",
+        "description": "JWT algorithm confusion, none attack, weak secrets",
+        "marker": "jwt",
+        "category": "security",
+    },
+    "jwt_none": {
+        "name": "JWT None Algorithm",
+        "description": "Test for algorithm 'none' vulnerability",
+        "marker": "jwt_none",
+        "category": "security",
+    },
+    "jwt_weak_secret": {
+        "name": "JWT Weak Secret",
+        "description": "Brute force weak JWT signing secrets",
+        "marker": "jwt_weak_secret",
+        "category": "security",
+    },
+    "jwt_kid": {
+        "name": "JWT KID Injection",
+        "description": "Key ID header injection attacks",
+        "marker": "jwt_kid",
+        "category": "security",
+    },
+    # Web Cache Poisoning Tests
+    "cache_poisoning": {
+        "name": "Cache Poisoning",
+        "description": "Web cache poisoning via unkeyed inputs",
+        "marker": "cache_poisoning",
+        "category": "security",
+    },
+    "cache_deception": {
+        "name": "Cache Deception",
+        "description": "Web cache deception to leak sensitive data",
+        "marker": "cache_deception",
+        "category": "security",
+    },
+    "cache_host": {
+        "name": "Host Header Poisoning",
+        "description": "Cache poisoning via Host header manipulation",
+        "marker": "cache_host",
+        "category": "security",
+    },
 }
 
 
