@@ -165,7 +165,7 @@ Do NOT expose this application to the internet without proper security configura
 - Debug log exposure
 - wp-admin accessibility
 
-### LLM Security Testing (50 Tests)
+### LLM Security Testing (53 Tests)
 
 Test your LLM-powered API endpoints for security vulnerabilities:
 
@@ -445,6 +445,34 @@ Test your LLM-powered API endpoints for security vulnerabilities:
   - Dependency confusion patterns
   - Training data poisoning indicators
 
+- **Cognitive Overload / Paradox Attacks** *(NEW)*
+  - Instruction paradox exploitation
+  - Liar paradox / self-reference attacks
+  - Trolley problem coercion
+  - Policy contradiction exploitation
+  - Meta-cognitive overload
+  - Parallel task flooding
+  - Utilitarian ethics bypass
+
+- **Multi-Agent Compromise** *(NEW)*
+  - Agent-to-agent message poisoning
+  - Agent chain injection
+  - Privilege escalation via agents
+  - Orchestrator impersonation
+  - Low-to-high privilege attacks
+  - Pipeline stage injection
+  - Agent delegation attacks
+
+- **Misinformation / Disinformation** *(NEW)*
+  - Political propaganda generation
+  - Health misinformation requests
+  - Executive/government impersonation
+  - Conspiracy theory amplification
+  - Astroturfing / fake grassroots
+  - Demographic bias content
+  - Election interference content
+  - Financial panic / bank run content
+
 ## Quick Start
 
 ### 1. Setup
@@ -633,6 +661,9 @@ python3 -m pytest -m llm_cve --llm-endpoint=https://api.example.com/chat        
 python3 -m pytest -m llm_consumption --llm-endpoint=https://api.example.com/chat # Unbounded consumption
 python3 -m pytest -m llm_multimodal --llm-endpoint=https://api.example.com/chat # Multimodal attacks
 python3 -m pytest -m llm_supplychain --llm-endpoint=https://api.example.com/chat # Supply chain attacks
+python3 -m pytest -m llm_cognitive --llm-endpoint=https://api.example.com/chat   # Cognitive overload/paradox
+python3 -m pytest -m llm_multiagent --llm-endpoint=https://api.example.com/chat  # Multi-agent compromise
+python3 -m pytest -m llm_misinfo --llm-endpoint=https://api.example.com/chat     # Misinformation generation
 ```
 
 ## Test Intensity Levels

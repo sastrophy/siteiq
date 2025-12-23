@@ -837,6 +837,25 @@ TEST_CATEGORIES = {
         "marker": "llm_supplychain",
         "category": "llm",
     },
+    # Additional Gap Categories
+    "llm_cognitive": {
+        "name": "Cognitive Overload",
+        "description": "Test paradox attacks, ethical dilemmas, policy contradictions",
+        "marker": "llm_cognitive",
+        "category": "llm",
+    },
+    "llm_multiagent": {
+        "name": "Multi-Agent Compromise",
+        "description": "Test agent-to-agent poisoning, privilege escalation",
+        "marker": "llm_multiagent",
+        "category": "llm",
+    },
+    "llm_misinfo": {
+        "name": "Misinformation Generation",
+        "description": "Test propaganda, deepfake text, disinformation creation",
+        "marker": "llm_misinfo",
+        "category": "llm",
+    },
 }
 
 

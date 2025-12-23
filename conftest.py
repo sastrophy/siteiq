@@ -169,6 +169,10 @@ def pytest_configure(config):
     config.addinivalue_line("markers", "llm_consumption: Unbounded consumption tests (model extraction, economic DoS)")
     config.addinivalue_line("markers", "llm_multimodal: Multimodal attack simulation tests (image/audio/PDF injection)")
     config.addinivalue_line("markers", "llm_supplychain: Supply chain attack tests (backdoor detection, plugin impersonation)")
+    # Additional Gap Categories
+    config.addinivalue_line("markers", "llm_cognitive: Cognitive overload and paradox attack tests")
+    config.addinivalue_line("markers", "llm_multiagent: Multi-agent compromise and privilege escalation tests")
+    config.addinivalue_line("markers", "llm_misinfo: Misinformation and disinformation generation tests")
 
     # API Security test markers
     config.addinivalue_line("markers", "api_security: API security tests")
