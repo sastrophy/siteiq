@@ -154,6 +154,11 @@ def pytest_configure(config):
     config.addinivalue_line("markers", "llm_refusal: Refusal suppression tests")
     config.addinivalue_line("markers", "llm_cipher: Cipher/encryption game bypass tests")
     config.addinivalue_line("markers", "llm_recursive: Recursive/self-replicating prompt DoS tests")
+    config.addinivalue_line("markers", "llm_semantic: Semantic dissociation/misdirection attack tests")
+    config.addinivalue_line("markers", "llm_finetune: Fine-tuning data inference tests")
+    config.addinivalue_line("markers", "llm_adversarial: Adversarial suffix/preface bypass tests")
+    config.addinivalue_line("markers", "llm_implicit: Implicit instruction following tests")
+    config.addinivalue_line("markers", "llm_fileoutput: Sensitive file output disclosure tests")
 
     # API Security test markers
     config.addinivalue_line("markers", "api_security: API security tests")

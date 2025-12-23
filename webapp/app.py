@@ -752,6 +752,36 @@ TEST_CATEGORIES = {
         "marker": "llm_recursive",
         "category": "llm",
     },
+    "llm_semantic": {
+        "name": "Semantic Dissociation",
+        "description": "Test misdirection and logic bypass attacks",
+        "marker": "llm_semantic",
+        "category": "llm",
+    },
+    "llm_finetune": {
+        "name": "Fine-tuning Inference",
+        "description": "Test for fine-tuning data leakage",
+        "marker": "llm_finetune",
+        "category": "llm",
+    },
+    "llm_adversarial": {
+        "name": "Adversarial Suffix",
+        "description": "Test adversarial suffix/preface bypass",
+        "marker": "llm_adversarial",
+        "category": "llm",
+    },
+    "llm_implicit": {
+        "name": "Implicit Instructions",
+        "description": "Test hidden/implied instruction following",
+        "marker": "llm_implicit",
+        "category": "llm",
+    },
+    "llm_fileoutput": {
+        "name": "Sensitive File Output",
+        "description": "Test for RAG/context file disclosure",
+        "marker": "llm_fileoutput",
+        "category": "llm",
+    },
 }
 
 

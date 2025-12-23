@@ -165,7 +165,7 @@ Do NOT expose this application to the internet without proper security configura
 - Debug log exposure
 - wp-admin accessibility
 
-### LLM Security Testing (36 Tests)
+### LLM Security Testing (41 Tests)
 
 Test your LLM-powered API endpoints for security vulnerabilities:
 
@@ -350,6 +350,36 @@ Test your LLM-powered API endpoints for security vulnerabilities:
   - Fibonacci expansion attacks
   - Binary tree generation
 
+- **Semantic Dissociation** *(NEW)*
+  - Educational misdirection attacks
+  - Fictional framing bypass
+  - Positive spin on harmful content
+  - Metaphor and abstract game theory attacks
+
+- **Fine-tuning Data Inference** *(NEW)*
+  - Internal documentation probing
+  - Company-specific knowledge extraction
+  - HR/personnel data inference
+  - Customer data probing
+
+- **Adversarial Suffixes** *(NEW)*
+  - Control character injection
+  - Token boundary exploitation
+  - Unicode BOM injection
+  - Special token attempts
+
+- **Implicit Instruction Following** *(NEW)*
+  - Hidden document commands
+  - Conversational pattern inference
+  - False memory/authorization claims
+  - Behavioral classification bypass
+
+- **Sensitive File Output** *(NEW)*
+  - RAG context file disclosure
+  - Environment variable extraction
+  - Source code leakage via context
+  - Cloud/infrastructure config exposure
+
 ## Quick Start
 
 ### 1. Setup
@@ -522,6 +552,11 @@ python3 -m pytest -m llm_ascii --llm-endpoint=https://api.example.com/chat     #
 python3 -m pytest -m llm_refusal --llm-endpoint=https://api.example.com/chat   # Refusal suppression
 python3 -m pytest -m llm_cipher --llm-endpoint=https://api.example.com/chat    # Cipher game bypass
 python3 -m pytest -m llm_recursive --llm-endpoint=https://api.example.com/chat # Recursive prompt DoS
+python3 -m pytest -m llm_semantic --llm-endpoint=https://api.example.com/chat  # Semantic dissociation
+python3 -m pytest -m llm_finetune --llm-endpoint=https://api.example.com/chat  # Fine-tuning data inference
+python3 -m pytest -m llm_adversarial --llm-endpoint=https://api.example.com/chat # Adversarial suffix bypass
+python3 -m pytest -m llm_implicit --llm-endpoint=https://api.example.com/chat  # Implicit instruction following
+python3 -m pytest -m llm_fileoutput --llm-endpoint=https://api.example.com/chat # Sensitive file output
 ```
 
 ## Test Intensity Levels
