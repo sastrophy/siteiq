@@ -1478,10 +1478,56 @@ def results_page(test_id):
     with tests_lock:
         test_run = tests_store.get(test_id)
 
-    if not test_run:
-        return "Test not found", 404
+    if test_run:
+        return render_template("results.html", test=test_run.to_dict(), categories=TEST_CATEGORIES)
 
-    return render_template("results.html", test=test_run.to_dict(), categories=TEST_CATEGORIES)
+    # Try to load from saved report file if not in memory
+    report_file = REPORTS_DIR / f"report_{test_id}.json"
+    if report_file.exists():
+        try:
+            with open(report_file, "r") as f:
+                report_data = json.load(f)
+
+            # Reconstruct test data from report
+            test_data = {
+                "id": test_id,
+                "target_url": report_data.get("target_url") or report_data.get("target", "Unknown"),
+                "options": report_data.get("options", {}),
+                "status": "completed",
+                "started_at": report_data.get("timestamp", None),
+                "completed_at": report_data.get("timestamp", None),
+                "output_lines": [],
+                "findings": report_data.get("findings", []),
+                "summary": report_data.get("summary") or report_data.get("findings_by_severity", {
+                    "critical": 0, "high": 0, "medium": 0, "low": 0, "info": 0
+                }),
+                "test_results": report_data.get("test_results", {
+                    "passed": 0, "failed": 0, "skipped": 0, "errors": 0
+                }),
+                "test_results_by_category": report_data.get("test_results_by_category", {
+                    "security": {"passed": 0, "failed": 0, "skipped": 0, "total": 0},
+                    "seo": {"passed": 0, "failed": 0, "skipped": 0, "total": 0},
+                    "geo": {"passed": 0, "failed": 0, "skipped": 0, "total": 0},
+                    "llm": {"passed": 0, "failed": 0, "skipped": 0, "total": 0},
+                }),
+                "failed_tests": report_data.get("failed_tests", []),
+            }
+
+            # Calculate summary from findings if not present
+            if not test_data["summary"].get("critical") and test_data["findings"]:
+                test_data["summary"] = {
+                    "critical": sum(1 for f in test_data["findings"] if f.get("severity") == "critical"),
+                    "high": sum(1 for f in test_data["findings"] if f.get("severity") == "high"),
+                    "medium": sum(1 for f in test_data["findings"] if f.get("severity") == "medium"),
+                    "low": sum(1 for f in test_data["findings"] if f.get("severity") == "low"),
+                    "info": sum(1 for f in test_data["findings"] if f.get("severity") == "info"),
+                }
+
+            return render_template("results.html", test=test_data, categories=TEST_CATEGORIES)
+        except Exception as e:
+            return f"Error loading report: {str(e)}", 500
+
+    return "Test not found", 404
 
 
 if __name__ == "__main__":
