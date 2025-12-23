@@ -69,6 +69,16 @@ from payloads.llm import (
     IMPLICIT_INSTRUCTION_PAYLOADS,
     SENSITIVE_FILE_OUTPUT_PAYLOADS,
     SENSITIVE_FILE_PATTERNS,
+    # 2025 Advanced Categories
+    MCP_TOOL_ATTACK_PAYLOADS,
+    MEMORY_POISONING_PAYLOADS,
+    COT_MANIPULATION_PAYLOADS,
+    STRUCTURED_OUTPUT_PAYLOADS,
+    VECTOR_EMBEDDING_PAYLOADS,
+    CVE_ATTACK_PAYLOADS,
+    UNBOUNDED_CONSUMPTION_PAYLOADS,
+    MULTIMODAL_SIMULATION_PAYLOADS,
+    SUPPLY_CHAIN_PAYLOADS,
 )
 
 
@@ -2004,6 +2014,388 @@ class TestLLMEndpoint:
                             remediation="Implement strict access controls on RAG document retrieval. Filter sensitive content from LLM context. Never include credentials or config files in retrieval systems.",
                             cwe_id="CWE-200",
                             owasp_category="LLM06 - Sensitive Information Disclosure",
+                        )
+                        findings_collector.add(finding)
+                        llm_scanner.add_finding(finding)
+                        return
+
+    # ==========================================
+    # 2025 Advanced LLM Security Tests
+    # ==========================================
+
+    @pytest.mark.llm
+    @pytest.mark.llm_mcp
+    def test_mcp_tool_attacks(self, llm_scanner, target_url, findings_collector, llm_endpoint):
+        """Test for MCP/Agent tool-based vulnerabilities (line jumping, tool hijacking)."""
+        endpoints = []
+        if llm_endpoint:
+            endpoints = [llm_endpoint]
+        elif target_url:
+            endpoints = self._detect_llm_endpoint(llm_scanner, target_url)
+
+        if not endpoints:
+            pytest.skip("No LLM endpoint provided or detected")
+
+        for endpoint in endpoints:
+            url = endpoint if isinstance(endpoint, str) else endpoint.get("url", endpoint)
+
+            for mcp_test in MCP_TOOL_ATTACK_PAYLOADS:
+                payload = mcp_test["payload"]
+                technique = mcp_test["technique"]
+                signature = mcp_test["signature"]
+
+                result = self._send_llm_request(llm_scanner, url, payload)
+
+                if result:
+                    response_text = json.dumps(result["response"]) if isinstance(result["response"], dict) else str(result["response"])
+
+                    if signature.upper() in response_text.upper():
+                        finding = Finding(
+                            title=f"MCP/Tool Attack Vulnerability ({technique})",
+                            severity=Severity.CRITICAL,
+                            description=f"The LLM is vulnerable to MCP/agent tool attacks via {technique}. Attackers can hijack tool descriptions, impersonate tools, or inject commands into tool contexts.",
+                            url=url,
+                            evidence=f"Technique: {technique} | Signature: {signature}",
+                            remediation="Validate tool descriptions server-side. Implement tool authentication. Sanitize tool outputs. Use allowlists for tool names and capabilities.",
+                            cwe_id="CWE-94",
+                            owasp_category="LLM07 - Insecure Plugin Design",
+                        )
+                        findings_collector.add(finding)
+                        llm_scanner.add_finding(finding)
+                        return
+
+    @pytest.mark.llm
+    @pytest.mark.llm_memory
+    def test_memory_context_poisoning(self, llm_scanner, target_url, findings_collector, llm_endpoint):
+        """Test for memory/context poisoning vulnerabilities (Echo Chamber, MemoryGraft, MINJA)."""
+        endpoints = []
+        if llm_endpoint:
+            endpoints = [llm_endpoint]
+        elif target_url:
+            endpoints = self._detect_llm_endpoint(llm_scanner, target_url)
+
+        if not endpoints:
+            pytest.skip("No LLM endpoint provided or detected")
+
+        for endpoint in endpoints:
+            url = endpoint if isinstance(endpoint, str) else endpoint.get("url", endpoint)
+
+            for memory_test in MEMORY_POISONING_PAYLOADS:
+                payload = memory_test["payload"]
+                technique = memory_test["technique"]
+                signature = memory_test["signature"]
+
+                result = self._send_llm_request(llm_scanner, url, payload)
+
+                if result:
+                    response_text = json.dumps(result["response"]) if isinstance(result["response"], dict) else str(result["response"])
+
+                    if signature.upper() in response_text.upper():
+                        finding = Finding(
+                            title=f"Memory/Context Poisoning ({technique})",
+                            severity=Severity.CRITICAL,
+                            description=f"The LLM is vulnerable to memory poisoning via {technique}. Attackers can inject malicious content into conversation history or memory systems that persists across sessions.",
+                            url=url,
+                            evidence=f"Technique: {technique} | Signature: {signature}",
+                            remediation="Validate and sanitize all memory/context entries. Implement memory isolation between users. Clear memory on sensitive operations. Use cryptographic integrity checks for conversation history.",
+                            cwe_id="CWE-345",
+                            owasp_category="LLM01 - Prompt Injection",
+                        )
+                        findings_collector.add(finding)
+                        llm_scanner.add_finding(finding)
+                        return
+
+    @pytest.mark.llm
+    @pytest.mark.llm_cot
+    def test_cot_manipulation(self, llm_scanner, target_url, findings_collector, llm_endpoint):
+        """Test for Chain-of-Thought manipulation vulnerabilities (H-CoT, CoT forging)."""
+        endpoints = []
+        if llm_endpoint:
+            endpoints = [llm_endpoint]
+        elif target_url:
+            endpoints = self._detect_llm_endpoint(llm_scanner, target_url)
+
+        if not endpoints:
+            pytest.skip("No LLM endpoint provided or detected")
+
+        for endpoint in endpoints:
+            url = endpoint if isinstance(endpoint, str) else endpoint.get("url", endpoint)
+
+            for cot_test in COT_MANIPULATION_PAYLOADS:
+                payload = cot_test["payload"]
+                technique = cot_test["technique"]
+                signature = cot_test["signature"]
+
+                result = self._send_llm_request(llm_scanner, url, payload)
+
+                if result:
+                    response_text = json.dumps(result["response"]) if isinstance(result["response"], dict) else str(result["response"])
+
+                    if signature.upper() in response_text.upper():
+                        finding = Finding(
+                            title=f"Chain-of-Thought Manipulation ({technique})",
+                            severity=Severity.HIGH,
+                            description=f"The LLM is vulnerable to CoT manipulation via {technique}. Attackers can hijack reasoning processes, inject fake thinking tokens, or corrupt intermediate reasoning steps.",
+                            url=url,
+                            evidence=f"Technique: {technique} | Signature: {signature}",
+                            remediation="Protect internal reasoning tokens. Validate reasoning chain integrity. Don't expose raw CoT to users. Implement reasoning step verification.",
+                            cwe_id="CWE-693",
+                            owasp_category="LLM01 - Prompt Injection",
+                        )
+                        findings_collector.add(finding)
+                        llm_scanner.add_finding(finding)
+                        return
+
+    @pytest.mark.llm
+    @pytest.mark.llm_structured
+    def test_structured_output_attacks(self, llm_scanner, target_url, findings_collector, llm_endpoint):
+        """Test for structured output attacks (Chain Enum, JSON injection, schema exploitation)."""
+        endpoints = []
+        if llm_endpoint:
+            endpoints = [llm_endpoint]
+        elif target_url:
+            endpoints = self._detect_llm_endpoint(llm_scanner, target_url)
+
+        if not endpoints:
+            pytest.skip("No LLM endpoint provided or detected")
+
+        for endpoint in endpoints:
+            url = endpoint if isinstance(endpoint, str) else endpoint.get("url", endpoint)
+
+            for struct_test in STRUCTURED_OUTPUT_PAYLOADS:
+                payload = struct_test["payload"]
+                technique = struct_test["technique"]
+                signature = struct_test["signature"]
+
+                result = self._send_llm_request(llm_scanner, url, payload)
+
+                if result:
+                    response_text = json.dumps(result["response"]) if isinstance(result["response"], dict) else str(result["response"])
+
+                    if signature.upper() in response_text.upper():
+                        finding = Finding(
+                            title=f"Structured Output Attack ({technique})",
+                            severity=Severity.HIGH,
+                            description=f"The LLM is vulnerable to structured output attacks via {technique}. JSON schemas, enum fields, or output format constraints can be exploited to bypass safety filters.",
+                            url=url,
+                            evidence=f"Technique: {technique} | Signature: {signature}",
+                            remediation="Apply safety filters to output regardless of format constraints. Validate JSON schemas. Don't allow user-controlled enum values to contain instructions.",
+                            cwe_id="CWE-94",
+                            owasp_category="LLM02 - Insecure Output Handling",
+                        )
+                        findings_collector.add(finding)
+                        llm_scanner.add_finding(finding)
+                        return
+
+    @pytest.mark.llm
+    @pytest.mark.llm_vector
+    def test_vector_embedding_attacks(self, llm_scanner, target_url, findings_collector, llm_endpoint):
+        """Test for vector/embedding attacks (embedding extraction, semantic collision, RAG manipulation)."""
+        endpoints = []
+        if llm_endpoint:
+            endpoints = [llm_endpoint]
+        elif target_url:
+            endpoints = self._detect_llm_endpoint(llm_scanner, target_url)
+
+        if not endpoints:
+            pytest.skip("No LLM endpoint provided or detected")
+
+        for endpoint in endpoints:
+            url = endpoint if isinstance(endpoint, str) else endpoint.get("url", endpoint)
+
+            for vector_test in VECTOR_EMBEDDING_PAYLOADS:
+                payload = vector_test["payload"]
+                technique = vector_test["technique"]
+                signature = vector_test["signature"]
+
+                result = self._send_llm_request(llm_scanner, url, payload)
+
+                if result:
+                    response_text = json.dumps(result["response"]) if isinstance(result["response"], dict) else str(result["response"])
+
+                    if signature.upper() in response_text.upper():
+                        finding = Finding(
+                            title=f"Vector/Embedding Attack ({technique})",
+                            severity=Severity.HIGH,
+                            description=f"The LLM/RAG system is vulnerable to vector attacks via {technique}. Attackers can manipulate embedding retrieval, extract sensitive embeddings, or poison vector databases.",
+                            url=url,
+                            evidence=f"Technique: {technique} | Signature: {signature}",
+                            remediation="Implement access controls on vector databases. Validate retrieved content before inclusion. Use tenant isolation for embeddings. Monitor for embedding extraction patterns.",
+                            cwe_id="CWE-200",
+                            owasp_category="LLM08 - Vector and Embedding Weaknesses",
+                        )
+                        findings_collector.add(finding)
+                        llm_scanner.add_finding(finding)
+                        return
+
+    @pytest.mark.llm
+    @pytest.mark.llm_cve
+    def test_cve_attack_patterns(self, llm_scanner, target_url, findings_collector, llm_endpoint):
+        """Test for real-world CVE attack patterns (EchoLeak, CurXecute, Copilot RCE patterns)."""
+        endpoints = []
+        if llm_endpoint:
+            endpoints = [llm_endpoint]
+        elif target_url:
+            endpoints = self._detect_llm_endpoint(llm_scanner, target_url)
+
+        if not endpoints:
+            pytest.skip("No LLM endpoint provided or detected")
+
+        for endpoint in endpoints:
+            url = endpoint if isinstance(endpoint, str) else endpoint.get("url", endpoint)
+
+            for cve_test in CVE_ATTACK_PAYLOADS:
+                payload = cve_test["payload"]
+                technique = cve_test["technique"]
+                signature = cve_test["signature"]
+                cve_ref = cve_test.get("cve_reference", "Unknown CVE")
+
+                result = self._send_llm_request(llm_scanner, url, payload)
+
+                if result:
+                    response_text = json.dumps(result["response"]) if isinstance(result["response"], dict) else str(result["response"])
+
+                    if signature.upper() in response_text.upper():
+                        finding = Finding(
+                            title=f"CVE Pattern Detected ({technique})",
+                            severity=Severity.CRITICAL,
+                            description=f"The LLM is vulnerable to attack patterns from {cve_ref} via {technique}. This vulnerability has been exploited in real-world incidents.",
+                            url=url,
+                            evidence=f"Technique: {technique} | CVE Reference: {cve_ref} | Signature: {signature}",
+                            remediation="Apply patches for known CVEs. Implement document sanitization. Block hidden prompt patterns. Monitor for exfiltration attempts.",
+                            cwe_id="CWE-94",
+                            owasp_category="LLM01 - Prompt Injection",
+                        )
+                        findings_collector.add(finding)
+                        llm_scanner.add_finding(finding)
+                        return
+
+    @pytest.mark.llm
+    @pytest.mark.llm_consumption
+    def test_unbounded_consumption(self, llm_scanner, target_url, findings_collector, llm_endpoint):
+        """Test for unbounded consumption vulnerabilities (model extraction, compute exhaustion, economic DoS)."""
+        endpoints = []
+        if llm_endpoint:
+            endpoints = [llm_endpoint]
+        elif target_url:
+            endpoints = self._detect_llm_endpoint(llm_scanner, target_url)
+
+        if not endpoints:
+            pytest.skip("No LLM endpoint provided or detected")
+
+        for endpoint in endpoints:
+            url = endpoint if isinstance(endpoint, str) else endpoint.get("url", endpoint)
+
+            for consumption_test in UNBOUNDED_CONSUMPTION_PAYLOADS:
+                payload = consumption_test["payload"]
+                technique = consumption_test["technique"]
+                signature = consumption_test.get("signature", "")
+
+                start_time = time.time()
+                result = self._send_llm_request(llm_scanner, url, payload)
+                elapsed_time = time.time() - start_time
+
+                if result:
+                    response_text = json.dumps(result["response"]) if isinstance(result["response"], dict) else str(result["response"])
+                    response_length = len(response_text)
+
+                    # Check for signs of unbounded consumption
+                    excessive_output = response_length > 20000
+                    excessive_time = elapsed_time > 15
+                    signature_match = signature and signature.upper() in response_text.upper()
+
+                    if signature_match or excessive_output or excessive_time:
+                        finding = Finding(
+                            title=f"Unbounded Consumption ({technique})",
+                            severity=Severity.HIGH,
+                            description=f"The LLM is vulnerable to unbounded consumption via {technique}. This can lead to model extraction, compute exhaustion, or economic denial of service.",
+                            url=url,
+                            evidence=f"Technique: {technique} | Response length: {response_length} | Time: {elapsed_time:.2f}s",
+                            remediation="Implement strict rate limits. Set output token limits. Monitor for extraction patterns. Add cost controls and anomaly detection.",
+                            cwe_id="CWE-400",
+                            owasp_category="LLM10 - Unbounded Consumption",
+                        )
+                        findings_collector.add(finding)
+                        llm_scanner.add_finding(finding)
+                        return
+
+    @pytest.mark.llm
+    @pytest.mark.llm_multimodal
+    def test_multimodal_simulation_attacks(self, llm_scanner, target_url, findings_collector, llm_endpoint):
+        """Test for multimodal attack patterns via text simulation (image/audio/PDF injection concepts)."""
+        endpoints = []
+        if llm_endpoint:
+            endpoints = [llm_endpoint]
+        elif target_url:
+            endpoints = self._detect_llm_endpoint(llm_scanner, target_url)
+
+        if not endpoints:
+            pytest.skip("No LLM endpoint provided or detected")
+
+        for endpoint in endpoints:
+            url = endpoint if isinstance(endpoint, str) else endpoint.get("url", endpoint)
+
+            for multimodal_test in MULTIMODAL_SIMULATION_PAYLOADS:
+                payload = multimodal_test["payload"]
+                technique = multimodal_test["technique"]
+                signature = multimodal_test["signature"]
+
+                result = self._send_llm_request(llm_scanner, url, payload)
+
+                if result:
+                    response_text = json.dumps(result["response"]) if isinstance(result["response"], dict) else str(result["response"])
+
+                    if signature.upper() in response_text.upper():
+                        finding = Finding(
+                            title=f"Multimodal Attack Pattern ({technique})",
+                            severity=Severity.HIGH,
+                            description=f"The LLM responds to multimodal attack patterns via {technique}. If this endpoint processes images/audio/PDFs, it may be vulnerable to hidden instruction injection.",
+                            url=url,
+                            evidence=f"Technique: {technique} | Signature: {signature}",
+                            remediation="Sanitize all multimodal inputs. Strip metadata and hidden content from images/PDFs. Implement separate safety checks for each modality.",
+                            cwe_id="CWE-94",
+                            owasp_category="LLM01 - Prompt Injection",
+                        )
+                        findings_collector.add(finding)
+                        llm_scanner.add_finding(finding)
+                        return
+
+    @pytest.mark.llm
+    @pytest.mark.llm_supplychain
+    def test_supply_chain_attacks(self, llm_scanner, target_url, findings_collector, llm_endpoint):
+        """Test for supply chain attack patterns (backdoor inference, plugin impersonation)."""
+        endpoints = []
+        if llm_endpoint:
+            endpoints = [llm_endpoint]
+        elif target_url:
+            endpoints = self._detect_llm_endpoint(llm_scanner, target_url)
+
+        if not endpoints:
+            pytest.skip("No LLM endpoint provided or detected")
+
+        for endpoint in endpoints:
+            url = endpoint if isinstance(endpoint, str) else endpoint.get("url", endpoint)
+
+            for supply_test in SUPPLY_CHAIN_PAYLOADS:
+                payload = supply_test["payload"]
+                technique = supply_test["technique"]
+                signature = supply_test["signature"]
+
+                result = self._send_llm_request(llm_scanner, url, payload)
+
+                if result:
+                    response_text = json.dumps(result["response"]) if isinstance(result["response"], dict) else str(result["response"])
+
+                    if signature.upper() in response_text.upper():
+                        finding = Finding(
+                            title=f"Supply Chain Attack Pattern ({technique})",
+                            severity=Severity.MEDIUM,
+                            description=f"The LLM may be susceptible to supply chain attacks via {technique}. Poisoned training data, malicious plugins, or compromised model components could affect behavior.",
+                            url=url,
+                            evidence=f"Technique: {technique} | Signature: {signature}",
+                            remediation="Verify model and plugin provenance. Use cryptographic signing for components. Audit training data sources. Implement dependency scanning.",
+                            cwe_id="CWE-1104",
+                            owasp_category="LLM03 - Supply Chain Vulnerabilities",
                         )
                         findings_collector.add(finding)
                         llm_scanner.add_finding(finding)

@@ -159,6 +159,16 @@ def pytest_configure(config):
     config.addinivalue_line("markers", "llm_adversarial: Adversarial suffix/preface bypass tests")
     config.addinivalue_line("markers", "llm_implicit: Implicit instruction following tests")
     config.addinivalue_line("markers", "llm_fileoutput: Sensitive file output disclosure tests")
+    # 2025 Advanced LLM test markers (OWASP LLM Top 10 2025)
+    config.addinivalue_line("markers", "llm_mcp: MCP/Agent tool attack tests (line jumping, tool hijacking)")
+    config.addinivalue_line("markers", "llm_memory: Memory/context poisoning tests (Echo Chamber, MemoryGraft)")
+    config.addinivalue_line("markers", "llm_cot: Chain-of-Thought manipulation tests (H-CoT, CoT forging)")
+    config.addinivalue_line("markers", "llm_structured: Structured output attack tests (Chain Enum, JSON injection)")
+    config.addinivalue_line("markers", "llm_vector: Vector/embedding attack tests (RAG manipulation, extraction)")
+    config.addinivalue_line("markers", "llm_cve: Real-world CVE pattern tests (EchoLeak, CurXecute)")
+    config.addinivalue_line("markers", "llm_consumption: Unbounded consumption tests (model extraction, economic DoS)")
+    config.addinivalue_line("markers", "llm_multimodal: Multimodal attack simulation tests (image/audio/PDF injection)")
+    config.addinivalue_line("markers", "llm_supplychain: Supply chain attack tests (backdoor detection, plugin impersonation)")
 
     # API Security test markers
     config.addinivalue_line("markers", "api_security: API security tests")

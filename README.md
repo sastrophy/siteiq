@@ -165,7 +165,7 @@ Do NOT expose this application to the internet without proper security configura
 - Debug log exposure
 - wp-admin accessibility
 
-### LLM Security Testing (41 Tests)
+### LLM Security Testing (50 Tests)
 
 Test your LLM-powered API endpoints for security vulnerabilities:
 
@@ -380,6 +380,71 @@ Test your LLM-powered API endpoints for security vulnerabilities:
   - Source code leakage via context
   - Cloud/infrastructure config exposure
 
+#### 2025 Advanced LLM Security Tests (OWASP LLM Top 10 2025)
+
+- **MCP/Tool Attacks** *(NEW - CRITICAL)*
+  - Line jumping (tool description injection)
+  - Tool impersonation and hijacking
+  - Context manipulation via tools
+  - Cross-tool pollution attacks
+  - MCP server authentication bypass
+
+- **Memory/Context Poisoning** *(NEW - CRITICAL)*
+  - Echo Chamber attacks (90%+ success on GPT-4o/Gemini)
+  - MemoryGraft (persistent compromise)
+  - MINJA (memory injection via queries)
+  - Cross-session pollution
+  - Fabricated conversation history
+
+- **Chain-of-Thought Manipulation** *(NEW)*
+  - H-CoT (Hijacking Chain-of-Thought)
+  - `<think>` token injection
+  - Reasoning step disruption
+  - Safety reasoning hijacking
+  - CoT forging attacks
+
+- **Structured Output Attacks** *(NEW)*
+  - Chain Enum Attack (96.2% ASR on GPT-4o)
+  - JSON key injection (duplicate key override)
+  - Schema constraint bypass
+  - Output format manipulation
+  - Constrained decoding exploitation
+
+- **Vector/Embedding Attacks** *(NEW - OWASP LLM08:2025)*
+  - Embedding extraction attempts
+  - Vector similarity exploitation
+  - Cross-tenant vector leakage
+  - RAG retrieval manipulation
+  - Semantic collision attacks
+
+- **CVE Attack Patterns** *(NEW)*
+  - CVE-2025-32711 (EchoLeak) patterns
+  - CVE-2025-54135 (CurXecute) patterns
+  - GitHub Copilot RCE patterns
+  - Document-embedded prompt injection
+  - Log-to-prompt injection
+
+- **Unbounded Consumption** *(NEW - OWASP LLM10:2025)*
+  - Model extraction query patterns
+  - Compute exhaustion attacks
+  - Economic denial of service
+  - Token multiplication attacks
+  - Rate limit evasion techniques
+
+- **Multimodal Attack Simulation** *(NEW)*
+  - Image-based injection patterns
+  - Audio transcription attacks
+  - PDF hidden prompt detection
+  - Cross-modal exploitation
+  - OCR bypass techniques
+
+- **Supply Chain Attacks** *(NEW - OWASP LLM03:2025)*
+  - Backdoor trigger detection
+  - Plugin impersonation
+  - Poisoned model claims
+  - Dependency confusion patterns
+  - Training data poisoning indicators
+
 ## Quick Start
 
 ### 1. Setup
@@ -557,6 +622,17 @@ python3 -m pytest -m llm_finetune --llm-endpoint=https://api.example.com/chat  #
 python3 -m pytest -m llm_adversarial --llm-endpoint=https://api.example.com/chat # Adversarial suffix bypass
 python3 -m pytest -m llm_implicit --llm-endpoint=https://api.example.com/chat  # Implicit instruction following
 python3 -m pytest -m llm_fileoutput --llm-endpoint=https://api.example.com/chat # Sensitive file output
+
+# 2025 ADVANCED LLM Tests (OWASP LLM Top 10 2025)
+python3 -m pytest -m llm_mcp --llm-endpoint=https://api.example.com/chat        # MCP/Tool attacks
+python3 -m pytest -m llm_memory --llm-endpoint=https://api.example.com/chat     # Memory/context poisoning
+python3 -m pytest -m llm_cot --llm-endpoint=https://api.example.com/chat        # CoT manipulation
+python3 -m pytest -m llm_structured --llm-endpoint=https://api.example.com/chat # Structured output attacks
+python3 -m pytest -m llm_vector --llm-endpoint=https://api.example.com/chat     # Vector/embedding attacks
+python3 -m pytest -m llm_cve --llm-endpoint=https://api.example.com/chat        # CVE attack patterns
+python3 -m pytest -m llm_consumption --llm-endpoint=https://api.example.com/chat # Unbounded consumption
+python3 -m pytest -m llm_multimodal --llm-endpoint=https://api.example.com/chat # Multimodal attacks
+python3 -m pytest -m llm_supplychain --llm-endpoint=https://api.example.com/chat # Supply chain attacks
 ```
 
 ## Test Intensity Levels

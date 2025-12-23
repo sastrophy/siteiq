@@ -782,6 +782,61 @@ TEST_CATEGORIES = {
         "marker": "llm_fileoutput",
         "category": "llm",
     },
+    # 2025 Advanced LLM test categories (OWASP LLM Top 10 2025)
+    "llm_mcp": {
+        "name": "MCP/Tool Attacks",
+        "description": "Test MCP line jumping, tool hijacking, context injection",
+        "marker": "llm_mcp",
+        "category": "llm",
+    },
+    "llm_memory": {
+        "name": "Memory Poisoning",
+        "description": "Test Echo Chamber, MemoryGraft, MINJA attacks",
+        "marker": "llm_memory",
+        "category": "llm",
+    },
+    "llm_cot": {
+        "name": "CoT Manipulation",
+        "description": "Test Chain-of-Thought hijacking and forging",
+        "marker": "llm_cot",
+        "category": "llm",
+    },
+    "llm_structured": {
+        "name": "Structured Output Attacks",
+        "description": "Test Chain Enum, JSON injection, schema bypass",
+        "marker": "llm_structured",
+        "category": "llm",
+    },
+    "llm_vector": {
+        "name": "Vector/Embedding Attacks",
+        "description": "Test RAG manipulation, embedding extraction",
+        "marker": "llm_vector",
+        "category": "llm",
+    },
+    "llm_cve": {
+        "name": "CVE Attack Patterns",
+        "description": "Test EchoLeak, CurXecute, Copilot RCE patterns",
+        "marker": "llm_cve",
+        "category": "llm",
+    },
+    "llm_consumption": {
+        "name": "Unbounded Consumption",
+        "description": "Test model extraction, compute exhaustion, economic DoS",
+        "marker": "llm_consumption",
+        "category": "llm",
+    },
+    "llm_multimodal": {
+        "name": "Multimodal Attacks",
+        "description": "Test image/audio/PDF injection patterns",
+        "marker": "llm_multimodal",
+        "category": "llm",
+    },
+    "llm_supplychain": {
+        "name": "Supply Chain Attacks",
+        "description": "Test backdoor inference, plugin impersonation",
+        "marker": "llm_supplychain",
+        "category": "llm",
+    },
 }
 
 
