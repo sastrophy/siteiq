@@ -1438,6 +1438,67 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Advanced Security Options -->
+                        <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color);">
+                            <div class="section-title" style="margin-bottom: 1rem; font-size: 0.85rem;">
+                                <i class="bi bi-shield-exclamation" style="color: var(--accent-orange);"></i>
+                                Advanced Security Testing
+                            </div>
+                            <div class="options-grid">
+                                <div class="option-group">
+                                    <label>OAST Server <small style="color: var(--text-muted);">(Blind detection)</small></label>
+                                    <input type="text" id="oastServer" placeholder="oast.live">
+                                </div>
+                                <div class="option-group">
+                                    <label>Custom Wordlist <small style="color: var(--text-muted);">(Forced browsing)</small></label>
+                                    <input type="text" id="wordlist" placeholder="Path to wordlist file">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Advanced LLM Options -->
+                        <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color);">
+                            <div class="section-title" style="margin-bottom: 1rem; font-size: 0.85rem;">
+                                <i class="bi bi-robot" style="color: var(--accent-green);"></i>
+                                Advanced LLM Testing
+                            </div>
+                            <div class="options-grid">
+                                <div class="option-group">
+                                    <label>Toxicity Scorer</label>
+                                    <select id="toxicityScorer">
+                                        <option value="auto" selected>Auto (best available)</option>
+                                        <option value="perspective">Perspective API</option>
+                                        <option value="toxic_bert">Toxic-BERT (local)</option>
+                                        <option value="signature">Signature-based</option>
+                                    </select>
+                                </div>
+                                <div class="option-group">
+                                    <label>Toxicity Threshold <small style="color: var(--text-muted);">(0.0-1.0)</small></label>
+                                    <input type="number" id="toxicityThreshold" value="0.7" min="0" max="1" step="0.1" placeholder="0.7">
+                                </div>
+                                <div class="option-group">
+                                    <label>Perspective API Key <small style="color: var(--text-muted);">(optional)</small></label>
+                                    <input type="password" id="perspectiveApiKey" placeholder="Your API key">
+                                </div>
+                                <div class="option-group">
+                                    <label>Adversarial Mode</label>
+                                    <select id="adversarialMode">
+                                        <option value="static" selected>Static suffixes</option>
+                                        <option value="random">Random search</option>
+                                        <option value="genetic">Genetic algorithm</option>
+                                    </select>
+                                </div>
+                                <div class="option-group">
+                                    <label>Attacker LLM <small style="color: var(--text-muted);">(Red-team orchestration)</small></label>
+                                    <input type="text" id="attackerLlm" placeholder="https://api.example.com/chat">
+                                </div>
+                                <div class="option-group">
+                                    <label>Max Attack Turns</label>
+                                    <input type="number" id="maxAttackTurns" value="10" min="1" max="50" placeholder="10">
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Scan Button -->
@@ -1701,6 +1762,16 @@
                 skip_ssl: document.getElementById('skipSsl').checked,
                 skip_wordpress: document.getElementById('skipWordpress').checked,
                 llm_endpoint: llmEndpoint,
+                // Advanced security options
+                oast_server: document.getElementById('oastServer').value.trim() || null,
+                wordlist: document.getElementById('wordlist').value.trim() || null,
+                // Advanced LLM options
+                toxicity_scorer: document.getElementById('toxicityScorer').value,
+                toxicity_threshold: parseFloat(document.getElementById('toxicityThreshold').value) || 0.7,
+                perspective_api_key: document.getElementById('perspectiveApiKey').value.trim() || null,
+                adversarial_mode: document.getElementById('adversarialMode').value,
+                attacker_llm: document.getElementById('attackerLlm').value.trim() || null,
+                max_attack_turns: parseInt(document.getElementById('maxAttackTurns').value) || 10,
             };
 
             fetch('/api/scan', {

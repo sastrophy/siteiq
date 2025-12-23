@@ -1054,6 +1054,32 @@ def run_tests_thread(test_run: TestRun):
         if test_run.options.get("llm_endpoint"):
             cmd.extend([f"--llm-endpoint={test_run.options['llm_endpoint']}"])
 
+        # Add OAST server for blind vulnerability detection
+        if test_run.options.get("oast_server"):
+            cmd.extend([f"--oast-server={test_run.options['oast_server']}"])
+
+        # Add toxicity scoring options
+        if test_run.options.get("toxicity_scorer"):
+            cmd.extend([f"--toxicity-scorer={test_run.options['toxicity_scorer']}"])
+        if test_run.options.get("toxicity_threshold"):
+            cmd.extend([f"--toxicity-threshold={test_run.options['toxicity_threshold']}"])
+        if test_run.options.get("perspective_api_key"):
+            cmd.extend([f"--perspective-api-key={test_run.options['perspective_api_key']}"])
+
+        # Add wordlist for forced browsing
+        if test_run.options.get("wordlist"):
+            cmd.extend([f"--wordlist={test_run.options['wordlist']}"])
+
+        # Add adversarial mode
+        if test_run.options.get("adversarial_mode"):
+            cmd.extend([f"--adversarial-mode={test_run.options['adversarial_mode']}"])
+
+        # Add attacker LLM for orchestration
+        if test_run.options.get("attacker_llm"):
+            cmd.extend([f"--attacker-llm={test_run.options['attacker_llm']}"])
+        if test_run.options.get("max_attack_turns"):
+            cmd.extend([f"--max-attack-turns={test_run.options['max_attack_turns']}"])
+
         # Add report ID so the report file is named after this test run
         cmd.append(f"--report-id={test_run.id}")
 
