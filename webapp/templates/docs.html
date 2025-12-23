@@ -1,0 +1,1452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation - SiteIQ</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --bg-card-hover: rgba(255, 255, 255, 0.06);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --text-primary: #ffffff;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --accent-pink: #ec4899;
+            --accent-cyan: #06b6d4;
+            --accent-green: #10b981;
+            --accent-orange: #f97316;
+            --accent-red: #ef4444;
+            --accent-yellow: #fbbf24;
+            --gradient-primary: linear-gradient(135deg, #3b82f6, #8b5cf6, #ec4899);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bg-glow {
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 30%, rgba(59, 130, 246, 0.08) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 70%, rgba(139, 92, 246, 0.08) 0%, transparent 50%);
+            animation: glowMove 20s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes glowMove {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-5%, -5%); }
+        }
+
+        /* Navigation */
+        .navbar {
+            background: rgba(10, 10, 15, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--text-primary);
+            background: var(--bg-card);
+        }
+
+        /* Main Container */
+        .main-container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 3rem 0;
+            margin-bottom: 2rem;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Table of Contents */
+        .toc-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            position: sticky;
+            top: 100px;
+        }
+
+        .toc-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .toc-link {
+            display: block;
+            color: var(--text-muted);
+            text-decoration: none;
+            padding: 0.5rem 0;
+            font-size: 0.9rem;
+            border-left: 2px solid transparent;
+            padding-left: 1rem;
+            margin-left: -1rem;
+            transition: all 0.2s;
+        }
+
+        .toc-link:hover {
+            color: var(--text-primary);
+            border-left-color: var(--accent-blue);
+        }
+
+        .toc-link.sub {
+            padding-left: 2rem;
+            font-size: 0.85rem;
+        }
+
+        /* Section Cards */
+        .section {
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-title i {
+            font-size: 1.25rem;
+            padding: 0.5rem;
+            border-radius: 8px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Code Block */
+        .code-block {
+            background: #0d0d12;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem 1.25rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: #e2e8f0;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        .code-block .comment {
+            color: #6b7280;
+        }
+
+        .code-block .keyword {
+            color: #c084fc;
+        }
+
+        .code-block .string {
+            color: #86efac;
+        }
+
+        .code-block .function {
+            color: #60a5fa;
+        }
+
+        /* Architecture Diagram */
+        .arch-diagram {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+        }
+
+        .arch-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            margin: 0.5rem;
+        }
+
+        .arch-box.webapp {
+            border-color: var(--accent-blue);
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .arch-box.tests {
+            border-color: var(--accent-orange);
+            background: rgba(249, 115, 22, 0.1);
+        }
+
+        .arch-box.utils {
+            border-color: var(--accent-green);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .arch-box.payloads {
+            border-color: var(--accent-purple);
+            background: rgba(139, 92, 246, 0.1);
+        }
+
+        .arch-box h5 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .arch-box p {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        .arch-arrow {
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            text-align: center;
+            padding: 0.5rem;
+        }
+
+        /* Module Grid */
+        .module-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+
+        .module-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.25rem;
+            transition: all 0.3s;
+        }
+
+        .module-card:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .module-card .icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        .module-card.security .icon {
+            background: rgba(249, 115, 22, 0.2);
+            color: var(--accent-orange);
+        }
+
+        .module-card.seo .icon {
+            background: rgba(6, 182, 212, 0.2);
+            color: var(--accent-cyan);
+        }
+
+        .module-card.geo .icon {
+            background: rgba(139, 92, 246, 0.2);
+            color: var(--accent-purple);
+        }
+
+        .module-card.llm .icon {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--accent-green);
+        }
+
+        .module-card.util .icon {
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--accent-blue);
+        }
+
+        .module-card h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .module-card p {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .module-card .file-path {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--accent-cyan);
+            background: rgba(6, 182, 212, 0.1);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        /* File Tree */
+        .file-tree {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            line-height: 1.8;
+        }
+
+        .file-tree .folder {
+            color: var(--accent-blue);
+        }
+
+        .file-tree .file {
+            color: var(--text-secondary);
+        }
+
+        .file-tree .comment {
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        /* Tables */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .data-table th {
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .data-table td {
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .data-table code {
+            background: var(--bg-secondary);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+
+        /* Alert Boxes */
+        .alert-box {
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .alert-box i {
+            font-size: 1.1rem;
+            margin-top: 0.1rem;
+        }
+
+        .alert-box.info {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            color: #93c5fd;
+        }
+
+        .alert-box.info i {
+            color: var(--accent-blue);
+        }
+
+        .alert-box.tip {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            color: #6ee7b7;
+        }
+
+        .alert-box.tip i {
+            color: var(--accent-green);
+        }
+
+        /* Flow Diagram */
+        .flow-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            align-items: center;
+            padding: 1.5rem;
+        }
+
+        .flow-step {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 1rem 1.5rem;
+            text-align: center;
+            min-width: 150px;
+        }
+
+        .flow-step .num {
+            width: 28px;
+            height: 28px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+            margin: 0 auto 0.5rem;
+        }
+
+        .flow-step h5 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .flow-step p {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        .flow-arrow {
+            color: var(--text-muted);
+            font-size: 1.5rem;
+        }
+
+        /* Back to Top */
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 48px;
+            height: 48px;
+            background: var(--gradient-primary);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 1.25rem;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .toc-card {
+                position: static;
+                margin-bottom: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 1rem;
+            }
+
+            .hero h1 {
+                font-size: 1.75rem;
+            }
+
+            .module-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .flow-container {
+                flex-direction: column;
+            }
+
+            .flow-arrow {
+                transform: rotate(90deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-grid"></div>
+    <div class="bg-glow"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container d-flex justify-content-between align-items-center">
+            <a class="navbar-brand" href="/">
+                <i class="bi bi-lightning-charge-fill"></i>
+                SiteIQ
+            </a>
+            <div class="nav-links d-flex gap-2">
+                <a href="/"><i class="bi bi-speedometer2 me-1"></i>Dashboard</a>
+                <a href="/docs" class="active"><i class="bi bi-book me-1"></i>Docs</a>
+                <a href="/help"><i class="bi bi-question-circle me-1"></i>Help</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <!-- Hero -->
+        <div class="hero">
+            <h1><i class="bi bi-gear me-2"></i>Technical Documentation</h1>
+            <p>Deep dive into SiteIQ's architecture, test modules, utilities, and how the automated security testing framework works under the hood.</p>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar TOC -->
+            <div class="col-lg-3 mb-4">
+                <div class="toc-card">
+                    <div class="toc-title">
+                        <i class="bi bi-list-ul"></i>
+                        Contents
+                    </div>
+                    <a href="#architecture" class="toc-link">Architecture Overview</a>
+                    <a href="#project-structure" class="toc-link">Project Structure</a>
+                    <a href="#test-modules" class="toc-link">Test Modules</a>
+                    <a href="#test-security" class="toc-link sub">Security Tests</a>
+                    <a href="#test-seo" class="toc-link sub">SEO Tests</a>
+                    <a href="#test-geo" class="toc-link sub">GEO Tests</a>
+                    <a href="#test-llm" class="toc-link sub">LLM Tests</a>
+                    <a href="#utilities" class="toc-link">Utilities</a>
+                    <a href="#payloads" class="toc-link">Payloads</a>
+                    <a href="#test-flow" class="toc-link">Test Execution Flow</a>
+                    <a href="#cli-usage" class="toc-link">CLI Usage</a>
+                    <a href="#configuration" class="toc-link">Configuration</a>
+                    <a href="#extending" class="toc-link">Extending SiteIQ</a>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-lg-9">
+                <!-- Architecture Overview -->
+                <section id="architecture" class="section">
+                    <h2 class="section-title">
+                        <i class="bi bi-diagram-3" style="background: rgba(59, 130, 246, 0.2); color: var(--accent-blue);"></i>
+                        Architecture Overview
+                    </h2>
+
+                    <p class="text-secondary mb-4">SiteIQ is built on a modular architecture using pytest as the test execution framework, Flask for the web interface, and specialized utilities for advanced security testing.</p>
+
+                    <div class="arch-diagram">
+                        <div class="row text-center">
+                            <div class="col-12 mb-3">
+                                <div class="arch-box webapp">
+                                    <h5><i class="bi bi-browser-chrome me-2"></i>Web Application</h5>
+                                    <p>Flask-based UI with real-time streaming</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="arch-arrow"><i class="bi bi-arrow-down"></i></div>
+                        <div class="row">
+                            <div class="col-md-6 col-lg-3">
+                                <div class="arch-box tests">
+                                    <h5><i class="bi bi-shield-check me-2"></i>Test Modules</h5>
+                                    <p>pytest-based security, SEO, GEO, LLM tests</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-3">
+                                <div class="arch-box utils">
+                                    <h5><i class="bi bi-tools me-2"></i>Utilities</h5>
+                                    <p>OAST, Toxicity, Adversarial, Orchestrator</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-3">
+                                <div class="arch-box payloads">
+                                    <h5><i class="bi bi-file-code me-2"></i>Payloads</h5>
+                                    <p>SQLi, XSS, LLM attack vectors</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-3">
+                                <div class="arch-box" style="border-color: var(--accent-cyan); background: rgba(6, 182, 212, 0.1);">
+                                    <h5><i class="bi bi-file-text me-2"></i>Reports</h5>
+                                    <p>JSON reports with findings</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title"><i class="bi bi-stack me-2"></i>Core Components</div>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Component</th>
+                                    <th>Technology</th>
+                                    <th>Purpose</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Web Interface</strong></td>
+                                    <td>Flask + Jinja2</td>
+                                    <td>Dashboard, real-time streaming, results display</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Test Framework</strong></td>
+                                    <td>pytest</td>
+                                    <td>Test discovery, execution, fixtures, markers</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>HTTP Client</strong></td>
+                                    <td>requests</td>
+                                    <td>Target communication, payload delivery</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>HTML Parsing</strong></td>
+                                    <td>BeautifulSoup4</td>
+                                    <td>Response analysis, DOM inspection</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Streaming</strong></td>
+                                    <td>Server-Sent Events</td>
+                                    <td>Real-time test output to browser</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Project Structure -->
+                <section id="project-structure" class="section">
+                    <h2 class="section-title">
+                        <i class="bi bi-folder2-open" style="background: rgba(139, 92, 246, 0.2); color: var(--accent-purple);"></i>
+                        Project Structure
+                    </h2>
+
+                    <div class="card">
+                        <div class="file-tree">
+<pre>
+<span class="folder">siteiq/</span>
+├── <span class="folder">webapp/</span>                    <span class="comment"># Flask web application</span>
+│   ├── <span class="file">app.py</span>               <span class="comment"># Main Flask app, routes, SSE streaming</span>
+│   ├── <span class="folder">templates/</span>           <span class="comment"># Jinja2 HTML templates</span>
+│   │   ├── <span class="file">index.html</span>       <span class="comment"># Dashboard with test selection</span>
+│   │   ├── <span class="file">results.html</span>     <span class="comment"># Scan results display</span>
+│   │   ├── <span class="file">help.html</span>        <span class="comment"># User guide</span>
+│   │   └── <span class="file">docs.html</span>        <span class="comment"># Technical documentation</span>
+│   └── <span class="folder">static/</span>              <span class="comment"># CSS, JS, images</span>
+│
+├── <span class="folder">tests/</span>                     <span class="comment"># pytest test modules</span>
+│   ├── <span class="file">test_sql_injection.py</span>   <span class="comment"># SQL injection tests</span>
+│   ├── <span class="file">test_xss.py</span>             <span class="comment"># Cross-site scripting tests</span>
+│   ├── <span class="file">test_security_headers.py</span> <span class="comment"># HTTP security headers</span>
+│   ├── <span class="file">test_ssl.py</span>             <span class="comment"># SSL/TLS validation</span>
+│   ├── <span class="file">test_authentication.py</span>  <span class="comment"># Auth security tests</span>
+│   ├── <span class="file">test_csrf.py</span>            <span class="comment"># CSRF protection tests</span>
+│   ├── <span class="file">test_ssrf.py</span>            <span class="comment"># SSRF + OAST tests</span>
+│   ├── <span class="file">test_directory_traversal.py</span>
+│   ├── <span class="file">test_forced_browse.py</span>   <span class="comment"># Directory brute-forcing</span>
+│   ├── <span class="file">test_wordpress.py</span>       <span class="comment"># WordPress-specific tests</span>
+│   ├── <span class="file">test_seo.py</span>             <span class="comment"># SEO analysis tests</span>
+│   ├── <span class="file">test_geo.py</span>             <span class="comment"># GEO/latency tests</span>
+│   └── <span class="file">test_llm.py</span>             <span class="comment"># LLM security tests (25+ tests)</span>
+│
+├── <span class="folder">payloads/</span>                  <span class="comment"># Attack payload collections</span>
+│   ├── <span class="file">sql_injection.py</span>    <span class="comment"># SQLi payloads + OAST</span>
+│   ├── <span class="file">xss.py</span>              <span class="comment"># XSS payloads</span>
+│   ├── <span class="file">ssrf.py</span>             <span class="comment"># SSRF payloads + OAST</span>
+│   ├── <span class="file">directory_traversal.py</span>
+│   └── <span class="file">llm.py</span>              <span class="comment"># LLM attack prompts</span>
+│
+├── <span class="folder">utils/</span>                     <span class="comment"># Utility modules</span>
+│   ├── <span class="file">oast_client.py</span>      <span class="comment"># OAST/Interactsh client</span>
+│   ├── <span class="file">toxicity_scorer.py</span>  <span class="comment"># ML toxicity detection</span>
+│   ├── <span class="file">adversarial_optimizer.py</span> <span class="comment"># GCG-style attacks</span>
+│   └── <span class="file">orchestrator.py</span>     <span class="comment"># Red-team orchestration</span>
+│
+├── <span class="folder">wordlists/</span>                 <span class="comment"># Brute-forcing wordlists</span>
+│   ├── <span class="file">common-directories.txt</span>
+│   └── <span class="file">sensitive-files.txt</span>
+│
+├── <span class="folder">reports/</span>                   <span class="comment"># Generated JSON reports</span>
+├── <span class="file">conftest.py</span>               <span class="comment"># pytest fixtures, markers, CLI options</span>
+├── <span class="file">config.py</span>                 <span class="comment"># Configuration management</span>
+└── <span class="file">requirements.txt</span>         <span class="comment"># Python dependencies</span>
+</pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Test Modules -->
+                <section id="test-modules" class="section">
+                    <h2 class="section-title">
+                        <i class="bi bi-puzzle" style="background: rgba(249, 115, 22, 0.2); color: var(--accent-orange);"></i>
+                        Test Modules
+                    </h2>
+
+                    <p class="text-secondary mb-4">Tests are organized into four main categories, each with specialized test classes that inherit common fixtures and utilities.</p>
+
+                    <!-- Security Tests -->
+                    <div id="test-security" class="card">
+                        <div class="card-title"><i class="bi bi-shield-lock me-2" style="color: var(--accent-orange);"></i>Security Tests</div>
+                        <div class="module-grid">
+                            <div class="module-card security">
+                                <div class="icon"><i class="bi bi-database"></i></div>
+                                <h4>SQL Injection</h4>
+                                <p>Tests for classic, union-based, blind, time-based, and NoSQL injection vulnerabilities.</p>
+                                <span class="file-path">tests/test_sql_injection.py</span>
+                            </div>
+                            <div class="module-card security">
+                                <div class="icon"><i class="bi bi-code-slash"></i></div>
+                                <h4>Cross-Site Scripting</h4>
+                                <p>Reflected XSS, DOM-based XSS, and filter bypass techniques.</p>
+                                <span class="file-path">tests/test_xss.py</span>
+                            </div>
+                            <div class="module-card security">
+                                <div class="icon"><i class="bi bi-shield-check"></i></div>
+                                <h4>Security Headers</h4>
+                                <p>Validates CSP, HSTS, X-Frame-Options, CORS, and other security headers.</p>
+                                <span class="file-path">tests/test_security_headers.py</span>
+                            </div>
+                            <div class="module-card security">
+                                <div class="icon"><i class="bi bi-broadcast"></i></div>
+                                <h4>SSRF + OAST</h4>
+                                <p>Server-side request forgery with blind detection via OAST callbacks.</p>
+                                <span class="file-path">tests/test_ssrf.py</span>
+                            </div>
+                            <div class="module-card security">
+                                <div class="icon"><i class="bi bi-folder-symlink"></i></div>
+                                <h4>Forced Browsing</h4>
+                                <p>Directory/file enumeration using wordlists to discover hidden resources.</p>
+                                <span class="file-path">tests/test_forced_browse.py</span>
+                            </div>
+                            <div class="module-card security">
+                                <div class="icon"><i class="bi bi-lock"></i></div>
+                                <h4>SSL/TLS</h4>
+                                <p>Certificate validation, protocol versions, cipher strength analysis.</p>
+                                <span class="file-path">tests/test_ssl.py</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SEO Tests -->
+                    <div id="test-seo" class="card">
+                        <div class="card-title"><i class="bi bi-search me-2" style="color: var(--accent-cyan);"></i>SEO Tests</div>
+                        <div class="module-grid">
+                            <div class="module-card seo">
+                                <div class="icon"><i class="bi bi-tags"></i></div>
+                                <h4>Meta Tags</h4>
+                                <p>Title, description, viewport, robots meta tag validation.</p>
+                                <span class="file-path">tests/test_seo.py</span>
+                            </div>
+                            <div class="module-card seo">
+                                <div class="icon"><i class="bi bi-code-square"></i></div>
+                                <h4>Schema Markup</h4>
+                                <p>JSON-LD structured data validation for rich snippets.</p>
+                                <span class="file-path">tests/test_seo.py</span>
+                            </div>
+                            <div class="module-card seo">
+                                <div class="icon"><i class="bi bi-speedometer2"></i></div>
+                                <h4>Performance</h4>
+                                <p>Page load time, Core Web Vitals, compression analysis.</p>
+                                <span class="file-path">tests/test_seo.py</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- GEO Tests -->
+                    <div id="test-geo" class="card">
+                        <div class="card-title"><i class="bi bi-geo-alt me-2" style="color: var(--accent-purple);"></i>GEO Tests</div>
+                        <div class="module-grid">
+                            <div class="module-card geo">
+                                <div class="icon"><i class="bi bi-globe"></i></div>
+                                <h4>Multi-Region Access</h4>
+                                <p>Tests accessibility from different geographic locations.</p>
+                                <span class="file-path">tests/test_geo.py</span>
+                            </div>
+                            <div class="module-card geo">
+                                <div class="icon"><i class="bi bi-stopwatch"></i></div>
+                                <h4>Latency Analysis</h4>
+                                <p>Response time measurement and CDN effectiveness.</p>
+                                <span class="file-path">tests/test_geo.py</span>
+                            </div>
+                            <div class="module-card geo">
+                                <div class="icon"><i class="bi bi-shield-check"></i></div>
+                                <h4>Compliance</h4>
+                                <p>GDPR/CCPA compliance indicators detection.</p>
+                                <span class="file-path">tests/test_geo.py</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- LLM Tests -->
+                    <div id="test-llm" class="card">
+                        <div class="card-title"><i class="bi bi-robot me-2" style="color: var(--accent-green);"></i>LLM Security Tests</div>
+                        <p class="text-secondary mb-3">25+ comprehensive tests for LLM-powered API endpoints.</p>
+                        <div class="module-grid">
+                            <div class="module-card llm">
+                                <div class="icon"><i class="bi bi-input-cursor-text"></i></div>
+                                <h4>Prompt Injection</h4>
+                                <p>Direct/indirect injection, instruction override, context manipulation.</p>
+                                <span class="file-path">tests/test_llm.py</span>
+                            </div>
+                            <div class="module-card llm">
+                                <div class="icon"><i class="bi bi-unlock"></i></div>
+                                <h4>Jailbreaking</h4>
+                                <p>DAN-style, roleplay, encoding tricks, safety bypass attempts.</p>
+                                <span class="file-path">tests/test_llm.py</span>
+                            </div>
+                            <div class="module-card llm">
+                                <div class="icon"><i class="bi bi-exclamation-diamond"></i></div>
+                                <h4>Toxicity Detection</h4>
+                                <p>ML-based detection using Perspective API or Toxic-BERT.</p>
+                                <span class="file-path">tests/test_llm.py</span>
+                            </div>
+                            <div class="module-card llm">
+                                <div class="icon"><i class="bi bi-bandaid"></i></div>
+                                <h4>Unauthorized Advice</h4>
+                                <p>Medical, legal, financial advice that LLMs shouldn't provide.</p>
+                                <span class="file-path">tests/test_llm.py</span>
+                            </div>
+                            <div class="module-card llm">
+                                <div class="icon"><i class="bi bi-lightning-charge"></i></div>
+                                <h4>Adversarial Optimization</h4>
+                                <p>GCG-style suffix attacks to bypass safety filters.</p>
+                                <span class="file-path">tests/test_llm.py</span>
+                            </div>
+                            <div class="module-card llm">
+                                <div class="icon"><i class="bi bi-bullseye"></i></div>
+                                <h4>Red-Team Orchestration</h4>
+                                <p>Automated multi-turn attacks using LLM-as-Attacker pattern.</p>
+                                <span class="file-path">tests/test_llm.py</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Utilities -->
+                <section id="utilities" class="section">
+                    <h2 class="section-title">
+                        <i class="bi bi-tools" style="background: rgba(16, 185, 129, 0.2); color: var(--accent-green);"></i>
+                        Utilities
+                    </h2>
+
+                    <p class="text-secondary mb-4">Advanced utility modules that provide specialized capabilities for security testing.</p>
+
+                    <div class="card">
+                        <div class="card-title"><i class="bi bi-broadcast me-2"></i>OAST Client</div>
+                        <p class="text-secondary">Out-of-Band Application Security Testing for blind vulnerability detection.</p>
+                        <span class="file-path mb-3" style="display: inline-block;">utils/oast_client.py</span>
+                        <div class="code-block">
+<pre><span class="keyword">from</span> utils.oast_client <span class="keyword">import</span> OASTClient, OASTConfig
+
+<span class="comment"># Initialize client with Interactsh server</span>
+config = OASTConfig(server=<span class="string">"oast.live"</span>)
+client = OASTClient(config)
+
+<span class="comment"># Generate unique callback URL for a test</span>
+callback_url = client.<span class="function">generate_callback</span>(<span class="string">"ssrf_test_001"</span>)
+<span class="comment"># Returns: http://abc123.oast.live</span>
+
+<span class="comment"># Check if callback was triggered (blind vuln detected)</span>
+<span class="keyword">if</span> client.<span class="function">has_interaction</span>(<span class="string">"ssrf_test_001"</span>):
+    print(<span class="string">"Blind SSRF vulnerability confirmed!"</span>)</pre>
+                        </div>
+                        <p class="text-muted mt-2"><strong>Capabilities:</strong> DNS callbacks, HTTP callbacks, Interactsh integration, local callback server fallback</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title"><i class="bi bi-exclamation-diamond me-2"></i>Toxicity Scorer</div>
+                        <p class="text-secondary">ML-based detection of toxic, harmful, or inappropriate LLM outputs.</p>
+                        <span class="file-path mb-3" style="display: inline-block;">utils/toxicity_scorer.py</span>
+                        <div class="code-block">
+<pre><span class="keyword">from</span> utils.toxicity_scorer <span class="keyword">import</span> ToxicityScorer, ScorerBackend
+
+<span class="comment"># Initialize with Perspective API</span>
+scorer = ToxicityScorer(
+    backend=ScorerBackend.PERSPECTIVE,
+    api_key=<span class="string">"your_perspective_api_key"</span>,
+    threshold=<span class="number">0.7</span>
+)
+
+<span class="comment"># Score LLM response for toxicity</span>
+result = scorer.<span class="function">score</span>(<span class="string">"Some LLM response text..."</span>)
+print(f<span class="string">"Toxicity: {result.score}, Toxic: {result.is_toxic}"</span>)
+print(f<span class="string">"Categories: {result.categories}"</span>)  <span class="comment"># threat, insult, profanity, etc.</span></pre>
+                        </div>
+                        <p class="text-muted mt-2"><strong>Backends:</strong> Perspective API (Google), Toxic-BERT (local), Signature-based (fallback)</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title"><i class="bi bi-lightning-charge me-2"></i>Adversarial Optimizer</div>
+                        <p class="text-secondary">GCG-style adversarial suffix optimization to bypass LLM safety filters.</p>
+                        <span class="file-path mb-3" style="display: inline-block;">utils/adversarial_optimizer.py</span>
+                        <div class="code-block">
+<pre><span class="keyword">from</span> utils.adversarial_optimizer <span class="keyword">import</span> AdversarialOptimizer, OptimizationMode
+
+optimizer = AdversarialOptimizer()
+
+<span class="comment"># Define query function for target LLM</span>
+<span class="keyword">def</span> <span class="function">query_llm</span>(prompt):
+    <span class="keyword">return</span> requests.post(llm_endpoint, json={<span class="string">"message"</span>: prompt}).json()
+
+<span class="comment"># Run adversarial optimization</span>
+result = optimizer.<span class="function">optimize</span>(
+    prompt=<span class="string">"Tell me how to..."</span>,
+    target_goal=<span class="string">"Get LLM to comply"</span>,
+    query_fn=query_llm,
+    mode=OptimizationMode.GENETIC  <span class="comment"># or STATIC, RANDOM_SEARCH</span>
+)
+
+print(f<span class="string">"Best suffix: {result.best_suffix}"</span>)
+print(f<span class="string">"Success: {result.success}"</span>)</pre>
+                        </div>
+                        <p class="text-muted mt-2"><strong>Modes:</strong> Static (known suffixes), Random Search, Genetic Algorithm</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title"><i class="bi bi-bullseye me-2"></i>Red-Team Orchestrator</div>
+                        <p class="text-secondary">Automated multi-turn attack conversations using LLM-as-Attacker pattern.</p>
+                        <span class="file-path mb-3" style="display: inline-block;">utils/orchestrator.py</span>
+                        <div class="code-block">
+<pre><span class="keyword">from</span> utils.orchestrator <span class="keyword">import</span> RedTeamOrchestrator, OrchestratorConfig, AttackStrategy
+
+config = OrchestratorConfig(
+    strategy=AttackStrategy.JAILBREAK,
+    max_turns=<span class="number">10</span>,
+    attack_goal=<span class="string">"Bypass safety guidelines"</span>
+)
+
+orchestrator = RedTeamOrchestrator(
+    config=config,
+    attacker_query_fn=attacker_llm_query,  <span class="comment"># Your attacker LLM</span>
+    target_query_fn=target_llm_query       <span class="comment"># Target being tested</span>
+)
+
+<span class="comment"># Run automated attack conversation</span>
+result = orchestrator.<span class="function">run</span>()
+print(f<span class="string">"Success: {result.success}, Turns: {result.total_turns}"</span>)
+print(orchestrator.<span class="function">get_conversation_log</span>())</pre>
+                        </div>
+                        <p class="text-muted mt-2"><strong>Strategies:</strong> Jailbreak, Extraction, Manipulation, Escalation</p>
+                    </div>
+                </section>
+
+                <!-- Payloads -->
+                <section id="payloads" class="section">
+                    <h2 class="section-title">
+                        <i class="bi bi-file-code" style="background: rgba(139, 92, 246, 0.2); color: var(--accent-purple);"></i>
+                        Payloads
+                    </h2>
+
+                    <p class="text-secondary mb-4">Attack payload collections organized by vulnerability type. Each module provides both static payloads and dynamic generators.</p>
+
+                    <div class="card">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Module</th>
+                                    <th>Payloads</th>
+                                    <th>Features</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>payloads/sql_injection.py</code></td>
+                                    <td>100+ SQLi payloads</td>
+                                    <td>Classic, Union, Blind, Time-based, NoSQL, OAST templates</td>
+                                </tr>
+                                <tr>
+                                    <td><code>payloads/xss.py</code></td>
+                                    <td>80+ XSS payloads</td>
+                                    <td>Reflected, DOM-based, Filter bypass, Event handlers</td>
+                                </tr>
+                                <tr>
+                                    <td><code>payloads/ssrf.py</code></td>
+                                    <td>50+ SSRF payloads</td>
+                                    <td>Internal IP bypass, Cloud metadata, OAST callbacks</td>
+                                </tr>
+                                <tr>
+                                    <td><code>payloads/directory_traversal.py</code></td>
+                                    <td>40+ traversal payloads</td>
+                                    <td>Path traversal, Null bytes, Encoding bypass</td>
+                                </tr>
+                                <tr>
+                                    <td><code>payloads/llm.py</code></td>
+                                    <td>200+ LLM prompts</td>
+                                    <td>Jailbreaks, Injections, Encoding, Language switching, Unauthorized advice</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="alert-box tip">
+                        <i class="bi bi-lightbulb"></i>
+                        <div>
+                            <strong>Dynamic Payloads:</strong> Many payload modules include generator functions like <code>generate_oast_payloads()</code> that create context-specific payloads with unique callback URLs.
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Test Execution Flow -->
+                <section id="test-flow" class="section">
+                    <h2 class="section-title">
+                        <i class="bi bi-arrow-repeat" style="background: rgba(6, 182, 212, 0.2); color: var(--accent-cyan);"></i>
+                        Test Execution Flow
+                    </h2>
+
+                    <div class="card">
+                        <div class="flow-container">
+                            <div class="flow-step">
+                                <div class="num">1</div>
+                                <h5>User Input</h5>
+                                <p>URL + test selection</p>
+                            </div>
+                            <div class="flow-arrow"><i class="bi bi-arrow-right"></i></div>
+                            <div class="flow-step">
+                                <div class="num">2</div>
+                                <h5>Flask API</h5>
+                                <p>Validate & queue</p>
+                            </div>
+                            <div class="flow-arrow"><i class="bi bi-arrow-right"></i></div>
+                            <div class="flow-step">
+                                <div class="num">3</div>
+                                <h5>pytest</h5>
+                                <p>Execute tests</p>
+                            </div>
+                            <div class="flow-arrow"><i class="bi bi-arrow-right"></i></div>
+                            <div class="flow-step">
+                                <div class="num">4</div>
+                                <h5>SSE Stream</h5>
+                                <p>Real-time output</p>
+                            </div>
+                            <div class="flow-arrow"><i class="bi bi-arrow-right"></i></div>
+                            <div class="flow-step">
+                                <div class="num">5</div>
+                                <h5>Report</h5>
+                                <p>JSON results</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">Detailed Flow</div>
+                        <ol style="color: var(--text-secondary); padding-left: 1.5rem;">
+                            <li class="mb-2"><strong>Web Interface:</strong> User enters target URL and selects tests via dashboard</li>
+                            <li class="mb-2"><strong>API Endpoint:</strong> <code>POST /api/scan</code> receives config, validates input, creates test run</li>
+                            <li class="mb-2"><strong>Process Spawn:</strong> Flask spawns pytest subprocess with appropriate markers and CLI options</li>
+                            <li class="mb-2"><strong>Test Discovery:</strong> pytest discovers tests matching selected markers (e.g., <code>-m security</code>)</li>
+                            <li class="mb-2"><strong>Fixture Injection:</strong> <code>conftest.py</code> injects target_url, session, and utility fixtures</li>
+                            <li class="mb-2"><strong>Test Execution:</strong> Each test class sends payloads and analyzes responses</li>
+                            <li class="mb-2"><strong>SSE Streaming:</strong> Test output is streamed via Server-Sent Events to browser</li>
+                            <li class="mb-2"><strong>Report Generation:</strong> Results saved to <code>reports/</code> as timestamped JSON</li>
+                        </ol>
+                    </div>
+                </section>
+
+                <!-- CLI Usage -->
+                <section id="cli-usage" class="section">
+                    <h2 class="section-title">
+                        <i class="bi bi-terminal" style="background: rgba(251, 191, 36, 0.2); color: var(--accent-yellow);"></i>
+                        CLI Usage
+                    </h2>
+
+                    <p class="text-secondary mb-4">SiteIQ can be run directly via pytest CLI for automation and CI/CD integration.</p>
+
+                    <div class="card">
+                        <div class="card-title">Basic Usage</div>
+                        <div class="code-block">
+<pre><span class="comment"># Run all security tests</span>
+pytest --target-url=https://example.com -m security -v
+
+<span class="comment"># Run specific test category</span>
+pytest --target-url=https://example.com -m sql_injection -v
+
+<span class="comment"># Run LLM security tests</span>
+pytest --llm-endpoint=https://api.example.com/chat -m llm -v
+
+<span class="comment"># Run SEO and GEO tests</span>
+pytest --target-url=https://example.com -m "seo or geo" -v</pre>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">Advanced Options</div>
+                        <div class="code-block">
+<pre><span class="comment"># With OAST for blind vulnerability detection</span>
+pytest --target-url=https://example.com -m ssrf \
+    --oast-server=oast.live -v
+
+<span class="comment"># With custom wordlist for forced browsing</span>
+pytest --target-url=https://example.com -m forced_browse \
+    --wordlist=/path/to/wordlist.txt -v
+
+<span class="comment"># LLM tests with toxicity scoring</span>
+pytest --llm-endpoint=https://api.example.com/chat -m llm \
+    --toxicity-scorer=perspective \
+    --perspective-api-key=YOUR_KEY \
+    --toxicity-threshold=0.7 -v
+
+<span class="comment"># LLM tests with adversarial optimization</span>
+pytest --llm-endpoint=https://api.example.com/chat -m llm_adversarial \
+    --adversarial-mode=genetic -v
+
+<span class="comment"># Red-team orchestration</span>
+pytest --llm-endpoint=https://target.example.com/chat -m llm_orchestration \
+    --attacker-llm=https://attacker.example.com/chat \
+    --max-attack-turns=15 -v</pre>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">Available CLI Options</div>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Option</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>--target-url</code></td>
+                                    <td>Target website URL for testing</td>
+                                </tr>
+                                <tr>
+                                    <td><code>--llm-endpoint</code></td>
+                                    <td>LLM API endpoint URL</td>
+                                </tr>
+                                <tr>
+                                    <td><code>--oast-server</code></td>
+                                    <td>OAST server for blind detection</td>
+                                </tr>
+                                <tr>
+                                    <td><code>--wordlist</code></td>
+                                    <td>Custom wordlist for brute-forcing</td>
+                                </tr>
+                                <tr>
+                                    <td><code>--toxicity-scorer</code></td>
+                                    <td>Toxicity backend (auto/perspective/toxic_bert/signature)</td>
+                                </tr>
+                                <tr>
+                                    <td><code>--toxicity-threshold</code></td>
+                                    <td>Toxicity score threshold (0.0-1.0)</td>
+                                </tr>
+                                <tr>
+                                    <td><code>--perspective-api-key</code></td>
+                                    <td>Google Perspective API key</td>
+                                </tr>
+                                <tr>
+                                    <td><code>--adversarial-mode</code></td>
+                                    <td>Adversarial optimization mode (static/random/genetic)</td>
+                                </tr>
+                                <tr>
+                                    <td><code>--attacker-llm</code></td>
+                                    <td>Attacker LLM endpoint for orchestration</td>
+                                </tr>
+                                <tr>
+                                    <td><code>--max-attack-turns</code></td>
+                                    <td>Max turns for orchestrated attacks</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Configuration -->
+                <section id="configuration" class="section">
+                    <h2 class="section-title">
+                        <i class="bi bi-gear" style="background: rgba(236, 72, 153, 0.2); color: var(--accent-pink);"></i>
+                        Configuration
+                    </h2>
+
+                    <div class="card">
+                        <div class="card-title">Environment Variables</div>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Variable</th>
+                                    <th>Description</th>
+                                    <th>Default</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>SITEIQ_REQUIRE_AUTH</code></td>
+                                    <td>Enable API key authentication</td>
+                                    <td>false</td>
+                                </tr>
+                                <tr>
+                                    <td><code>SITEIQ_API_KEY</code></td>
+                                    <td>API key value when auth enabled</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <td><code>SITEIQ_SSRF_PROTECTION</code></td>
+                                    <td>Block requests to internal IPs</td>
+                                    <td>true</td>
+                                </tr>
+                                <tr>
+                                    <td><code>SITEIQ_RATE_LIMIT</code></td>
+                                    <td>Enable rate limiting</td>
+                                    <td>true</td>
+                                </tr>
+                                <tr>
+                                    <td><code>PAGESPEED_API_KEY</code></td>
+                                    <td>Google PageSpeed API key</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <td><code>PERSPECTIVE_API_KEY</code></td>
+                                    <td>Google Perspective API key</td>
+                                    <td>-</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">pytest Markers</div>
+                        <p class="text-secondary mb-3">Tests are organized using pytest markers defined in <code>conftest.py</code>:</p>
+                        <div class="code-block">
+<pre><span class="comment"># Security markers</span>
+@pytest.mark.security
+@pytest.mark.sql_injection
+@pytest.mark.xss
+@pytest.mark.security_headers
+@pytest.mark.ssl
+@pytest.mark.csrf
+@pytest.mark.ssrf
+@pytest.mark.forced_browse
+@pytest.mark.authentication
+@pytest.mark.directory_traversal
+
+<span class="comment"># SEO/GEO markers</span>
+@pytest.mark.seo
+@pytest.mark.geo
+
+<span class="comment"># LLM markers</span>
+@pytest.mark.llm
+@pytest.mark.llm_prompt_injection
+@pytest.mark.llm_jailbreak
+@pytest.mark.llm_toxicity
+@pytest.mark.llm_unauthorized_advice
+@pytest.mark.llm_adversarial
+@pytest.mark.llm_orchestration</pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Extending SiteIQ -->
+                <section id="extending" class="section">
+                    <h2 class="section-title">
+                        <i class="bi bi-plus-circle" style="background: rgba(16, 185, 129, 0.2); color: var(--accent-green);"></i>
+                        Extending SiteIQ
+                    </h2>
+
+                    <div class="card">
+                        <div class="card-title">Adding New Tests</div>
+                        <ol style="color: var(--text-secondary); padding-left: 1.5rem;">
+                            <li class="mb-2">Create test file in <code>tests/</code> directory (e.g., <code>test_new_vuln.py</code>)</li>
+                            <li class="mb-2">Add pytest marker in <code>conftest.py</code></li>
+                            <li class="mb-2">Add test category to <code>TEST_CATEGORIES</code> in <code>webapp/app.py</code></li>
+                            <li class="mb-2">Create payload file in <code>payloads/</code> if needed</li>
+                        </ol>
+                        <div class="code-block">
+<pre><span class="comment"># tests/test_new_vuln.py</span>
+<span class="keyword">import</span> pytest
+
+<span class="keyword">class</span> <span class="function">TestNewVulnerability</span>:
+    <span class="string">"""Tests for new vulnerability type."""</span>
+
+    @pytest.mark.new_vuln
+    @pytest.mark.security
+    <span class="keyword">def</span> <span class="function">test_basic_detection</span>(self, target_url, session):
+        <span class="string">"""Test basic vulnerability detection."""</span>
+        response = session.get(f<span class="string">"{target_url}/endpoint"</span>)
+        <span class="comment"># Your test logic here</span>
+        <span class="keyword">assert</span> <span class="string">"vulnerable_pattern"</span> <span class="keyword">not in</span> response.text</pre>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">Adding New Payloads</div>
+                        <div class="code-block">
+<pre><span class="comment"># payloads/new_payloads.py</span>
+
+<span class="comment"># Static payload list</span>
+NEW_VULN_PAYLOADS = [
+    <span class="string">"payload1"</span>,
+    <span class="string">"payload2"</span>,
+    <span class="string">"payload3"</span>,
+]
+
+<span class="comment"># Dynamic payload generator</span>
+<span class="keyword">def</span> <span class="function">generate_context_payloads</span>(context: str) -> list:
+    <span class="string">"""Generate payloads based on context."""</span>
+    <span class="keyword">return</span> [f<span class="string">"{context}{p}"</span> <span class="keyword">for</span> p <span class="keyword">in</span> NEW_VULN_PAYLOADS]</pre>
+                        </div>
+                    </div>
+
+                    <div class="alert-box info">
+                        <i class="bi bi-info-circle"></i>
+                        <div>
+                            <strong>Test Categories:</strong> Remember that Security tests and SEO/GEO tests are mutually exclusive. LLM tests are also separate. Design your tests to fit within these boundaries.
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <!-- Back to Top Button -->
+    <button class="back-to-top" onclick="scrollToTop()">
+        <i class="bi bi-arrow-up"></i>
+    </button>
+
+    <script>
+        // Back to top
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Show/hide back to top button
+        window.addEventListener('scroll', () => {
+            const btn = document.querySelector('.back-to-top');
+            if (window.scrollY > 300) {
+                btn.classList.add('visible');
+            } else {
+                btn.classList.remove('visible');
+            }
+        });
+
+        // Smooth scroll for TOC links
+        document.querySelectorAll('.toc-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = document.querySelector(link.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

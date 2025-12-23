@@ -1298,6 +1298,12 @@ def help_page():
     return render_template("help.html")
 
 
+@app.route("/docs")
+def docs_page():
+    """Technical documentation page."""
+    return render_template("docs.html")
+
+
 @app.route("/api/scan", methods=["POST"])
 @require_rate_limit
 @require_auth
