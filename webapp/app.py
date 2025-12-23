@@ -1084,6 +1084,142 @@ TEST_CATEGORIES = {
         "marker": "cache_host",
         "category": "security",
     },
+    # OAuth/OpenID Connect Tests
+    "oauth": {
+        "name": "OAuth/OIDC Security",
+        "description": "OAuth 2.0 and OpenID Connect vulnerability tests",
+        "marker": "oauth",
+        "category": "security",
+    },
+    "oauth_redirect": {
+        "name": "OAuth Redirect URI",
+        "description": "Redirect URI manipulation and open redirect tests",
+        "marker": "oauth_redirect",
+        "category": "security",
+    },
+    "oauth_pkce": {
+        "name": "OAuth PKCE Bypass",
+        "description": "PKCE (Proof Key for Code Exchange) bypass tests",
+        "marker": "oauth_pkce",
+        "category": "security",
+    },
+    # HTTP Parameter Pollution Tests
+    "hpp": {
+        "name": "HTTP Parameter Pollution",
+        "description": "Parameter duplication, array notation, WAF bypass",
+        "marker": "hpp",
+        "category": "security",
+    },
+    "hpp_waf_bypass": {
+        "name": "HPP WAF Bypass",
+        "description": "Bypass WAF using duplicate parameters",
+        "marker": "hpp_waf_bypass",
+        "category": "security",
+    },
+    # XPath Injection Tests
+    "xpath_injection": {
+        "name": "XPath Injection",
+        "description": "XPath query injection and authentication bypass",
+        "marker": "xpath_injection",
+        "category": "security",
+    },
+    "xpath_blind": {
+        "name": "Blind XPath Injection",
+        "description": "Boolean-based blind XPath injection",
+        "marker": "xpath_blind",
+        "category": "security",
+    },
+    # LDAP Injection Tests
+    "ldap_injection": {
+        "name": "LDAP Injection",
+        "description": "LDAP filter injection and Active Directory attacks",
+        "marker": "ldap_injection",
+        "category": "security",
+    },
+    "ldap_enum": {
+        "name": "LDAP Enumeration",
+        "description": "User enumeration via LDAP wildcard injection",
+        "marker": "ldap_enum",
+        "category": "security",
+    },
+    # HTTP Request Smuggling Tests
+    "request_smuggling": {
+        "name": "Request Smuggling",
+        "description": "CL.TE, TE.CL, and HTTP/2 downgrade smuggling",
+        "marker": "request_smuggling",
+        "category": "security",
+    },
+    "smuggling_h2": {
+        "name": "HTTP/2 Smuggling",
+        "description": "HTTP/2 to HTTP/1.1 downgrade smuggling attacks",
+        "marker": "smuggling_h2",
+        "category": "security",
+    },
+    # SMTP Injection Tests
+    "smtp_injection": {
+        "name": "SMTP Injection",
+        "description": "Email header injection via CRLF characters",
+        "marker": "smtp_injection",
+        "category": "security",
+    },
+    "smtp_bcc": {
+        "name": "SMTP BCC Injection",
+        "description": "Inject BCC recipients via email forms",
+        "marker": "smtp_bcc",
+        "category": "security",
+    },
+    # Race Condition Tests
+    "race_conditions": {
+        "name": "Race Conditions",
+        "description": "TOCTOU, double-spend, and concurrent request attacks",
+        "marker": "race_conditions",
+        "category": "security",
+    },
+    "race_coupon": {
+        "name": "Coupon Race",
+        "description": "Coupon/discount reuse via concurrent requests",
+        "marker": "race_coupon",
+        "category": "security",
+    },
+    # Business Logic Tests
+    "business_logic": {
+        "name": "Business Logic",
+        "description": "Price manipulation, workflow bypass, privilege escalation",
+        "marker": "business_logic",
+        "category": "security",
+    },
+    "business_price": {
+        "name": "Price Manipulation",
+        "description": "Negative prices, quantity manipulation, discount abuse",
+        "marker": "business_price",
+        "category": "security",
+    },
+    # File Upload Tests
+    "file_upload": {
+        "name": "File Upload Security",
+        "description": "MIME spoofing, extension bypass, webshell upload",
+        "marker": "file_upload",
+        "category": "security",
+    },
+    "upload_webshell": {
+        "name": "Webshell Upload",
+        "description": "Test for executable file upload vulnerabilities",
+        "marker": "upload_webshell",
+        "category": "security",
+    },
+    # WebSocket Tests
+    "websocket": {
+        "name": "WebSocket Security",
+        "description": "Origin bypass, message injection, auth bypass",
+        "marker": "websocket",
+        "category": "security",
+    },
+    "ws_injection": {
+        "name": "WebSocket Injection",
+        "description": "XSS and command injection via WebSocket messages",
+        "marker": "ws_injection",
+        "category": "security",
+    },
 }
 
 

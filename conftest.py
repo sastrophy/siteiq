@@ -348,6 +348,64 @@ def pytest_configure(config):
     config.addinivalue_line("markers", "cache_crlf: CRLF cache poisoning tests")
     config.addinivalue_line("markers", "cache_dos: Cache poisoning DoS tests")
 
+    # OAuth/OpenID Connect test markers
+    config.addinivalue_line("markers", "oauth: OAuth/OpenID Connect security tests")
+    config.addinivalue_line("markers", "oauth_redirect: Redirect URI manipulation tests")
+    config.addinivalue_line("markers", "oauth_state: State parameter bypass tests")
+    config.addinivalue_line("markers", "oauth_pkce: PKCE bypass tests")
+    config.addinivalue_line("markers", "oauth_token: Token leakage tests")
+
+    # HTTP Parameter Pollution test markers
+    config.addinivalue_line("markers", "hpp: HTTP Parameter Pollution tests")
+    config.addinivalue_line("markers", "hpp_duplicate: Duplicate parameter tests")
+    config.addinivalue_line("markers", "hpp_array: Array notation pollution tests")
+    config.addinivalue_line("markers", "hpp_waf_bypass: WAF bypass via HPP tests")
+
+    # XPath Injection test markers
+    config.addinivalue_line("markers", "xpath_injection: XPath injection tests")
+    config.addinivalue_line("markers", "xpath_auth_bypass: XPath authentication bypass tests")
+    config.addinivalue_line("markers", "xpath_blind: Blind XPath injection tests")
+
+    # LDAP Injection test markers
+    config.addinivalue_line("markers", "ldap_injection: LDAP injection tests")
+    config.addinivalue_line("markers", "ldap_auth_bypass: LDAP authentication bypass tests")
+    config.addinivalue_line("markers", "ldap_enum: LDAP enumeration tests")
+
+    # HTTP Request Smuggling test markers
+    config.addinivalue_line("markers", "request_smuggling: HTTP request smuggling tests")
+    config.addinivalue_line("markers", "smuggling_clte: CL.TE smuggling tests")
+    config.addinivalue_line("markers", "smuggling_tecl: TE.CL smuggling tests")
+    config.addinivalue_line("markers", "smuggling_h2: HTTP/2 downgrade smuggling tests")
+
+    # SMTP Injection test markers
+    config.addinivalue_line("markers", "smtp_injection: SMTP header injection tests")
+    config.addinivalue_line("markers", "smtp_crlf: CRLF injection in email tests")
+    config.addinivalue_line("markers", "smtp_bcc: BCC injection tests")
+
+    # Race Condition test markers
+    config.addinivalue_line("markers", "race_conditions: Race condition/TOCTOU tests")
+    config.addinivalue_line("markers", "race_coupon: Coupon reuse race tests")
+    config.addinivalue_line("markers", "race_withdrawal: Double withdrawal race tests")
+    config.addinivalue_line("markers", "race_booking: Resource booking race tests")
+
+    # Business Logic test markers
+    config.addinivalue_line("markers", "business_logic: Business logic vulnerability tests")
+    config.addinivalue_line("markers", "business_price: Price manipulation tests")
+    config.addinivalue_line("markers", "business_workflow: Workflow bypass tests")
+    config.addinivalue_line("markers", "business_privilege: Privilege escalation tests")
+
+    # File Upload test markers
+    config.addinivalue_line("markers", "file_upload: File upload security tests")
+    config.addinivalue_line("markers", "upload_mime: MIME type spoofing tests")
+    config.addinivalue_line("markers", "upload_extension: Extension bypass tests")
+    config.addinivalue_line("markers", "upload_webshell: Webshell upload tests")
+
+    # WebSocket test markers
+    config.addinivalue_line("markers", "websocket: WebSocket security tests")
+    config.addinivalue_line("markers", "ws_origin: WebSocket origin bypass tests")
+    config.addinivalue_line("markers", "ws_injection: WebSocket message injection tests")
+    config.addinivalue_line("markers", "ws_auth: WebSocket authentication tests")
+
 
 @pytest.fixture(scope="session")
 def test_config(request) -> SecurityTestConfig:
