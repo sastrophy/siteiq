@@ -376,6 +376,113 @@ TEST_CATEGORIES = {
         "marker": "csrf",
         "category": "security",
     },
+    # API Security Tests
+    "api_security": {
+        "name": "API Security",
+        "description": "GraphQL, Swagger, Mass Assignment, CORS",
+        "marker": "api_security",
+        "category": "security",
+    },
+    "graphql": {
+        "name": "GraphQL Introspection",
+        "description": "Test for GraphQL schema exposure",
+        "marker": "graphql",
+        "category": "security",
+    },
+    "swagger": {
+        "name": "Swagger/OpenAPI",
+        "description": "Test for API documentation exposure",
+        "marker": "swagger",
+        "category": "security",
+    },
+    "mass_assignment": {
+        "name": "Mass Assignment",
+        "description": "Test for mass assignment vulnerabilities",
+        "marker": "mass_assignment",
+        "category": "security",
+    },
+    "cors": {
+        "name": "CORS Misconfiguration",
+        "description": "Test for CORS security issues",
+        "marker": "cors",
+        "category": "security",
+    },
+    # Secrets Detection Tests
+    "secrets": {
+        "name": "Secrets Detection",
+        "description": "Scan for leaked credentials and API keys",
+        "marker": "secrets",
+        "category": "security",
+    },
+    "config_exposure": {
+        "name": "Config Exposure",
+        "description": "Test for exposed .env and config files",
+        "marker": "config_exposure",
+        "category": "security",
+    },
+    "git_exposure": {
+        "name": "Git Exposure",
+        "description": "Test for exposed .git directories",
+        "marker": "git_exposure",
+        "category": "security",
+    },
+    # SSTI Tests
+    "ssti": {
+        "name": "Template Injection (SSTI)",
+        "description": "Server-side template injection tests",
+        "marker": "ssti",
+        "category": "security",
+    },
+    "jinja2": {
+        "name": "Jinja2 SSTI",
+        "description": "Jinja2-specific template injection",
+        "marker": "jinja2",
+        "category": "security",
+    },
+    "freemarker": {
+        "name": "FreeMarker SSTI",
+        "description": "FreeMarker (Java) template injection",
+        "marker": "freemarker",
+        "category": "security",
+    },
+    # Subdomain Takeover Tests
+    "subdomain_takeover": {
+        "name": "Subdomain Takeover",
+        "description": "Test for dangling DNS and takeover risks",
+        "marker": "subdomain_takeover",
+        "category": "security",
+    },
+    "s3_takeover": {
+        "name": "S3 Bucket Takeover",
+        "description": "Test for S3 bucket takeover",
+        "marker": "s3_takeover",
+        "category": "security",
+    },
+    "azure_takeover": {
+        "name": "Azure Takeover",
+        "description": "Test for Azure subdomain takeover",
+        "marker": "azure_takeover",
+        "category": "security",
+    },
+    # XXE Tests
+    "xxe": {
+        "name": "XXE Injection",
+        "description": "XML External Entity injection tests",
+        "marker": "xxe",
+        "category": "security",
+    },
+    "xxe_file_read": {
+        "name": "XXE File Read",
+        "description": "Test for file read via XXE",
+        "marker": "xxe_file_read",
+        "category": "security",
+    },
+    "xxe_blind": {
+        "name": "Blind XXE",
+        "description": "Test for out-of-band XXE",
+        "marker": "xxe_blind",
+        "category": "security",
+    },
     # SEO Tests
     "seo": {
         "name": "SEO Analysis",

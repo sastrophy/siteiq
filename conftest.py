@@ -155,6 +155,49 @@ def pytest_configure(config):
     config.addinivalue_line("markers", "llm_cipher: Cipher/encryption game bypass tests")
     config.addinivalue_line("markers", "llm_recursive: Recursive/self-replicating prompt DoS tests")
 
+    # API Security test markers
+    config.addinivalue_line("markers", "api_security: API security tests")
+    config.addinivalue_line("markers", "graphql: GraphQL introspection tests")
+    config.addinivalue_line("markers", "swagger: Swagger/OpenAPI exposure tests")
+    config.addinivalue_line("markers", "mass_assignment: Mass assignment vulnerability tests")
+    config.addinivalue_line("markers", "api_info: API information disclosure tests")
+    config.addinivalue_line("markers", "cors: CORS misconfiguration tests")
+
+    # Secrets Detection test markers
+    config.addinivalue_line("markers", "secrets: Secrets detection tests")
+    config.addinivalue_line("markers", "config_exposure: Configuration file exposure tests")
+    config.addinivalue_line("markers", "js_secrets: JavaScript secrets exposure tests")
+    config.addinivalue_line("markers", "sourcemaps: Source map exposure tests")
+    config.addinivalue_line("markers", "response_secrets: Secrets in HTTP responses tests")
+    config.addinivalue_line("markers", "git_exposure: Git repository exposure tests")
+
+    # SSTI (Server-Side Template Injection) test markers
+    config.addinivalue_line("markers", "ssti: Server-side template injection tests")
+    config.addinivalue_line("markers", "ssti_detection: SSTI arithmetic detection tests")
+    config.addinivalue_line("markers", "jinja2: Jinja2 template injection tests")
+    config.addinivalue_line("markers", "twig: Twig (PHP) template injection tests")
+    config.addinivalue_line("markers", "freemarker: FreeMarker (Java) template injection tests")
+    config.addinivalue_line("markers", "smarty: Smarty (PHP) template injection tests")
+    config.addinivalue_line("markers", "erb: ERB (Ruby) template injection tests")
+    config.addinivalue_line("markers", "polyglot: Polyglot SSTI tests")
+    config.addinivalue_line("markers", "ssti_error: Error-based SSTI detection tests")
+
+    # Subdomain Takeover test markers
+    config.addinivalue_line("markers", "subdomain_takeover: Subdomain takeover tests")
+    config.addinivalue_line("markers", "s3_takeover: S3 bucket takeover tests")
+    config.addinivalue_line("markers", "azure_takeover: Azure subdomain takeover tests")
+    config.addinivalue_line("markers", "github_takeover: GitHub Pages takeover tests")
+
+    # XXE (XML External Entity) test markers
+    config.addinivalue_line("markers", "xxe: XML External Entity injection tests")
+    config.addinivalue_line("markers", "xxe_file_read: XXE file read tests")
+    config.addinivalue_line("markers", "xxe_parameter_entity: Parameter entity XXE tests")
+    config.addinivalue_line("markers", "xxe_blind: Blind XXE detection tests")
+    config.addinivalue_line("markers", "xxe_svg: SVG-based XXE tests")
+    config.addinivalue_line("markers", "xxe_soap: SOAP endpoint XXE tests")
+    config.addinivalue_line("markers", "xinclude: XInclude injection tests")
+    config.addinivalue_line("markers", "xxe_content_type: Content-Type XXE manipulation tests")
+
 
 @pytest.fixture(scope="session")
 def test_config(request) -> SecurityTestConfig:

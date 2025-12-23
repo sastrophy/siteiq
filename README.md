@@ -56,7 +56,8 @@ Do NOT expose this application to the internet without proper security configura
   - NoSQL injection
   - Command injection
   - XSS (Reflected, Stored vectors, DOM-based)
-  - Template injection
+  - SSTI (Server-Side Template Injection) - Jinja2, Twig, FreeMarker, Smarty, ERB
+  - XXE (XML External Entity) - File read, blind XXE, SVG-based, SOAP
 
 - **A05:2021 - Security Misconfiguration**
   - Security headers (CSP, HSTS, X-Frame-Options, etc.)
@@ -77,6 +78,27 @@ Do NOT expose this application to the internet without proper security configura
 - **A10:2021 - Server-Side Request Forgery (SSRF)**
   - URL parameter injection
   - Webhook endpoint testing
+
+- **API Security**
+  - GraphQL introspection disclosure
+  - Swagger/OpenAPI documentation exposure
+  - Mass assignment vulnerabilities
+  - CORS misconfiguration
+  - API information disclosure
+
+- **Secrets Detection**
+  - API keys in responses (AWS, Stripe, OpenAI, GitHub, etc.)
+  - Configuration file exposure (.env, .config, etc.)
+  - JavaScript secrets scanning
+  - Source map exposure
+  - Git repository exposure
+
+- **Subdomain Takeover**
+  - Dangling DNS detection (NXDOMAIN)
+  - S3 bucket takeover
+  - Azure subdomain takeover
+  - GitHub Pages takeover
+  - Service fingerprinting (25+ cloud services)
 
 ### SEO Analysis 
 
@@ -402,6 +424,41 @@ python3 -m pytest -m wordpress        # WordPress tests
 python3 -m pytest -m auth             # Authentication tests
 python3 -m pytest -m traversal        # Directory traversal tests
 
+# API Security Tests
+python3 -m pytest -m api_security     # All API security tests
+python3 -m pytest -m graphql          # GraphQL introspection
+python3 -m pytest -m swagger          # Swagger/OpenAPI exposure
+python3 -m pytest -m mass_assignment  # Mass assignment attacks
+python3 -m pytest -m cors             # CORS misconfiguration
+
+# Secrets Detection Tests
+python3 -m pytest -m secrets          # All secrets detection
+python3 -m pytest -m config_exposure  # Config file exposure
+python3 -m pytest -m js_secrets       # JavaScript secrets
+python3 -m pytest -m sourcemaps       # Source map exposure
+python3 -m pytest -m git_exposure     # Git repository exposure
+
+# SSTI (Template Injection) Tests
+python3 -m pytest -m ssti             # All SSTI tests
+python3 -m pytest -m jinja2           # Jinja2 injection
+python3 -m pytest -m twig             # Twig (PHP) injection
+python3 -m pytest -m freemarker       # FreeMarker (Java) injection
+python3 -m pytest -m smarty           # Smarty (PHP) injection
+python3 -m pytest -m erb              # ERB (Ruby) injection
+
+# Subdomain Takeover Tests
+python3 -m pytest -m subdomain_takeover  # All takeover tests
+python3 -m pytest -m s3_takeover         # S3 bucket takeover
+python3 -m pytest -m azure_takeover      # Azure takeover
+python3 -m pytest -m github_takeover     # GitHub Pages takeover
+
+# XXE (XML External Entity) Tests
+python3 -m pytest -m xxe              # All XXE tests
+python3 -m pytest -m xxe_file_read    # File read via XXE
+python3 -m pytest -m xxe_blind        # Blind XXE detection
+python3 -m pytest -m xxe_svg          # SVG-based XXE
+python3 -m pytest -m xxe_soap         # SOAP endpoint XXE
+
 # SEO Tests
 python3 -m pytest -m seo              # All SEO tests
 python3 -m pytest -m meta_tags        # Meta tags analysis
@@ -492,7 +549,11 @@ siteiq/
 │   ├── wordpress.py
 │   ├── seo.py             # SEO test data & thresholds
 │   ├── geo.py             # GEO test data & regions
-│   └── llm.py             # LLM attack payloads
+│   ├── llm.py             # LLM attack payloads
+│   ├── api_security.py    # API security payloads
+│   ├── secrets.py         # Secret patterns & paths
+│   ├── ssti.py            # Template injection payloads
+│   └── xxe.py             # XXE injection payloads
 ├── utils/
 │   └── scanner.py         # Core scanner utilities
 ├── tests/                 # Test modules
@@ -506,7 +567,12 @@ siteiq/
 │   ├── test_csrf_owasp.py
 │   ├── test_seo.py        # SEO analysis tests
 │   ├── test_geo.py        # GEO testing
-│   └── test_llm.py        # LLM security tests
+│   ├── test_llm.py        # LLM security tests
+│   ├── test_api_security.py    # API security tests
+│   ├── test_secrets.py         # Secrets detection
+│   ├── test_ssti.py            # Template injection
+│   ├── test_subdomain_takeover.py  # Takeover tests
+│   └── test_xxe.py             # XXE injection tests
 ├── webapp/                # Web application
 │   ├── app.py
 │   └── templates/
