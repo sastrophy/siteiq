@@ -165,7 +165,7 @@ Do NOT expose this application to the internet without proper security configura
 - Debug log exposure
 - wp-admin accessibility
 
-### LLM Security Testing (61 Tests)
+### LLM Security Testing (83 Tests)
 
 Test your LLM-powered API endpoints for security vulnerabilities:
 
@@ -515,11 +515,113 @@ Test your LLM-powered API endpoints for security vulnerabilities:
   - Social proof pressure
   - Fake statistics/evidence
 
-- **Snowball Hallucination** 
+- **Snowball Hallucination**
   - False premise acceptance
   - Future event fabrication
   - Pseudoscience confirmation
   - Conspiracy detail generation
+
+#### Emerging LLM Security Tests (2024-2025 Research)
+
+- **Skeleton Key Jailbreak** (Microsoft Research)
+  - Behavior augmentation attacks
+  - Safety training bypass via role modification
+  - Multi-turn skeleton key patterns
+
+- **Many-Shot Jailbreaking** (Anthropic Research)
+  - In-context learning exploitation
+  - Faux dialogue injection (100+ examples)
+  - Long context window abuse
+
+- **Visual Prompt Injection**
+  - Hidden text in images/PDFs
+  - OCR-based injection
+  - Steganographic payloads
+
+- **Audio Prompt Injection**
+  - Ultrasonic hidden commands
+  - Speech-to-text manipulation
+  - Audio steganography
+
+- **Agent Workflow Hijacking**
+  - LangChain/AutoGPT exploitation
+  - Tool chain manipulation
+  - Agent loop injection
+
+- **Guardrail Bypass**
+  - NeMo Guardrails evasion
+  - Llama Guard bypass
+  - Safety classifier manipulation
+
+- **System Prompt Reconstruction**
+  - Iterative extraction techniques
+  - Binary search reconstruction
+  - Token-by-token extraction
+
+- **Prefilling Attacks** (Claude-specific)
+  - Response prefill manipulation
+  - Assistant turn injection
+  - Partial completion attacks
+
+- **Function Parameter Injection**
+  - OpenAI function calling abuse
+  - Tool parameter manipulation
+  - Schema constraint bypass
+
+- **Reasoning Trace Manipulation**
+  - o1/thinking model CoT hijacking
+  - `<think>` token injection
+  - Reasoning step override
+
+- **Tool Result Injection**
+  - Poisoning tool outputs
+  - Fake API responses
+  - Tool result manipulation
+
+- **Context Window Smuggling**
+  - Unicode padding attacks
+  - Invisible character injection
+  - Token boundary exploitation
+
+- **Instruction Boundary Confusion**
+  - XML/JSON policy format injection
+  - Delimiter confusion
+  - System/user boundary attacks
+
+- **Jailbreak Transfer**
+  - Cross-model attack portability
+  - Universal jailbreak patterns
+  - Model-agnostic exploits
+
+- **Fine-Tuning Poisoning Detection**
+  - Backdoor trigger detection
+  - Poisoned model indicators
+  - Training data manipulation signs
+
+- **Prompt Caching Attacks**
+  - Cache reconstruction
+  - Shared cache injection
+  - Cross-tenant cache leakage
+
+- **Constitutional AI Bypass**
+  - RLHF guardrail evasion
+  - Constitutional principle manipulation
+  - Self-critique bypass
+
+- **Model Merging Vulnerabilities**
+  - Merged model security gaps
+  - Weight averaging exploits
+  - Safety degradation in merges
+
+- **Quantization Vulnerabilities**
+  - INT4/INT8 safety degradation
+  - Precision loss exploitation
+  - Quantized model jailbreaks
+
+- **Speculative Decoding Attacks**
+  - Draft model exploitation
+  - Speculative output manipulation
+  - Parallel decoding attacks
 
 ## Quick Start
 
@@ -653,7 +755,7 @@ python3 -m pytest -m compliance       # Regional compliance
 python3 -m pytest -m cdn              # CDN tests
 
 # LLM Security Tests (use --llm-endpoint instead of --target-url)
-python3 -m pytest -m llm --llm-endpoint=https://api.example.com/chat           # All LLM tests (61 tests)
+python3 -m pytest -m llm --llm-endpoint=https://api.example.com/chat           # All LLM tests (83 tests)
 python3 -m pytest -m llm_injection --llm-endpoint=https://api.example.com/chat # Prompt injection
 python3 -m pytest -m llm_jailbreak --llm-endpoint=https://api.example.com/chat # Jailbreaking
 python3 -m pytest -m llm_leakage --llm-endpoint=https://api.example.com/chat   # System prompt leak
@@ -722,6 +824,28 @@ python3 -m pytest -m llm_code_chameleon --llm-endpoint=https://api.example.com/c
 python3 -m pytest -m llm_math_framing --llm-endpoint=https://api.example.com/chat  # Math prompt framing
 python3 -m pytest -m llm_persuasion --llm-endpoint=https://api.example.com/chat    # Persuasion techniques
 python3 -m pytest -m llm_snowball --llm-endpoint=https://api.example.com/chat      # Snowball hallucination
+
+# EMERGING LLM Tests (2024-2025 Research)
+python3 -m pytest -m llm_skeleton_key --llm-endpoint=https://api.example.com/chat    # Skeleton Key jailbreak
+python3 -m pytest -m llm_manyshot --llm-endpoint=https://api.example.com/chat        # Many-shot jailbreaking
+python3 -m pytest -m llm_visual_injection --llm-endpoint=https://api.example.com/chat # Visual prompt injection
+python3 -m pytest -m llm_audio_injection --llm-endpoint=https://api.example.com/chat  # Audio prompt injection
+python3 -m pytest -m llm_agent_hijack --llm-endpoint=https://api.example.com/chat    # Agent workflow hijacking
+python3 -m pytest -m llm_guardrail_bypass --llm-endpoint=https://api.example.com/chat # Guardrail bypass
+python3 -m pytest -m llm_prompt_reconstruction --llm-endpoint=https://api.example.com/chat # System prompt reconstruction
+python3 -m pytest -m llm_prefilling --llm-endpoint=https://api.example.com/chat      # Prefilling attacks
+python3 -m pytest -m llm_function_injection --llm-endpoint=https://api.example.com/chat # Function parameter injection
+python3 -m pytest -m llm_reasoning_manipulation --llm-endpoint=https://api.example.com/chat # Reasoning trace manipulation
+python3 -m pytest -m llm_tool_injection --llm-endpoint=https://api.example.com/chat  # Tool result injection
+python3 -m pytest -m llm_context_smuggling --llm-endpoint=https://api.example.com/chat # Context window smuggling
+python3 -m pytest -m llm_boundary_confusion --llm-endpoint=https://api.example.com/chat # Instruction boundary confusion
+python3 -m pytest -m llm_jailbreak_transfer --llm-endpoint=https://api.example.com/chat # Jailbreak transfer
+python3 -m pytest -m llm_finetuning_poison --llm-endpoint=https://api.example.com/chat # Fine-tuning poisoning
+python3 -m pytest -m llm_cache_attack --llm-endpoint=https://api.example.com/chat    # Prompt caching attacks
+python3 -m pytest -m llm_constitutional_bypass --llm-endpoint=https://api.example.com/chat # Constitutional AI bypass
+python3 -m pytest -m llm_model_merging --llm-endpoint=https://api.example.com/chat   # Model merging vulnerabilities
+python3 -m pytest -m llm_quantization --llm-endpoint=https://api.example.com/chat    # Quantization vulnerabilities
+python3 -m pytest -m llm_speculative_decoding --llm-endpoint=https://api.example.com/chat # Speculative decoding attacks
 ```
 
 ## Test Intensity Levels
@@ -750,6 +874,7 @@ siteiq/
 │   ├── seo.py             # SEO test data & thresholds
 │   ├── geo.py             # GEO test data & regions
 │   ├── llm.py             # LLM attack payloads
+│   ├── llm_emerging.py    # Emerging LLM threats (2024-2025)
 │   ├── api_security.py    # API security payloads
 │   ├── secrets.py         # Secret patterns & paths
 │   ├── ssti.py            # Template injection payloads
