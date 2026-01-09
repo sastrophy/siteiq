@@ -498,3 +498,189 @@ class TestCORSHeaders:
                 owasp_category="A05:2021 - Security Misconfiguration",
             )
             findings_collector.add(finding)
+
+
+# =============================================================================
+# 2026 SECURITY HEADERS - Modern Standards
+# =============================================================================
+
+class TestModernSecurityHeaders:
+    """Tests for modern security headers (2024-2026 standards)."""
+
+    @pytest.mark.headers
+    def test_cross_origin_opener_policy(self, headers_scanner, target_url, findings_collector):
+        """Test for Cross-Origin-Opener-Policy (COOP) header."""
+        resp = headers_scanner.get(target_url)
+        if not resp:
+            pytest.skip("Could not connect to target")
+
+        coop = resp.headers.get("Cross-Origin-Opener-Policy", "")
+
+        if not coop:
+            finding = Finding(
+                title="Missing Cross-Origin-Opener-Policy Header",
+                severity=Severity.LOW,
+                description="No COOP header. COOP prevents cross-origin attacks like Spectre.",
+                url=target_url,
+                evidence="Header not present",
+                remediation="Add 'Cross-Origin-Opener-Policy: same-origin' for sensitive pages",
+                cwe_id="CWE-1021",
+                owasp_category="A05:2021 - Security Misconfiguration",
+            )
+            findings_collector.add(finding)
+        else:
+            valid_values = ["same-origin", "same-origin-allow-popups", "unsafe-none"]
+            if coop not in valid_values:
+                finding = Finding(
+                    title="Invalid Cross-Origin-Opener-Policy Value",
+                    severity=Severity.LOW,
+                    description=f"COOP has invalid value: {coop}",
+                    url=target_url,
+                    evidence=f"Cross-Origin-Opener-Policy: {coop}",
+                    remediation=f"Use valid COOP value: {valid_values}",
+                    cwe_id="CWE-1021",
+                    owasp_category="A05:2021 - Security Misconfiguration",
+                )
+                findings_collector.add(finding)
+
+    @pytest.mark.headers
+    def test_cross_origin_embedder_policy(self, headers_scanner, target_url, findings_collector):
+        """Test for Cross-Origin-Embedder-Policy (COEP) header."""
+        resp = headers_scanner.get(target_url)
+        if not resp:
+            pytest.skip("Could not connect to target")
+
+        coep = resp.headers.get("Cross-Origin-Embedder-Policy", "")
+
+        if not coep:
+            finding = Finding(
+                title="Missing Cross-Origin-Embedder-Policy Header",
+                severity=Severity.LOW,
+                description="No COEP header. COEP is required for cross-origin isolation (SharedArrayBuffer).",
+                url=target_url,
+                evidence="Header not present",
+                remediation="Add 'Cross-Origin-Embedder-Policy: require-corp' if cross-origin isolation is needed",
+                cwe_id="CWE-1021",
+                owasp_category="A05:2021 - Security Misconfiguration",
+            )
+            findings_collector.add(finding)
+
+    @pytest.mark.headers
+    def test_trusted_types_csp(self, headers_scanner, target_url, findings_collector):
+        """Test for Trusted Types in CSP (DOM XSS prevention)."""
+        resp = headers_scanner.get(target_url)
+        if not resp:
+            pytest.skip("Could not connect to target")
+
+        csp = resp.headers.get("Content-Security-Policy", "")
+
+        if csp and "require-trusted-types-for" not in csp and "trusted-types" not in csp:
+            finding = Finding(
+                title="CSP Missing Trusted Types",
+                severity=Severity.INFO,
+                description="CSP does not enforce Trusted Types. Trusted Types prevent DOM XSS attacks.",
+                url=target_url,
+                evidence=f"CSP: {csp[:200]}",
+                remediation="Add 'require-trusted-types-for 'script'' to CSP for DOM XSS protection",
+                cwe_id="CWE-79",
+                owasp_category="A03:2021 - Injection",
+            )
+            findings_collector.add(finding)
+
+    @pytest.mark.headers
+    def test_sec_fetch_headers(self, headers_scanner, target_url, findings_collector):
+        """Check server handling of Sec-Fetch-* headers (Fetch Metadata)."""
+        # Send request with Sec-Fetch headers simulating cross-origin attack
+        resp = headers_scanner.get(
+            target_url,
+            headers={
+                "Sec-Fetch-Site": "cross-site",
+                "Sec-Fetch-Mode": "navigate",
+                "Sec-Fetch-Dest": "document",
+            }
+        )
+        if not resp:
+            pytest.skip("Could not connect to target")
+
+        # If server accepts cross-site navigations without validation, note it
+        if resp.status_code == 200:
+            # This is informational - server should ideally validate these
+            finding = Finding(
+                title="Fetch Metadata Headers Not Enforced",
+                severity=Severity.INFO,
+                description="Server accepts cross-site requests. Consider validating Sec-Fetch-* headers.",
+                url=target_url,
+                evidence="Server returned 200 for cross-site Sec-Fetch-Site request",
+                remediation="Implement Fetch Metadata request validation to prevent CSRF-like attacks",
+                cwe_id="CWE-352",
+                owasp_category="A01:2021 - Broken Access Control",
+            )
+            findings_collector.add(finding)
+
+    @pytest.mark.headers
+    def test_reporting_endpoints(self, headers_scanner, target_url, findings_collector):
+        """Test for Reporting-Endpoints header (modern reporting API)."""
+        resp = headers_scanner.get(target_url)
+        if not resp:
+            pytest.skip("Could not connect to target")
+
+        reporting_endpoints = resp.headers.get("Reporting-Endpoints", "")
+        report_to = resp.headers.get("Report-To", "")  # Legacy
+
+        if not reporting_endpoints and not report_to:
+            finding = Finding(
+                title="Missing Security Reporting Configuration",
+                severity=Severity.INFO,
+                description="No Reporting-Endpoints header. Security violations won't be reported.",
+                url=target_url,
+                evidence="Neither Reporting-Endpoints nor Report-To headers present",
+                remediation="Add 'Reporting-Endpoints: default=\"https://your-endpoint.com/reports\"' to collect CSP/NEL violations",
+                cwe_id="CWE-778",
+                owasp_category="A09:2021 - Security Logging and Monitoring Failures",
+            )
+            findings_collector.add(finding)
+
+    @pytest.mark.headers
+    def test_nel_header(self, headers_scanner, target_url, findings_collector):
+        """Test for Network Error Logging (NEL) header."""
+        resp = headers_scanner.get(target_url)
+        if not resp:
+            pytest.skip("Could not connect to target")
+
+        nel = resp.headers.get("NEL", "")
+
+        if nel:
+            # NEL is configured - good for monitoring
+            print(f"INFO: NEL configured: {nel[:100]}")
+        # NEL is optional, so not having it is not a finding
+
+    @pytest.mark.headers
+    def test_private_network_access(self, headers_scanner, target_url, findings_collector):
+        """Test Private Network Access (CORS-RFC1918) handling."""
+        # Simulate a preflight for private network access
+        resp = headers_scanner.options(
+            target_url,
+            headers={
+                "Origin": "https://example.com",
+                "Access-Control-Request-Private-Network": "true",
+                "Access-Control-Request-Method": "GET",
+            }
+        )
+        if not resp:
+            pytest.skip("Could not connect to target")
+
+        # Check if server allows private network access from external origins
+        allow_private = resp.headers.get("Access-Control-Allow-Private-Network", "")
+
+        if allow_private.lower() == "true":
+            finding = Finding(
+                title="Private Network Access Allowed from External Origins",
+                severity=Severity.MEDIUM,
+                description="Server allows private network access from external websites (CORS-RFC1918)",
+                url=target_url,
+                evidence=f"Access-Control-Allow-Private-Network: {allow_private}",
+                remediation="Restrict private network access to trusted origins only",
+                cwe_id="CWE-284",
+                owasp_category="A01:2021 - Broken Access Control",
+            )
+            findings_collector.add(finding)

@@ -133,7 +133,17 @@ def pytest_configure(config):
     config.addinivalue_line("markers", "xss: Cross-site scripting tests")
     config.addinivalue_line("markers", "csrf: CSRF tests")
     config.addinivalue_line("markers", "headers: Security headers tests")
+    # 2026 Modern Security Headers markers
+    config.addinivalue_line("markers", "coop: Cross-Origin-Opener-Policy header tests")
+    config.addinivalue_line("markers", "coep: Cross-Origin-Embedder-Policy header tests")
+    config.addinivalue_line("markers", "trusted_types: Trusted Types CSP directive tests")
+    config.addinivalue_line("markers", "sec_fetch: Sec-Fetch-* metadata headers tests")
+    config.addinivalue_line("markers", "reporting_endpoints: Reporting-Endpoints header tests")
+    config.addinivalue_line("markers", "nel: Network Error Logging header tests")
+    config.addinivalue_line("markers", "private_network_access: Private Network Access (CORS-RFC1918) tests")
     config.addinivalue_line("markers", "ssl: SSL/TLS tests")
+    config.addinivalue_line("markers", "tls13_preferred: TLS 1.3 preferred protocol tests")
+    config.addinivalue_line("markers", "certificate_transparency: Certificate Transparency (SCT) tests")
     config.addinivalue_line("markers", "wordpress: WordPress-specific tests")
     config.addinivalue_line("markers", "auth: Authentication tests")
     config.addinivalue_line("markers", "traversal: Directory traversal tests")
@@ -156,6 +166,10 @@ def pytest_configure(config):
     config.addinivalue_line("markers", "performance: Performance SEO tests")
     config.addinivalue_line("markers", "pagespeed: PageSpeed API tests")
     config.addinivalue_line("markers", "hreflang: Hreflang tests")
+    # 2026 SEO test markers
+    config.addinivalue_line("markers", "llms_txt: LLMs.txt (AI crawler instructions) tests")
+    config.addinivalue_line("markers", "favicon: Favicon presence and quality tests")
+    config.addinivalue_line("markers", "speculation_rules: Speculation Rules API tests")
 
     # GEO test markers
     config.addinivalue_line("markers", "geo: GEO testing")

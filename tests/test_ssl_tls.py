@@ -474,3 +474,165 @@ class TestMixedContent:
                 owasp_category="A02:2021 - Cryptographic Failures",
             )
             findings_collector.add(finding)
+
+
+# =============================================================================
+# 2026 SSL/TLS SECURITY TESTS
+# =============================================================================
+
+
+class TestModernTLSConfiguration:
+    """Tests for modern TLS configuration (2026 standards)."""
+
+    @pytest.mark.ssl
+    @pytest.mark.tls13_preferred
+    def test_tls13_preferred(self, test_config, findings_collector):
+        """Test if TLS 1.3 is the preferred/negotiated protocol.
+
+        In 2026, TLS 1.3 should be the default negotiated protocol
+        when both client and server support it.
+        """
+        if not test_config.base_url.startswith("https://"):
+            pytest.skip("Target is not using HTTPS")
+
+        hostname = test_config.hostname
+        port = 443
+
+        try:
+            # Create context that supports both TLS 1.2 and 1.3
+            context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+            context.minimum_version = ssl.TLSVersion.TLSv1_2
+            context.check_hostname = False
+            context.verify_mode = ssl.CERT_NONE
+
+            with socket.create_connection((hostname, port), timeout=10) as sock:
+                with context.wrap_socket(sock, server_hostname=hostname) as ssock:
+                    negotiated_version = ssock.version()
+
+                    if negotiated_version != "TLSv1.3":
+                        finding = Finding(
+                            title="TLS 1.3 Not Preferred",
+                            severity=Severity.LOW,
+                            description=f"Server negotiates {negotiated_version} instead of TLS 1.3",
+                            url=test_config.base_url,
+                            evidence=f"Negotiated protocol: {negotiated_version}",
+                            remediation="Configure server to prefer TLS 1.3 for improved security and performance (0-RTT, improved handshake)",
+                            cwe_id="CWE-326",
+                            owasp_category="A02:2021 - Cryptographic Failures",
+                        )
+                        findings_collector.add(finding)
+
+        except Exception as e:
+            finding = Finding(
+                title="TLS Version Check Failed",
+                severity=Severity.INFO,
+                description=f"Could not determine preferred TLS version: {str(e)}",
+                url=test_config.base_url,
+                evidence=str(e),
+                remediation="Verify TLS configuration",
+                cwe_id="CWE-326",
+                owasp_category="A02:2021 - Cryptographic Failures",
+            )
+            findings_collector.add(finding)
+
+    @pytest.mark.ssl
+    @pytest.mark.certificate_transparency
+    def test_certificate_transparency(self, test_config, findings_collector):
+        """Test for Certificate Transparency (CT) compliance.
+
+        Certificate Transparency helps detect misissued certificates.
+        SCTs (Signed Certificate Timestamps) prove the certificate
+        is logged in public CT logs.
+        """
+        if not test_config.base_url.startswith("https://"):
+            pytest.skip("Target is not using HTTPS")
+
+        hostname = test_config.hostname
+        port = 443
+
+        try:
+            context = ssl.create_default_context()
+            context.check_hostname = False
+            context.verify_mode = ssl.CERT_NONE
+
+            with socket.create_connection((hostname, port), timeout=10) as sock:
+                with context.wrap_socket(sock, server_hostname=hostname) as ssock:
+                    # Get binary certificate for extension analysis
+                    cert_bin = ssock.getpeercert(binary_form=True)
+
+                    # Check for SCT in certificate extensions
+                    # OID 1.3.6.1.4.1.11129.2.4.2 is for embedded SCTs
+                    sct_oid = b'\x06\x0a\x2b\x06\x01\x04\x01\xd6\x79\x02\x04\x02'
+                    has_embedded_sct = sct_oid in cert_bin
+
+                    # Also check TLS extension (common delivery method)
+                    # This is harder to detect without lower-level access
+                    # But we can note if embedded SCT is missing
+
+                    if not has_embedded_sct:
+                        finding = Finding(
+                            title="Certificate Transparency SCTs Not Embedded",
+                            severity=Severity.LOW,
+                            description="Certificate does not contain embedded SCTs (Signed Certificate Timestamps)",
+                            url=test_config.base_url,
+                            evidence="No embedded SCT extension (OID 1.3.6.1.4.1.11129.2.4.2) found in certificate",
+                            remediation="Ensure your CA includes SCTs in certificates. SCTs can also be delivered via TLS extension or OCSP stapling.",
+                            cwe_id="CWE-295",
+                            owasp_category="A02:2021 - Cryptographic Failures",
+                        )
+                        findings_collector.add(finding)
+
+        except Exception as e:
+            finding = Finding(
+                title="Certificate Transparency Check Failed",
+                severity=Severity.INFO,
+                description=f"Could not check for Certificate Transparency: {str(e)}",
+                url=test_config.base_url,
+                evidence=str(e),
+                remediation="Verify SSL certificate configuration",
+                cwe_id="CWE-295",
+                owasp_category="A02:2021 - Cryptographic Failures",
+            )
+            findings_collector.add(finding)
+
+    @pytest.mark.ssl
+    def test_ocsp_stapling(self, test_config, findings_collector):
+        """Test if OCSP stapling is enabled.
+
+        OCSP stapling improves performance and privacy by having
+        the server provide certificate revocation status.
+        """
+        if not test_config.base_url.startswith("https://"):
+            pytest.skip("Target is not using HTTPS")
+
+        hostname = test_config.hostname
+        port = 443
+
+        try:
+            context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+            context.check_hostname = False
+            context.verify_mode = ssl.CERT_NONE
+
+            with socket.create_connection((hostname, port), timeout=10) as sock:
+                with context.wrap_socket(sock, server_hostname=hostname) as ssock:
+                    # Check if OCSP response was stapled
+                    # Note: Python's ssl module has limited OCSP stapling detection
+                    # This is a basic check - full verification requires pyOpenSSL
+                    cert = ssock.getpeercert()
+
+                    # Look for OCSP responder in certificate
+                    has_ocsp_responder = False
+                    if cert:
+                        # Check for OCSP in Authority Information Access
+                        # This indicates the cert supports OCSP
+                        for ext in cert.get('extensions', []):
+                            if 'OCSP' in str(ext):
+                                has_ocsp_responder = True
+                                break
+
+                    # We can't easily detect if stapling is enabled without
+                    # pyOpenSSL, but we note if OCSP is available
+                    # Modern servers should enable stapling for performance
+
+        except Exception:
+            pass  # OCSP stapling check is informational

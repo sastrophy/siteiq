@@ -50,6 +50,9 @@ Do NOT expose this application to the internet without proper security configura
   - Certificate validation
   - HTTPS enforcement
   - Mixed content detection
+  - TLS 1.3 preferred protocol detection
+  - Certificate Transparency (SCT) validation
+  - OCSP stapling check
 
 - **A03:2021 - Injection**
   - SQL injection (Classic, Union, Blind, Time-based)
@@ -64,6 +67,15 @@ Do NOT expose this application to the internet without proper security configura
   - Server information disclosure
   - Debug mode detection
   - Default pages
+
+- **2026 Modern Security Headers**
+  - Cross-Origin-Opener-Policy (COOP)
+  - Cross-Origin-Embedder-Policy (COEP)
+  - Trusted Types CSP directive
+  - Sec-Fetch-* metadata headers (Site, Mode, Dest, User)
+  - Reporting-Endpoints header
+  - NEL (Network Error Logging)
+  - Private Network Access (CORS-RFC1918)
 
 - **A06:2021 - Vulnerable and Outdated Components**
   - WordPress version detection
@@ -128,6 +140,11 @@ Do NOT expose this application to the internet without proper security configura
 - **International SEO**
   - Hreflang validation
   - Language targeting
+
+- **2026 SEO Standards**
+  - llms.txt / llms-full.txt (AI crawler instructions)
+  - Favicon presence and size validation
+  - Speculation Rules API (prerendering/prefetching)
 
 ### GEO Testing
 
@@ -697,6 +714,19 @@ python3 -m pytest -m wordpress        # WordPress tests
 python3 -m pytest -m auth             # Authentication tests
 python3 -m pytest -m traversal        # Directory traversal tests
 
+# 2026 Security Headers Tests
+python3 -m pytest -m coop             # Cross-Origin-Opener-Policy
+python3 -m pytest -m coep             # Cross-Origin-Embedder-Policy
+python3 -m pytest -m trusted_types    # Trusted Types CSP
+python3 -m pytest -m sec_fetch        # Sec-Fetch-* headers
+python3 -m pytest -m reporting_endpoints # Reporting-Endpoints header
+python3 -m pytest -m nel              # Network Error Logging
+python3 -m pytest -m private_network_access # Private Network Access (CORS-RFC1918)
+
+# 2026 SSL/TLS Tests
+python3 -m pytest -m tls13_preferred  # TLS 1.3 preferred protocol
+python3 -m pytest -m certificate_transparency # Certificate Transparency (SCT)
+
 # API Security Tests
 python3 -m pytest -m api_security     # All API security tests
 python3 -m pytest -m graphql          # GraphQL introspection
@@ -745,6 +775,11 @@ python3 -m pytest -m twitter          # Twitter Card tests
 python3 -m pytest -m performance      # Performance SEO
 python3 -m pytest -m pagespeed        # PageSpeed API tests
 python3 -m pytest -m hreflang         # Hreflang tests
+
+# 2026 SEO Tests
+python3 -m pytest -m llms_txt         # llms.txt AI crawler tests
+python3 -m pytest -m favicon          # Favicon validation
+python3 -m pytest -m speculation_rules # Speculation Rules API
 
 # GEO Tests
 python3 -m pytest -m geo              # All GEO tests

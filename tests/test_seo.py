@@ -1507,3 +1507,150 @@ class TestHreflang:
 
         if current_url not in hrefs:
             print("WARNING: Hreflang tags should include self-referencing URL")
+
+
+# =============================================================================
+# 2026 SEO TESTS - AI/LLM & Modern Standards
+# =============================================================================
+
+@pytest.mark.seo
+@pytest.mark.llms_txt
+class TestLLMsTxt:
+    """Test llms.txt file for AI crawler instructions (2024+ standard)."""
+
+    def test_llms_txt_exists(self, scanner):
+        """Check if llms.txt file exists for AI crawlers."""
+        config = get_config()
+        llms_url = urljoin(config.target_url, "/llms.txt")
+
+        try:
+            response = scanner.get(llms_url)
+            if response.status_code == 200:
+                print(f"INFO: llms.txt found - AI crawlers will use these instructions")
+                content = response.text[:500]
+                print(f"INFO: llms.txt preview: {content[:200]}...")
+            else:
+                print(
+                    "INFO: No llms.txt found. Consider adding one to control AI/LLM crawler behavior. "
+                    "See: https://llmstxt.org/"
+                )
+        except Exception:
+            print("INFO: Could not check for llms.txt")
+
+    def test_llms_full_txt_exists(self, scanner):
+        """Check if llms-full.txt exists (detailed version)."""
+        config = get_config()
+        llms_full_url = urljoin(config.target_url, "/llms-full.txt")
+
+        try:
+            response = scanner.get(llms_full_url)
+            if response.status_code == 200:
+                print("INFO: llms-full.txt found - detailed AI instructions available")
+        except Exception:
+            pass
+
+
+@pytest.mark.seo
+@pytest.mark.favicon
+class TestFavicon:
+    """Test favicon for search result display (Google requirement)."""
+
+    def test_favicon_exists(self, scanner, page_content):
+        """Check if favicon exists and is properly configured."""
+        config = get_config()
+        soup = page_content["soup"]
+
+        # Check for favicon link tags
+        favicon_links = soup.find_all("link", rel=lambda x: x and "icon" in x.lower() if x else False)
+
+        favicon_found = False
+        favicon_urls = []
+
+        for link in favicon_links:
+            href = link.get("href", "")
+            if href:
+                favicon_urls.append(href)
+                favicon_found = True
+
+        # Also check default /favicon.ico
+        try:
+            favicon_url = urljoin(config.target_url, "/favicon.ico")
+            response = scanner.get(favicon_url)
+            if response.status_code == 200:
+                favicon_found = True
+                favicon_urls.append("/favicon.ico")
+        except Exception:
+            pass
+
+        if favicon_found:
+            print(f"INFO: Favicon found: {favicon_urls[:3]}")
+        else:
+            print(
+                "WARNING: No favicon found. Google requires a favicon for search result display. "
+                "Add <link rel='icon' href='/favicon.ico'>"
+            )
+
+    def test_favicon_size(self, scanner, page_content):
+        """Check favicon meets Google's size requirements (48px minimum)."""
+        config = get_config()
+        soup = page_content["soup"]
+
+        # Look for apple-touch-icon or larger icons
+        large_icons = soup.find_all("link", rel=lambda x: x and ("apple-touch-icon" in str(x).lower() or "icon" in str(x).lower()) if x else False)
+
+        has_large_icon = False
+        for icon in large_icons:
+            sizes = icon.get("sizes", "")
+            if sizes:
+                try:
+                    width = int(sizes.split("x")[0])
+                    if width >= 48:
+                        has_large_icon = True
+                        break
+                except (ValueError, IndexError):
+                    continue
+
+        if not has_large_icon:
+            print(
+                "INFO: Consider adding a favicon with sizes='48x48' or larger for better search display"
+            )
+
+
+@pytest.mark.seo
+@pytest.mark.speculation_rules
+class TestSpeculationRules:
+    """Test Speculation Rules API for prerendering (Chrome 2023+)."""
+
+    def test_speculation_rules_present(self, page_content):
+        """Check for Speculation Rules for instant page loads."""
+        soup = page_content["soup"]
+
+        # Check for speculation rules script
+        speculation_scripts = soup.find_all("script", type="speculationrules")
+
+        if speculation_scripts:
+            print("INFO: Speculation Rules found - enables instant page navigation")
+            for script in speculation_scripts[:1]:
+                try:
+                    rules = json.loads(script.string or "{}")
+                    if "prerender" in rules:
+                        print(f"INFO: Prerender rules configured for {len(rules.get('prerender', []))} patterns")
+                    if "prefetch" in rules:
+                        print(f"INFO: Prefetch rules configured for {len(rules.get('prefetch', []))} patterns")
+                except json.JSONDecodeError:
+                    print("WARNING: Invalid JSON in speculation rules")
+        else:
+            print(
+                "INFO: No Speculation Rules found. Consider adding for faster navigation: "
+                "<script type='speculationrules'>{\"prerender\": [{\"where\": {\"href_matches\": \"/*\"}}]}</script>"
+            )
+
+    def test_speculation_rules_header(self, scanner):
+        """Check for Speculation-Rules header."""
+        config = get_config()
+        response = scanner.get(config.target_url)
+
+        speculation_header = response.headers.get("Speculation-Rules", "")
+
+        if speculation_header:
+            print(f"INFO: Speculation-Rules header found: {speculation_header[:100]}")
