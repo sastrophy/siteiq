@@ -299,12 +299,62 @@ def pytest_configure(config):
 
     # Toxicity Scoring test markers
     config.addinivalue_line("markers", "llm_toxicity: ML-based toxicity scoring tests")
+    config.addinivalue_line("markers", "llm_toxicity_hate: Hate speech generation tests")
+    config.addinivalue_line("markers", "llm_toxicity_threat: Threat generation tests")
+    config.addinivalue_line("markers", "llm_toxicity_bias: Bias detection tests")
 
     # Adversarial Optimization test markers
     config.addinivalue_line("markers", "llm_adversarial_opt: Adversarial suffix optimization tests")
 
     # Red-Team Orchestration test markers
     config.addinivalue_line("markers", "llm_orchestration: LLM-as-Attacker orchestration tests")
+
+    # LLM Output Handling markers (OWASP LLM05)
+    config.addinivalue_line("markers", "llm_output_xss: XSS in LLM output tests")
+    config.addinivalue_line("markers", "llm_output_sqli: SQL injection in LLM output tests")
+    config.addinivalue_line("markers", "llm_output_cmdi: Command injection in LLM output tests")
+    config.addinivalue_line("markers", "llm_output_ssrf: SSRF in LLM output tests")
+
+    # LLM Excessive Agency markers (OWASP LLM06)
+    config.addinivalue_line("markers", "llm_agency: Excessive agency tests")
+    config.addinivalue_line("markers", "llm_agency_tool: Unauthorized tool access tests")
+    config.addinivalue_line("markers", "llm_agency_escalation: Tool privilege escalation tests")
+    config.addinivalue_line("markers", "llm_agency_tenant: Cross-tenant tool access tests")
+    config.addinivalue_line("markers", "llm_agency_chain: Unintended tool chaining tests")
+    config.addinivalue_line("markers", "llm_agency_permissions: Excessive permissions tests")
+    config.addinivalue_line("markers", "llm_agency_hitl: Human-in-the-loop bypass tests")
+
+    # 2025-2026 Emerging LLM Attack markers
+    config.addinivalue_line("markers", "llm_mcp_poisoning: MCP tool description poisoning tests (CVE-2025-6514)")
+    config.addinivalue_line("markers", "llm_shadow_escape: Shadow Escape zero-click MCP exploit tests")
+    config.addinivalue_line("markers", "llm_confused_deputy: Confused deputy agent privilege escalation tests")
+    config.addinivalue_line("markers", "llm_react2shell: ReAct framework command injection tests (CVE-2025-55182)")
+    config.addinivalue_line("markers", "llm_langchain_injection: LangChain serialization injection tests (CVE-2025-68664)")
+    config.addinivalue_line("markers", "llm_diffusion_attacker: Diffusion-optimized adversarial prompt tests")
+    config.addinivalue_line("markers", "llm_content_concretization: Content concretization bypass tests")
+    config.addinivalue_line("markers", "llm_sequential_break: Sequential break benign chain embedding tests")
+    config.addinivalue_line("markers", "llm_immersive_world: Immersive world narrative bypass tests")
+    config.addinivalue_line("markers", "llm_cascade_multiturn: Cascade automated multi-turn attack tests")
+    config.addinivalue_line("markers", "llm_poisoned_rag: PoisonedRAG single-document stealth tests")
+    config.addinivalue_line("markers", "llm_mm_rag: Multimodal RAG poisoning tests")
+    config.addinivalue_line("markers", "llm_rag_jamming: RAG jamming and disruption tests")
+    config.addinivalue_line("markers", "llm_alignment_faking: Alignment faking and sandbagging detection tests")
+    config.addinivalue_line("markers", "llm_agentic_misalignment: Agentic misalignment behavior tests")
+    config.addinivalue_line("markers", "llm_sycophancy: Sycophancy exploitation tests")
+    config.addinivalue_line("markers", "llm_write_primitive: Write-primitive system prompt extraction tests")
+    config.addinivalue_line("markers", "llm_pleak: PLeak token-by-token prompt extraction tests")
+    config.addinivalue_line("markers", "llm_emoji_attack: Emoji attack against safety classifiers tests")
+    config.addinivalue_line("markers", "llm_eval_framing: Evaluation framing bypass tests")
+    config.addinivalue_line("markers", "llm_script_shaped: Script-shaped prompt fragment tests")
+    config.addinivalue_line("markers", "llm_multilingual_safety: Multilingual safety variance tests")
+    config.addinivalue_line("markers", "llm_whisper_leak: Side-channel timing/length inference tests")
+    config.addinivalue_line("markers", "llm_reward_hacking: Reward hacking detection tests")
+
+    # Stateful Multi-Turn markers
+    config.addinivalue_line("markers", "llm_crescendo_stateful: Stateful crescendo escalation tests")
+    config.addinivalue_line("markers", "llm_context_poisoning: Multi-turn context poisoning tests")
+    config.addinivalue_line("markers", "llm_persona_drift: Multi-turn persona drift tests")
+    config.addinivalue_line("markers", "llm_trust_building: Trust-building then attack tests")
 
     # API Security test markers
     config.addinivalue_line("markers", "api_security: API security tests")
@@ -496,6 +546,50 @@ def llm_endpoint(request, target_url) -> str:
             return f"{target_url.rstrip('/')}{endpoint}"
         return endpoint
     return None
+
+
+@pytest.fixture(scope="session")
+def toxicity_scorer(request):
+    """Create a ToxicityScorer from CLI options."""
+    scorer_type = request.config.getoption("--toxicity-scorer")
+    threshold = request.config.getoption("--toxicity-threshold")
+    api_key = request.config.getoption("--perspective-api-key")
+    from utils.toxicity_scorer import ToxicityScorer
+    return ToxicityScorer(
+        preferred_scorer=scorer_type,
+        threshold=threshold,
+        perspective_api_key=api_key,
+    )
+
+
+@pytest.fixture(scope="session")
+def adversarial_optimizer(request):
+    """Create an AdversarialOptimizer from CLI options."""
+    mode = request.config.getoption("--adversarial-mode")
+    from utils.adversarial_optimizer import AdversarialOptimizer, OptimizerConfig, OptimizationMode
+    mode_map = {
+        "static": OptimizationMode.STATIC,
+        "random": OptimizationMode.RANDOM_SEARCH,
+        "beam": OptimizationMode.BEAM_SEARCH,
+        "genetic": OptimizationMode.GENETIC,
+    }
+    config = OptimizerConfig(mode=mode_map.get(mode, OptimizationMode.STATIC))
+    return AdversarialOptimizer(config=config)
+
+
+@pytest.fixture(scope="session")
+def red_team_orchestrator(request):
+    """Create a RedTeamOrchestrator from CLI options."""
+    attacker_llm = request.config.getoption("--attacker-llm")
+    max_turns = request.config.getoption("--max-attack-turns")
+    if not attacker_llm:
+        pytest.skip("No --attacker-llm provided for orchestration tests")
+    from utils.orchestrator import RedTeamOrchestrator, OrchestratorConfig
+    config = OrchestratorConfig(
+        attacker_model=attacker_llm,
+        max_turns=max_turns,
+    )
+    return RedTeamOrchestrator(config=config)
 
 
 @pytest.fixture(scope="session")

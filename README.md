@@ -182,7 +182,7 @@ Do NOT expose this application to the internet without proper security configura
 - Debug log exposure
 - wp-admin accessibility
 
-### LLM Security Testing (83 Tests)
+### LLM Security Testing (131 Tests)
 
 Test your LLM-powered API endpoints for security vulnerabilities:
 
@@ -640,6 +640,65 @@ Test your LLM-powered API endpoints for security vulnerabilities:
   - Speculative output manipulation
   - Parallel decoding attacks
 
+- **Output Handling (OWASP LLM05)** *(NEW)*
+  - XSS injection in LLM outputs
+  - SQL injection in generated queries
+  - Command injection in output
+  - SSRF via generated URLs
+
+- **Excessive Agency (OWASP LLM06)** *(NEW)*
+  - Unauthorized tool access
+  - Tool privilege escalation
+  - Cross-tenant tool abuse
+  - Dangerous tool chaining
+  - HITL (Human-in-the-Loop) bypass
+
+- **2025-2026 MCP & Agent Attacks** *(NEW)*
+  - MCP Tool Poisoning (CVE-2025-6514)
+  - Shadow Escape (zero-click MCP hijacking)
+  - Confused Deputy (cross-privilege agent abuse)
+  - ReAct2Shell (CVE-2025-55182)
+  - LangChain Injection (CVE-2025-68664)
+
+- **2025-2026 Advanced Jailbreak Vectors** *(NEW)*
+  - Diffusion Attacker (optimized adversarial prompts)
+  - Content Concretization, Sequential Break
+  - Immersive World, Cascade Multi-Turn
+  - Emoji Attacks, Script-Shaped Payloads
+  - Evaluation Framing, Multilingual Safety
+
+- **2025-2026 RAG & Alignment Attacks** *(NEW)*
+  - Poisoned RAG (single & multimodal)
+  - RAG Jamming (retrieval disruption)
+  - Alignment Faking, Agentic Misalignment
+  - Sycophancy Exploitation, Reward Hacking
+
+- **Extraction & Side-Channel** *(NEW)*
+  - Write Primitive Extraction
+  - PLeak (token-by-token prompt reconstruction)
+  - Whisper Leak (side-channel probing)
+
+- **Toxicity Scoring** *(NEW)*
+  - ML-based toxicity detection (Perspective API, Toxic-BERT)
+  - Hate speech, threat, and bias detection
+  - Signature-based fallback scoring
+
+- **Adversarial Optimization** *(NEW)*
+  - Static suffix jailbreaks
+  - Random search optimization
+  - Genetic algorithm optimization
+
+- **Red-Team Orchestration** *(NEW)*
+  - LLM-as-Attacker automated multi-turn attacks
+  - System prompt extraction orchestration
+  - Gradual escalation orchestration
+
+- **Stateful Multi-Turn** *(NEW)*
+  - True multi-turn crescendo (separate HTTP requests)
+  - Context poisoning across turns
+  - Persona drift attacks
+  - Trust building exploitation
+
 ## Quick Start
 
 ### 1. Setup
@@ -790,7 +849,7 @@ python3 -m pytest -m compliance       # Regional compliance
 python3 -m pytest -m cdn              # CDN tests
 
 # LLM Security Tests (use --llm-endpoint instead of --target-url)
-python3 -m pytest -m llm --llm-endpoint=https://api.example.com/chat           # All LLM tests (83 tests)
+python3 -m pytest -m llm --llm-endpoint=https://api.example.com/chat           # All LLM tests (131 tests)
 python3 -m pytest -m llm_injection --llm-endpoint=https://api.example.com/chat # Prompt injection
 python3 -m pytest -m llm_jailbreak --llm-endpoint=https://api.example.com/chat # Jailbreaking
 python3 -m pytest -m llm_leakage --llm-endpoint=https://api.example.com/chat   # System prompt leak
@@ -881,6 +940,28 @@ python3 -m pytest -m llm_constitutional_bypass --llm-endpoint=https://api.exampl
 python3 -m pytest -m llm_model_merging --llm-endpoint=https://api.example.com/chat   # Model merging vulnerabilities
 python3 -m pytest -m llm_quantization --llm-endpoint=https://api.example.com/chat    # Quantization vulnerabilities
 python3 -m pytest -m llm_speculative_decoding --llm-endpoint=https://api.example.com/chat # Speculative decoding attacks
+
+# 2025-2026 ADVANCED LLM Tests (NEW - 48 tests across 7 files)
+python3 -m pytest -m llm_output_xss --llm-endpoint=https://api.example.com/chat       # Output XSS injection (LLM05)
+python3 -m pytest -m llm_output_sqli --llm-endpoint=https://api.example.com/chat      # Output SQL injection (LLM05)
+python3 -m pytest -m llm_agency --llm-endpoint=https://api.example.com/chat           # Excessive Agency (LLM06)
+python3 -m pytest -m llm_agency_hitl --llm-endpoint=https://api.example.com/chat      # HITL bypass (LLM06)
+python3 -m pytest -m llm_mcp_poisoning --llm-endpoint=https://api.example.com/chat    # MCP Tool Poisoning (CVE-2025-6514)
+python3 -m pytest -m llm_shadow_escape --llm-endpoint=https://api.example.com/chat    # Shadow Escape
+python3 -m pytest -m llm_confused_deputy --llm-endpoint=https://api.example.com/chat  # Confused Deputy
+python3 -m pytest -m llm_react2shell --llm-endpoint=https://api.example.com/chat      # ReAct2Shell (CVE-2025-55182)
+python3 -m pytest -m llm_langchain_injection --llm-endpoint=https://api.example.com/chat # LangChain Injection
+python3 -m pytest -m llm_alignment_faking --llm-endpoint=https://api.example.com/chat # Alignment Faking
+python3 -m pytest -m llm_reward_hacking --llm-endpoint=https://api.example.com/chat   # Reward Hacking
+python3 -m pytest -m llm_sycophancy --llm-endpoint=https://api.example.com/chat       # Sycophancy Exploitation
+python3 -m pytest -m llm_emoji_attack --llm-endpoint=https://api.example.com/chat     # Emoji Attack
+python3 -m pytest -m llm_multilingual_safety --llm-endpoint=https://api.example.com/chat # Multilingual Safety
+python3 -m pytest -m llm_pleak --llm-endpoint=https://api.example.com/chat            # PLeak Extraction
+python3 -m pytest -m llm_whisper_leak --llm-endpoint=https://api.example.com/chat     # Whisper Leak
+python3 -m pytest -m llm_toxicity --llm-endpoint=https://api.example.com/chat         # Toxicity Scoring
+python3 -m pytest -m llm_adversarial_opt --llm-endpoint=https://api.example.com/chat  # Adversarial Optimization
+python3 -m pytest -m llm_orchestration --llm-endpoint=https://api.example.com/chat    # Red-Team Orchestration
+python3 -m pytest -m llm_crescendo_stateful --llm-endpoint=https://api.example.com/chat # Stateful Multi-Turn
 ```
 
 ## Test Intensity Levels

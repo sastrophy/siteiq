@@ -1014,6 +1014,243 @@ TEST_CATEGORIES = {
         "marker": "llm_orchestration",
         "category": "llm",
     },
+    # LLM Output Handling (OWASP LLM05)
+    "llm_output_xss": {
+        "name": "Output XSS Injection",
+        "description": "Test if LLM outputs contain XSS payloads",
+        "marker": "llm_output_xss",
+        "category": "llm",
+    },
+    "llm_output_sqli": {
+        "name": "Output SQL Injection",
+        "description": "Test if LLM outputs unsafe SQL statements",
+        "marker": "llm_output_sqli",
+        "category": "llm",
+    },
+    "llm_output_cmdi": {
+        "name": "Output Command Injection",
+        "description": "Test if LLM outputs shell commands for execution",
+        "marker": "llm_output_cmdi",
+        "category": "llm",
+    },
+    "llm_output_ssrf": {
+        "name": "Output SSRF",
+        "description": "Test if LLM outputs internal URLs for fetching",
+        "marker": "llm_output_ssrf",
+        "category": "llm",
+    },
+    # LLM Excessive Agency (OWASP LLM06)
+    "llm_agency": {
+        "name": "Excessive Agency",
+        "description": "Full excessive agency test suite (tools, escalation, HITL)",
+        "marker": "llm_agency",
+        "category": "llm",
+    },
+    "llm_agency_tool": {
+        "name": "Unauthorized Tool Use",
+        "description": "Test LLM invoking admin/privileged tools",
+        "marker": "llm_agency_tool",
+        "category": "llm",
+    },
+    "llm_agency_escalation": {
+        "name": "Tool Privilege Escalation",
+        "description": "Test tool chaining to escalate privileges",
+        "marker": "llm_agency_escalation",
+        "category": "llm",
+    },
+    "llm_agency_tenant": {
+        "name": "Cross-Tenant Tool Access",
+        "description": "Test accessing other tenants via tool calls",
+        "marker": "llm_agency_tenant",
+        "category": "llm",
+    },
+    "llm_agency_chain": {
+        "name": "Dangerous Tool Chaining",
+        "description": "Test dangerous combinations of tool calls",
+        "marker": "llm_agency_chain",
+        "category": "llm",
+    },
+    "llm_agency_hitl": {
+        "name": "HITL Bypass",
+        "description": "Test bypassing human-in-the-loop approval",
+        "marker": "llm_agency_hitl",
+        "category": "llm",
+    },
+    # 2025-2026 MCP & Agent Attacks
+    "llm_mcp_poisoning": {
+        "name": "MCP Tool Poisoning",
+        "description": "Test prompt injection via MCP tool descriptions (CVE-2025-6514)",
+        "marker": "llm_mcp_poisoning",
+        "category": "llm",
+    },
+    "llm_shadow_escape": {
+        "name": "Shadow Escape",
+        "description": "Test zero-click MCP workflow hijacking",
+        "marker": "llm_shadow_escape",
+        "category": "llm",
+    },
+    "llm_confused_deputy": {
+        "name": "Confused Deputy",
+        "description": "Test low-privilege agent tricking high-privilege agent",
+        "marker": "llm_confused_deputy",
+        "category": "llm",
+    },
+    "llm_react2shell": {
+        "name": "ReAct2Shell",
+        "description": "Test ReAct framework command injection (CVE-2025-55182)",
+        "marker": "llm_react2shell",
+        "category": "llm",
+    },
+    "llm_langchain_injection": {
+        "name": "LangChain Injection",
+        "description": "Test LangChain template/deserialization injection (CVE-2025-68664)",
+        "marker": "llm_langchain_injection",
+        "category": "llm",
+    },
+    # 2025-2026 Advanced Jailbreak Vectors
+    "llm_diffusion_attacker": {
+        "name": "Diffusion Attacker",
+        "description": "Test optimized adversarial prompts that appear benign",
+        "marker": "llm_diffusion_attacker",
+        "category": "llm",
+    },
+    "llm_content_concretization": {
+        "name": "Content Concretization",
+        "description": "Test abstract-to-concrete content bypass",
+        "marker": "llm_content_concretization",
+        "category": "llm",
+    },
+    "llm_sequential_break": {
+        "name": "Sequential Break",
+        "description": "Test multi-step constraint erosion",
+        "marker": "llm_sequential_break",
+        "category": "llm",
+    },
+    "llm_immersive_world": {
+        "name": "Immersive World",
+        "description": "Test fictional scenario deep immersion bypass",
+        "marker": "llm_immersive_world",
+        "category": "llm",
+    },
+    "llm_cascade_multiturn": {
+        "name": "Cascade Multi-Turn",
+        "description": "Test automated multi-turn escalation attacks",
+        "marker": "llm_cascade_multiturn",
+        "category": "llm",
+    },
+    # 2025-2026 RAG Attacks
+    "llm_poisoned_rag": {
+        "name": "Poisoned RAG",
+        "description": "Test adversarial document injection in RAG pipelines",
+        "marker": "llm_poisoned_rag",
+        "category": "llm",
+    },
+    "llm_mm_rag": {
+        "name": "Multimodal RAG Poisoning",
+        "description": "Test image/PDF payload injection in multimodal RAG",
+        "marker": "llm_mm_rag",
+        "category": "llm",
+    },
+    "llm_rag_jamming": {
+        "name": "RAG Jamming",
+        "description": "Test retrieval flooding and relevance manipulation",
+        "marker": "llm_rag_jamming",
+        "category": "llm",
+    },
+    # 2025-2026 Alignment & Safety Attacks
+    "llm_alignment_faking": {
+        "name": "Alignment Faking",
+        "description": "Test models faking alignment during evaluation",
+        "marker": "llm_alignment_faking",
+        "category": "llm",
+    },
+    "llm_agentic_misalignment": {
+        "name": "Agentic Misalignment",
+        "description": "Test goal drift and reward hacking in agents",
+        "marker": "llm_agentic_misalignment",
+        "category": "llm",
+    },
+    "llm_sycophancy": {
+        "name": "Sycophancy Exploitation",
+        "description": "Test exploiting model agreeableness for unsafe outputs",
+        "marker": "llm_sycophancy",
+        "category": "llm",
+    },
+    "llm_reward_hacking": {
+        "name": "Reward Hacking",
+        "description": "Test exploiting RLHF reward signals",
+        "marker": "llm_reward_hacking",
+        "category": "llm",
+    },
+    # 2025-2026 Extraction & Side-Channel Attacks
+    "llm_write_primitive": {
+        "name": "Write Primitive Extraction",
+        "description": "Test extracting system prompts via write-what-where primitives",
+        "marker": "llm_write_primitive",
+        "category": "llm",
+    },
+    "llm_pleak": {
+        "name": "PLeak Extraction",
+        "description": "Test optimized system prompt extraction",
+        "marker": "llm_pleak",
+        "category": "llm",
+    },
+    "llm_whisper_leak": {
+        "name": "Whisper Leak",
+        "description": "Test side-channel prompt extraction via token probabilities",
+        "marker": "llm_whisper_leak",
+        "category": "llm",
+    },
+    # 2025-2026 Novel Bypass Techniques
+    "llm_emoji_attack": {
+        "name": "Emoji Attack",
+        "description": "Test emoji-encoded instruction injection",
+        "marker": "llm_emoji_attack",
+        "category": "llm",
+    },
+    "llm_eval_framing": {
+        "name": "Evaluation Framing",
+        "description": "Test framing attacks as safety evaluations",
+        "marker": "llm_eval_framing",
+        "category": "llm",
+    },
+    "llm_script_shaped": {
+        "name": "Script-Shaped Payloads",
+        "description": "Test screenplay/dialogue format bypass",
+        "marker": "llm_script_shaped",
+        "category": "llm",
+    },
+    "llm_multilingual_safety": {
+        "name": "Multilingual Safety",
+        "description": "Test safety gaps in low-resource languages",
+        "marker": "llm_multilingual_safety",
+        "category": "llm",
+    },
+    # Stateful Multi-Turn Tests
+    "llm_crescendo_stateful": {
+        "name": "Stateful Crescendo",
+        "description": "True multi-turn crescendo with separate HTTP requests",
+        "marker": "llm_crescendo_stateful",
+        "category": "llm",
+    },
+    "llm_context_poisoning": {
+        "name": "Context Poisoning",
+        "description": "Inject false context in early turns, exploit later",
+        "marker": "llm_context_poisoning",
+        "category": "llm",
+    },
+    "llm_persona_drift": {
+        "name": "Persona Drift",
+        "description": "Gradually shift model persona across turns",
+        "marker": "llm_persona_drift",
+        "category": "llm",
+    },
+    "llm_trust_building": {
+        "name": "Trust Building Attack",
+        "description": "Build rapport then exploit trust in later turns",
+        "marker": "llm_trust_building",
+        "category": "llm",
+    },
     # NoSQL Injection Tests
     "nosql": {
         "name": "NoSQL Injection",
